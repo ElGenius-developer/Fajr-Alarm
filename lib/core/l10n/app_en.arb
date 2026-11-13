@@ -13,6 +13,64 @@
   "navSettings": "Settings",
   "navChallenge": "Proof-of-Action Challenge",
   "navAlarm": "Fajr Alarm",
-  "navOnboarding": "Setup"
+  "navOnboarding": "Setup",
+  "settingsTitle": "Settings",
+  "settingsKpisTitle": "Local-Only KPIs & Streak",
+  "settingsCurrentStreak": "Current Streak",
+  "settingsLongestStreak": "Longest Streak",
+  "settingsStreakDays": "{count} days",
+  "@settingsStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsStreakFrozenBadge": "Streak Frozen (Vacation)",
+  "settingsCompletionRate": "Completion Rate",
+  "settingsAvgTimeToWake": "Avg. Time-to-Wake",
+  "settingsMinutesValue": "{minutes} min",
+  "@settingsMinutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageArabic": "العربية",
+  "settingsLanguageEnglish": "English",
+  "settingsVacationTitle": "Vacation Mode",
+  "settingsVacationSubtitle": "Pause Fajr alarms with Streak Freeze for a fixed number of days.",
+  "settingsVacationDurationLabel": "Duration (days)",
+  "settingsVacationActivateButton": "Activate Vacation Mode",
+  "settingsVacationActiveUntil": "Active until {date}",
+  "@settingsVacationActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsEmergencyQuotaTitle": "Monthly Emergency Override Quota",
+  "settingsEmergencyQuotaRemaining": "{remaining} of {total} remaining this month",
+  "@settingsEmergencyQuotaRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDryRunTitle": "10-Second Dry-Run Alarm",
+  "settingsDryRunSubtitle": "Test alarm audio, lock screen, and camera without affecting your streak.",
+  "settingsDryRunButton": "Test Alarm Now (10s)",
+  "settingsDryRunScheduled": "Dry-run alarm scheduled for 10 seconds from now.",
+  "settingsLockWindowNotice": "Pre-Fajr Lock Window active (T - 30m): alarm, quota, and vacation changes are locked.",
+  "settingsErrorLockWindow": "Action blocked during the 30-minute Pre-Fajr Lock Window.",
+  "settingsErrorQuotaExceeded": "Monthly emergency override quota exceeded.",
+  "settingsErrorValidation": "Please enter a valid value."
 }
 
