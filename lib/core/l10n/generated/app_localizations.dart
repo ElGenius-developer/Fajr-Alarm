@@ -697,6 +697,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SubhanAllah wa bihamdihi, SubhanAllahil Azeem, Astaghfirullah al-Azeem wa atubu ilayhi, La ilaha illa Allah wahdahu now.'**
   String get challengeAdhkarPrompt;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr-Alarm Setup'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onboardingStepOf(int current, int total);
+
+  /// No description provided for @onboardingStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location & City'**
+  String get onboardingStep1Title;
+
+  /// No description provided for @onboardingStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your city or enter coordinates to calculate Fajr prayer times offline.'**
+  String get onboardingStep1Subtitle;
+
+  /// No description provided for @onboardingCityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'City Name'**
+  String get onboardingCityLabel;
+
+  /// No description provided for @onboardingCityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Cairo'**
+  String get onboardingCityHint;
+
+  /// No description provided for @onboardingLatitudeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get onboardingLatitudeLabel;
+
+  /// No description provided for @onboardingLongitudeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get onboardingLongitudeLabel;
+
+  /// No description provided for @onboardingPresetCitiesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Select City'**
+  String get onboardingPresetCitiesLabel;
+
+  /// No description provided for @onboardingCityCairo.
+  ///
+  /// In en, this message translates to:
+  /// **'Cairo'**
+  String get onboardingCityCairo;
+
+  /// No description provided for @onboardingCityMakkah.
+  ///
+  /// In en, this message translates to:
+  /// **'Makkah'**
+  String get onboardingCityMakkah;
+
+  /// No description provided for @onboardingCityMadinah.
+  ///
+  /// In en, this message translates to:
+  /// **'Madinah'**
+  String get onboardingCityMadinah;
+
+  /// No description provided for @onboardingCityRiyadh.
+  ///
+  /// In en, this message translates to:
+  /// **'Riyadh'**
+  String get onboardingCityRiyadh;
+
+  /// No description provided for @onboardingCityIstanbul.
+  ///
+  /// In en, this message translates to:
+  /// **'Istanbul'**
+  String get onboardingCityIstanbul;
+
+  /// No description provided for @onboardingCityLondon.
+  ///
+  /// In en, this message translates to:
+  /// **'London'**
+  String get onboardingCityLondon;
+
+  /// No description provided for @onboardingLocationSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Location & Continue'**
+  String get onboardingLocationSaveButton;
+
+  /// No description provided for @onboardingLocationErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid city name and coordinates.'**
+  String get onboardingLocationErrorInvalid;
+
+  /// No description provided for @onboardingStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Mandatory Permissions Gate'**
+  String get onboardingStep2Title;
+
+  /// No description provided for @onboardingStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr-Alarm requires these system permissions to ring reliably over your lock screen and verify your wake-up.'**
+  String get onboardingStep2Subtitle;
+
+  /// No description provided for @onboardingPermFullScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-Screen Lock Bypass'**
+  String get onboardingPermFullScreenTitle;
+
+  /// No description provided for @onboardingPermFullScreenDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Allows the alarm challenge to appear directly over the lock screen.'**
+  String get onboardingPermFullScreenDesc;
+
+  /// No description provided for @onboardingPermBatteryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore Battery Optimizations'**
+  String get onboardingPermBatteryTitle;
+
+  /// No description provided for @onboardingPermBatteryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Prevents the OS from killing the Fajr alarm before dawn.'**
+  String get onboardingPermBatteryDesc;
+
+  /// No description provided for @onboardingPermCameraTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Access'**
+  String get onboardingPermCameraTitle;
+
+  /// No description provided for @onboardingPermCameraDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for the live Proof-of-Action prayer rug photo and barcode scan.'**
+  String get onboardingPermCameraDesc;
+
+  /// No description provided for @onboardingPermAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact Alarms / AlarmKit'**
+  String get onboardingPermAlarmTitle;
+
+  /// No description provided for @onboardingPermAlarmDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules exact Fajr wake-up alarms on Android and iOS 26+.'**
+  String get onboardingPermAlarmDesc;
+
+  /// No description provided for @onboardingPermGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Granted'**
+  String get onboardingPermGranted;
+
+  /// No description provided for @onboardingPermMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get onboardingPermMissing;
+
+  /// No description provided for @onboardingPermRequestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permissions'**
+  String get onboardingPermRequestButton;
+
+  /// No description provided for @onboardingPermRefreshButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Status'**
+  String get onboardingPermRefreshButton;
+
+  /// No description provided for @onboardingPermGateBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'All mandatory permissions must be granted before continuing.'**
+  String get onboardingPermGateBlocked;
+
+  /// No description provided for @onboardingStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Gemini API Key'**
+  String get onboardingStep3Title;
+
+  /// No description provided for @onboardingStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr-Alarm uses your own Google AI Studio key (BYOK). No servers, no stored photos.'**
+  String get onboardingStep3Subtitle;
+
+  /// No description provided for @onboardingPrivacyNoticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Free Tier Disclosure'**
+  String get onboardingPrivacyNoticeTitle;
+
+  /// No description provided for @onboardingPrivacyNoticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your challenge photos stay in RAM only and are purged immediately (< 500ms) without saving to disk or gallery. However, Google\'s Gemini API Free Tier may use submitted inputs and outputs to improve Google products and may be reviewed by human reviewers. You can enable billing in your Google AI Studio account to opt out of Google\'s free-tier data usage.'**
+  String get onboardingPrivacyNoticeBody;
+
+  /// No description provided for @onboardingPrivacyConsentCheckbox.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand Google\'s Free Tier terms and explicitly consent to sending live challenge photos to Gemini using my own API key.'**
+  String get onboardingPrivacyConsentCheckbox;
+
+  /// No description provided for @onboardingApiKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API Key'**
+  String get onboardingApiKeyLabel;
+
+  /// No description provided for @onboardingApiKeyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your Google AI Studio key'**
+  String get onboardingApiKeyHint;
+
+  /// No description provided for @onboardingTestKeyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Test & Save Key'**
+  String get onboardingTestKeyButton;
+
+  /// No description provided for @onboardingTestingKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing key...'**
+  String get onboardingTestingKey;
+
+  /// No description provided for @onboardingKeyValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'API key verified and saved securely.'**
+  String get onboardingKeyValidated;
+
+  /// No description provided for @onboardingConsentRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the privacy disclosure before saving your API key.'**
+  String get onboardingConsentRequiredError;
+
+  /// No description provided for @onboardingApiKeyInvalidError.
+  ///
+  /// In en, this message translates to:
+  /// **'API key validation failed. Check your key and connection.'**
+  String get onboardingApiKeyInvalidError;
+
+  /// No description provided for @onboardingStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom Barcode (Offline Fallback)'**
+  String get onboardingStep4Title;
+
+  /// No description provided for @onboardingStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Register a product barcode in your bathroom (e.g., toothpaste) as an offline Proof-of-Action fallback.'**
+  String get onboardingStep4Subtitle;
+
+  /// No description provided for @onboardingBarcodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode Value'**
+  String get onboardingBarcodeLabel;
+
+  /// No description provided for @onboardingBarcodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or enter product barcode'**
+  String get onboardingBarcodeHint;
+
+  /// No description provided for @onboardingRegisterBarcodeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Barcode & Finish'**
+  String get onboardingRegisterBarcodeButton;
+
+  /// No description provided for @onboardingSkipBarcodeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now & Finish'**
+  String get onboardingSkipBarcodeButton;
+
+  /// No description provided for @onboardingCompletedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup complete! You are ready for Fajr.'**
+  String get onboardingCompletedMessage;
+
+  /// No description provided for @onboardingIncompleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all required setup steps first.'**
+  String get onboardingIncompleteError;
 }
 
 class _AppLocalizationsDelegate
