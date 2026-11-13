@@ -67,5 +67,45 @@
   "settingsLockWindowNotice": "نافذة القفل قبل الفجر مفعّلة (T - 30m): تعديل المنبه والرصيد والإجازة مقفل.",
   "settingsErrorLockWindow": "هذا الإجراء محظور خلال نافذة القفل قبل الفجر (30 دقيقة).",
   "settingsErrorQuotaExceeded": "تم استنفاد رصيد تجاوز الطوارئ الشهري.",
-  "settingsErrorValidation": "يرجى إدخال قيمة صالحة."
+  "settingsErrorValidation": "يرجى إدخال قيمة صالحة.",
+  "alarmRingingTitle": "منبه الفجر",
+  "alarmStatusIdle": "المنبه مجدول",
+  "alarmStatusLockedPreFajr": "نافذة القفل قبل الفجر مفعّلة",
+  "alarmStatusRingingInitial": "حان وقت صلاة الفجر!",
+  "alarmStatusSnoozed": "غفوة — 5 دقائق",
+  "alarmStatusRingingRelentless": "رنّ ملحّ — استيقظ الآن!",
+  "alarmStatusChallengeActive": "التحدي قيد التنفيذ",
+  "alarmStatusCompleted": "تم إتمام تحدي الفجر",
+  "alarmStatusVacationFrozen": "وضع الإجازة مفعّل",
+  "alarmSnoozeButton": "غفوة (5 دقائق)",
+  "alarmStartChallengeButton": "بدء تحدي إثبات الفعل",
+  "alarmEmergencyHoldButton": "اضغط باستمرار 60 ثانية لتجاوز الطوارئ",
+  "alarmEmergencyMutedHint": "تم كتم الصوت — استمر بالضغط ({seconds} ث متبقية)",
+  "@alarmEmergencyMutedHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "alarmEmergencyReleasedError": "تم رفع الإصبع مبكراً — أُعيد العداد وعاد الرنّ.",
+  "alarmEmergencyNoQuota": "لا يوجد رصيد طوارئ متبقٍ هذا الشهر.",
+  "alarmDryRunBadge": "منبه تجريبي",
+  "alarmSnoozeCountdown": "الرنّ التالي خلال {time}",
+  "@alarmSnoozeCountdown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "alarmRelentlessLoopHint": "يرنّ كل دقيقة واحدة حتى إتمام التحدي",
+  "alarmEmergencyRemainingCount": "رصيد الطوارئ المتبقي: {count}",
+  "@alarmEmergencyRemainingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
