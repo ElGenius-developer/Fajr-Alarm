@@ -181,6 +181,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Setup'**
   String get navOnboarding;
+
+  /// No description provided for @scheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr Schedule'**
+  String get scheduleTitle;
+
+  /// No description provided for @scheduleNextAlarmLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Fajr Alarm'**
+  String get scheduleNextAlarmLabel;
+
+  /// No description provided for @scheduleAlarmDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm is disabled'**
+  String get scheduleAlarmDisabled;
+
+  /// No description provided for @scheduleTodayFajrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fajr Adhan'**
+  String get scheduleTodayFajrLabel;
+
+  /// No description provided for @scheduleSunriseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise'**
+  String get scheduleSunriseLabel;
+
+  /// No description provided for @scheduleLockWindowActiveBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Fajr Lock Window active: alarm changes are locked until the challenge is completed.'**
+  String get scheduleLockWindowActiveBanner;
+
+  /// No description provided for @scheduleModeRelative.
+  ///
+  /// In en, this message translates to:
+  /// **'Relative to Adhan'**
+  String get scheduleModeRelative;
+
+  /// No description provided for @scheduleModeManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Fixed Time'**
+  String get scheduleModeManual;
+
+  /// No description provided for @scheduleOffsetBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before Adhan'**
+  String get scheduleOffsetBefore;
+
+  /// No description provided for @scheduleOffsetAt.
+  ///
+  /// In en, this message translates to:
+  /// **'At Adhan'**
+  String get scheduleOffsetAt;
+
+  /// No description provided for @scheduleOffsetAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'After Adhan'**
+  String get scheduleOffsetAfter;
+
+  /// No description provided for @scheduleOffsetMinutesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String scheduleOffsetMinutesLabel(int minutes);
+
+  /// No description provided for @scheduleLocationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get scheduleLocationLabel;
+
+  /// No description provided for @scheduleCalculationMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation Method'**
+  String get scheduleCalculationMethodLabel;
+
+  /// No description provided for @schedule30DayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'30-Day Rolling Schedule'**
+  String get schedule30DayTitle;
+
+  /// No description provided for @scheduleRecalculateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Recalculate 30-Day Schedule'**
+  String get scheduleRecalculateButton;
+
+  /// No description provided for @scheduleEnableSwitchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Fajr Alarm'**
+  String get scheduleEnableSwitchLabel;
+
+  /// No description provided for @scheduleManualTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Alarm Time'**
+  String get scheduleManualTimeLabel;
+
+  /// No description provided for @scheduleEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No cached prayer schedule found. Tap recalculate to generate 30 days offline.'**
+  String get scheduleEmptyState;
+
+  /// No description provided for @scheduleErrorLockWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot modify alarm during Pre-Fajr Lock Window (T - 30m).'**
+  String get scheduleErrorLockWindow;
 }
 
 class _AppLocalizationsDelegate
