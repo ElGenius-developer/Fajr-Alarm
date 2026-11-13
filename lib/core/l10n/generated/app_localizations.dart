@@ -577,6 +577,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Emergency overrides left: {count}'**
   String alarmEmergencyRemainingCount(int count);
+
+  /// No description provided for @challengeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Proof-of-Action Challenge'**
+  String get challengeTitle;
+
+  /// No description provided for @challengePhotoInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.'**
+  String get challengePhotoInstruction;
+
+  /// No description provided for @challengeTiltValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Standing angle OK ({degrees}°)'**
+  String challengeTiltValid(String degrees);
+
+  /// No description provided for @challengeTiltInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Point phone downward between -45° and -90° (current: {degrees}°)'**
+  String challengeTiltInvalid(String degrees);
+
+  /// No description provided for @challengeCapturePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture Live Photo'**
+  String get challengeCapturePhoto;
+
+  /// No description provided for @challengeToggleTorch.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Flash'**
+  String get challengeToggleTorch;
+
+  /// No description provided for @challengeVerifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying...'**
+  String get challengeVerifying;
+
+  /// No description provided for @challengeVerifiedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge completed! Alarm dismissed.'**
+  String get challengeVerifiedSuccess;
+
+  /// No description provided for @challengeRejectedDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification failed. Please stand on the prayer rug and try again.'**
+  String get challengeRejectedDefault;
+
+  /// No description provided for @challengeOfflineFallbackNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline mode active. Complete the fallback challenge.'**
+  String get challengeOfflineFallbackNotice;
+
+  /// No description provided for @challengeBarcodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom Barcode Challenge'**
+  String get challengeBarcodeTitle;
+
+  /// No description provided for @challengeBarcodeInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk to the bathroom and scan your registered product barcode.'**
+  String get challengeBarcodeInstruction;
+
+  /// No description provided for @challengeBarcodeMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned barcode does not match your registered bathroom product.'**
+  String get challengeBarcodeMismatch;
+
+  /// No description provided for @challengeTypingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Standing Typing Challenge'**
+  String get challengeTypingTitle;
+
+  /// No description provided for @challengeTypingInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.'**
+  String get challengeTypingInstruction;
+
+  /// No description provided for @challengeTypingCounter.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {target}'**
+  String challengeTypingCounter(int current, int target);
+
+  /// No description provided for @challengeTypingSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Text'**
+  String get challengeTypingSubmit;
+
+  /// No description provided for @challengeTypingMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Text does not match exactly or is incomplete.'**
+  String get challengeTypingMismatch;
+
+  /// No description provided for @challengeCameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera unavailable. Switching to Standing Typing Challenge.'**
+  String get challengeCameraUnavailable;
+
+  /// No description provided for @challengeAdhkarPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'SubhanAllah wa bihamdihi, SubhanAllahil Azeem, Astaghfirullah al-Azeem wa atubu ilayhi, La ilaha illa Allah wahdahu now.'**
+  String get challengeAdhkarPrompt;
 }
 
 class _AppLocalizationsDelegate
