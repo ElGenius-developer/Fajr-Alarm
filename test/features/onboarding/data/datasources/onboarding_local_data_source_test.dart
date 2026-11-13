@@ -77,7 +77,7 @@ void main() {
 
   test('OnboardingStateModelAdapter writes and reads all fields via BinaryWriter/BinaryReader', () {
     final OnboardingStateModelAdapter adapter = OnboardingStateModelAdapter();
-    expect(adapter.typeId, 10);
+    expect(adapter.typeId, 30);
 
     final FakeBinaryWriter writer = FakeBinaryWriter();
     const OnboardingStateModel model = OnboardingStateModel(

@@ -76,7 +76,7 @@ class FajrAlarmConfigHiveModel {
 class FajrAlarmConfigHiveAdapter extends TypeAdapter<FajrAlarmConfigHiveModel> {
   const FajrAlarmConfigHiveAdapter();
 
-  static const int adapterTypeId = 11;
+  static const int adapterTypeId = 21;
 
   @override
   int get typeId => adapterTypeId;
