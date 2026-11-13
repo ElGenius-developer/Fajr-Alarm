@@ -13,6 +13,46 @@
   "navSettings": "Settings",
   "navChallenge": "Proof-of-Action Challenge",
   "navAlarm": "Fajr Alarm",
-  "navOnboarding": "Setup"
+  "navOnboarding": "Setup",
+  "alarmRingingTitle": "Fajr Alarm",
+  "alarmStatusIdle": "Alarm Scheduled",
+  "alarmStatusLockedPreFajr": "Pre-Fajr Lock Window Active",
+  "alarmStatusRingingInitial": "Time for Fajr!",
+  "alarmStatusSnoozed": "Snoozed — 5 Minutes",
+  "alarmStatusRingingRelentless": "Relentless Ringing — Wake Up!",
+  "alarmStatusChallengeActive": "Challenge in Progress",
+  "alarmStatusCompleted": "Fajr Alarm Completed",
+  "alarmStatusVacationFrozen": "Vacation Mode Active",
+  "alarmSnoozeButton": "Snooze (5 min)",
+  "alarmStartChallengeButton": "Start Proof-of-Action Challenge",
+  "alarmEmergencyHoldButton": "Hold 60s for Emergency Override",
+  "alarmEmergencyMutedHint": "Audio muted — keep holding ({seconds}s left)",
+  "@alarmEmergencyMutedHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "alarmEmergencyReleasedError": "Released early — timer reset and alarm resumed.",
+  "alarmEmergencyNoQuota": "No emergency overrides remaining this month.",
+  "alarmDryRunBadge": "Dry-Run Test Alarm",
+  "alarmSnoozeCountdown": "Next ring in {time}",
+  "@alarmSnoozeCountdown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "alarmRelentlessLoopHint": "Ringing every 1 minute until challenge is completed",
+  "alarmEmergencyRemainingCount": "Emergency overrides left: {count}",
+  "@alarmEmergencyRemainingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
 
