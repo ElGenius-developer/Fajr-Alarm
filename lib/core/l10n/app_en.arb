@@ -1,0 +1,18 @@
+{
+  "@@locale": "en",
+  "appTitle": "Fajr-Alarm",
+  "commonRetry": "Retry",
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonContinue": "Continue",
+  "commonBack": "Back",
+  "commonSkip": "Skip for now",
+  "commonDone": "Done",
+  "commonErrorGeneric": "An unexpected error occurred. Please try again.",
+  "navSchedule": "Schedule",
+  "navSettings": "Settings",
+  "navChallenge": "Proof-of-Action Challenge",
+  "navAlarm": "Fajr Alarm",
+  "navOnboarding": "Setup"
+}
+
