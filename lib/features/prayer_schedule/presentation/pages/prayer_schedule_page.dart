@@ -10,14 +10,28 @@ import 'package:intl/intl.dart';
 
 /// Displays the 30-day rolling Fajr schedule and alarm timing configuration.
 class PrayerSchedulePage extends StatelessWidget {
-  const PrayerSchedulePage({super.key});
+  const PrayerSchedulePage({super.key, this.onOpenSettings});
+
+  final VoidCallback? onOpenSettings;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.scheduleTitle)),
+      appBar: AppBar(
+        title: Text(l10n.scheduleTitle),
+        actions: onOpenSettings != null
+            ? <Widget>[
+                IconButton(
+                  key: const Key('schedule_open_settings_button'),
+                  icon: const Icon(Icons.settings),
+                  tooltip: l10n.navSettings,
+                  onPressed: onOpenSettings,
+                ),
+              ]
+            : null,
+      ),
       body: BlocConsumer<PrayerScheduleCubit, PrayerScheduleState>(
         listenWhen: (previous, current) =>
             current is PrayerScheduleLoaded && current.actionFailure != null,

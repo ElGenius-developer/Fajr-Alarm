@@ -1,5 +1,15 @@
-import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/di/injection.dart';
+import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringing_bloc.dart';
+import 'package:fajr_alarm/features/alarm_ringing/presentation/pages/alarm_ringing_page.dart';
+import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_cubit.dart';
+import 'package:fajr_alarm/features/challenge_verification/presentation/pages/challenge_page.dart';
+import 'package:fajr_alarm/features/onboarding/presentation/bloc/onboarding_cubit.dart';
+import 'package:fajr_alarm/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_cubit.dart';
+import 'package:fajr_alarm/features/prayer_schedule/presentation/pages/prayer_schedule_page.dart';
+import 'package:fajr_alarm/features/settings_and_streak/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 /// Canonical route paths for Fajr-Alarm.
@@ -18,43 +28,47 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.schedule,
       builder: (BuildContext context, GoRouterState state) =>
-          _PlaceholderScreen(title: AppLocalizations.of(context)!.navSchedule),
+          BlocProvider<PrayerScheduleCubit>(
+            create: (_) => sl<PrayerScheduleCubit>()..loadSchedule(),
+            child: PrayerSchedulePage(
+              onOpenSettings: () => context.push(AppRoutes.settings),
+            ),
+          ),
     ),
     GoRoute(
       path: AppRoutes.onboarding,
       builder: (BuildContext context, GoRouterState state) =>
-          _PlaceholderScreen(
-            title: AppLocalizations.of(context)!.navOnboarding,
+          BlocProvider<OnboardingCubit>(
+            create: (_) => sl<OnboardingCubit>()..loadOnboarding(),
+            child: OnboardingPage(
+              onCompleted: () => context.go(AppRoutes.schedule),
+            ),
           ),
     ),
     GoRoute(
       path: AppRoutes.alarmRinging,
       builder: (BuildContext context, GoRouterState state) =>
-          _PlaceholderScreen(title: AppLocalizations.of(context)!.navAlarm),
+          BlocProvider<AlarmRingingBloc>(
+            create: (_) => sl<AlarmRingingBloc>(),
+            child: AlarmRingingPage(
+              onStartChallenge: () => context.go(AppRoutes.challenge),
+            ),
+          ),
     ),
     GoRoute(
       path: AppRoutes.challenge,
       builder: (BuildContext context, GoRouterState state) =>
-          _PlaceholderScreen(title: AppLocalizations.of(context)!.navChallenge),
+          BlocProvider<ChallengeCubit>(
+            create: (_) => sl<ChallengeCubit>(),
+            child: ChallengePage(
+              onChallengeCompleted: () => context.go(AppRoutes.schedule),
+            ),
+          ),
     ),
     GoRoute(
       path: AppRoutes.settings,
       builder: (BuildContext context, GoRouterState state) =>
-          _PlaceholderScreen(title: AppLocalizations.of(context)!.navSettings),
+          const SettingsPage(),
     ),
   ],
 );
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text(title)),
-    );
-  }
-}

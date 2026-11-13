@@ -50,7 +50,7 @@ class PrayerScheduleHiveModel {
 class PrayerScheduleHiveAdapter extends TypeAdapter<PrayerScheduleHiveModel> {
   const PrayerScheduleHiveAdapter();
 
-  static const int adapterTypeId = 10;
+  static const int adapterTypeId = 20;
 
   @override
   int get typeId => adapterTypeId;

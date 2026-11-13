@@ -54,11 +54,11 @@ final class OnboardingStateModel {
   }
 }
 
-/// Explicit [TypeAdapter] for [OnboardingStateModel] (typeId: 10).
+/// Explicit [TypeAdapter] for [OnboardingStateModel] (typeId: 30).
 final class OnboardingStateModelAdapter
     extends TypeAdapter<OnboardingStateModel> {
   @override
-  final int typeId = 10;
+  final int typeId = 30;
 
   @override
   OnboardingStateModel read(BinaryReader reader) {
