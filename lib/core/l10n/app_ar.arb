@@ -13,6 +13,50 @@
   "navSettings": "الإعدادات",
   "navChallenge": "تحدي إثبات الفعل",
   "navAlarm": "منبه الفجر",
-  "navOnboarding": "الإعداد الأولي"
+  "navOnboarding": "الإعداد الأولي",
+  "challengeTitle": "تحدي إثبات الفعل",
+  "challengePhotoInstruction": "قف على سجادة الصلاة ووجّه الكاميرا للأسفل نحو قدميك بزاوية (-45° إلى -90°) والتقط صورة حية.",
+  "challengeTiltValid": "زاوية الوقوف صحيحة ({degrees}°)",
+  "@challengeTiltValid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTiltInvalid": "وجّه الهاتف للأسفل بين -45° و -90° (الحالية: {degrees}°)",
+  "@challengeTiltInvalid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeCapturePhoto": "التقاط صورة حية",
+  "challengeToggleTorch": "تشغيل/إيقاف الفلاش",
+  "challengeVerifying": "جارٍ التحقق...",
+  "challengeVerifiedSuccess": "تم إتمام التحدي بنجاح! تم إيقاف المنبه.",
+  "challengeRejectedDefault": "فشل التحقق. يرجى الوقوف على سجادة الصلاة والمحاولة مرة أخرى.",
+  "challengeOfflineFallbackNotice": "تم التبديل للوضع الأوفلاين. أكمل التحدي البديل.",
+  "challengeBarcodeTitle": "تحدي باركود الحمام",
+  "challengeBarcodeInstruction": "انهض وامشِ إلى الحمام وامسح باركود المنتج المسجل مسبقاً.",
+  "challengeBarcodeMismatch": "الباركود الممسوح لا يطابق المنتج المسجل.",
+  "challengeTypingTitle": "تحدي الكتابة واقفاً",
+  "challengeTypingInstruction": "احمل الهاتف بزاوية الوقوف (-45° إلى -90°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.",
+  "challengeTypingCounter": "{current} / {target}",
+  "@challengeTypingCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeTypingSubmit": "تحقق من النص",
+  "challengeTypingMismatch": "النص غير مطابق تماماً أو غير مكتمل.",
+  "challengeCameraUnavailable": "الكاميرا غير متاحة. تم التبديل إلى تحدي الكتابة واقفاً.",
+  "challengeAdhkarPrompt": "سبحان الله وبحمده سبحان الله العظيم أستغفر الله العظيم وأتوب إليه لا إله إلا الله وحده لا شريك له له الملك وله الحمد كله"
 }
 

@@ -50,4 +50,79 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get navOnboarding => 'الإعداد الأولي';
+
+  @override
+  String get challengeTitle => 'تحدي إثبات الفعل';
+
+  @override
+  String get challengePhotoInstruction =>
+      'قف على سجادة الصلاة ووجّه الكاميرا للأسفل نحو قدميك بزاوية (-45° إلى -90°) والتقط صورة حية.';
+
+  @override
+  String challengeTiltValid(String degrees) {
+    return 'زاوية الوقوف صحيحة ($degrees°)';
+  }
+
+  @override
+  String challengeTiltInvalid(String degrees) {
+    return 'وجّه الهاتف للأسفل بين -45° و -90° (الحالية: $degrees°)';
+  }
+
+  @override
+  String get challengeCapturePhoto => 'التقاط صورة حية';
+
+  @override
+  String get challengeToggleTorch => 'تشغيل/إيقاف الفلاش';
+
+  @override
+  String get challengeVerifying => 'جارٍ التحقق...';
+
+  @override
+  String get challengeVerifiedSuccess =>
+      'تم إتمام التحدي بنجاح! تم إيقاف المنبه.';
+
+  @override
+  String get challengeRejectedDefault =>
+      'فشل التحقق. يرجى الوقوف على سجادة الصلاة والمحاولة مرة أخرى.';
+
+  @override
+  String get challengeOfflineFallbackNotice =>
+      'تم التبديل للوضع الأوفلاين. أكمل التحدي البديل.';
+
+  @override
+  String get challengeBarcodeTitle => 'تحدي باركود الحمام';
+
+  @override
+  String get challengeBarcodeInstruction =>
+      'انهض وامشِ إلى الحمام وامسح باركود المنتج المسجل مسبقاً.';
+
+  @override
+  String get challengeBarcodeMismatch =>
+      'الباركود الممسوح لا يطابق المنتج المسجل.';
+
+  @override
+  String get challengeTypingTitle => 'تحدي الكتابة واقفاً';
+
+  @override
+  String get challengeTypingInstruction =>
+      'احمل الهاتف بزاوية الوقوف (-45° إلى -90°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.';
+
+  @override
+  String challengeTypingCounter(int current, int target) {
+    return '$current / $target';
+  }
+
+  @override
+  String get challengeTypingSubmit => 'تحقق من النص';
+
+  @override
+  String get challengeTypingMismatch => 'النص غير مطابق تماماً أو غير مكتمل.';
+
+  @override
+  String get challengeCameraUnavailable =>
+      'الكاميرا غير متاحة. تم التبديل إلى تحدي الكتابة واقفاً.';
+
+  @override
+  String get challengeAdhkarPrompt =>
+      'سبحان الله وبحمده سبحان الله العظيم أستغفر الله العظيم وأتوب إليه لا إله إلا الله وحده لا شريك له له الملك وله الحمد كله';
 }

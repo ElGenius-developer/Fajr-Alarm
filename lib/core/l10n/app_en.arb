@@ -13,6 +13,50 @@
   "navSettings": "Settings",
   "navChallenge": "Proof-of-Action Challenge",
   "navAlarm": "Fajr Alarm",
-  "navOnboarding": "Setup"
+  "navOnboarding": "Setup",
+  "challengeTitle": "Proof-of-Action Challenge",
+  "challengePhotoInstruction": "Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.",
+  "challengeTiltValid": "Standing angle OK ({degrees}°)",
+  "@challengeTiltValid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTiltInvalid": "Point phone downward between -45° and -90° (current: {degrees}°)",
+  "@challengeTiltInvalid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeCapturePhoto": "Capture Live Photo",
+  "challengeToggleTorch": "Toggle Flash",
+  "challengeVerifying": "Verifying...",
+  "challengeVerifiedSuccess": "Challenge completed! Alarm dismissed.",
+  "challengeRejectedDefault": "Verification failed. Please stand on the prayer rug and try again.",
+  "challengeOfflineFallbackNotice": "Offline mode active. Complete the fallback challenge.",
+  "challengeBarcodeTitle": "Bathroom Barcode Challenge",
+  "challengeBarcodeInstruction": "Walk to the bathroom and scan your registered product barcode.",
+  "challengeBarcodeMismatch": "Scanned barcode does not match your registered bathroom product.",
+  "challengeTypingTitle": "Standing Typing Challenge",
+  "challengeTypingInstruction": "Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.",
+  "challengeTypingCounter": "{current} / {target}",
+  "@challengeTypingCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeTypingSubmit": "Verify Text",
+  "challengeTypingMismatch": "Text does not match exactly or is incomplete.",
+  "challengeCameraUnavailable": "Camera unavailable. Switching to Standing Typing Challenge.",
+  "challengeAdhkarPrompt": "SubhanAllah wa bihamdihi, SubhanAllahil Azeem, Astaghfirullah al-Azeem wa atubu ilayhi, La ilaha illa Allah wahdahu now."
 }
 
