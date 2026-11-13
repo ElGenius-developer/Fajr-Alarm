@@ -13,6 +13,33 @@
   "navSettings": "Settings",
   "navChallenge": "Proof-of-Action Challenge",
   "navAlarm": "Fajr Alarm",
-  "navOnboarding": "Setup"
+  "navOnboarding": "Setup",
+  "scheduleTitle": "Fajr Schedule",
+  "scheduleNextAlarmLabel": "Next Fajr Alarm",
+  "scheduleAlarmDisabled": "Alarm is disabled",
+  "scheduleTodayFajrLabel": "Today's Fajr Adhan",
+  "scheduleSunriseLabel": "Sunrise",
+  "scheduleLockWindowActiveBanner": "Pre-Fajr Lock Window active: alarm changes are locked until the challenge is completed.",
+  "scheduleModeRelative": "Relative to Adhan",
+  "scheduleModeManual": "Manual Fixed Time",
+  "scheduleOffsetBefore": "Before Adhan",
+  "scheduleOffsetAt": "At Adhan",
+  "scheduleOffsetAfter": "After Adhan",
+  "scheduleOffsetMinutesLabel": "{minutes} min",
+  "@scheduleOffsetMinutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleLocationLabel": "Location",
+  "scheduleCalculationMethodLabel": "Calculation Method",
+  "schedule30DayTitle": "30-Day Rolling Schedule",
+  "scheduleRecalculateButton": "Recalculate 30-Day Schedule",
+  "scheduleEnableSwitchLabel": "Enable Fajr Alarm",
+  "scheduleManualTimeLabel": "Manual Alarm Time",
+  "scheduleEmptyState": "No cached prayer schedule found. Tap recalculate to generate 30 days offline.",
+  "scheduleErrorLockWindow": "Cannot modify alarm during Pre-Fajr Lock Window (T - 30m)."
 }
 

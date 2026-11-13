@@ -13,6 +13,33 @@
   "navSettings": "الإعدادات",
   "navChallenge": "تحدي إثبات الفعل",
   "navAlarm": "منبه الفجر",
-  "navOnboarding": "الإعداد الأولي"
+  "navOnboarding": "الإعداد الأولي",
+  "scheduleTitle": "جدول صلاة الفجر",
+  "scheduleNextAlarmLabel": "منبه الفجر القادم",
+  "scheduleAlarmDisabled": "المنبه متوقف",
+  "scheduleTodayFajrLabel": "أذان الفجر اليوم",
+  "scheduleSunriseLabel": "الشروق",
+  "scheduleLockWindowActiveBanner": "نافذة القفل قبل الفجر مفعّلة: تعديل المنبه مقفول حتى إتمام التحدي.",
+  "scheduleModeRelative": "نسبي لأذان الفجر",
+  "scheduleModeManual": "وقت يدوي ثابت",
+  "scheduleOffsetBefore": "قبل الأذان",
+  "scheduleOffsetAt": "عند الأذان",
+  "scheduleOffsetAfter": "بعد الأذان",
+  "scheduleOffsetMinutesLabel": "{minutes} دقيقة",
+  "@scheduleOffsetMinutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleLocationLabel": "الموقع",
+  "scheduleCalculationMethodLabel": "طريقة الحساب",
+  "schedule30DayTitle": "جدول الـ 30 يوماً القادمة",
+  "scheduleRecalculateButton": "إعادة حساب جدول 30 يوماً",
+  "scheduleEnableSwitchLabel": "تفعيل منبه الفجر",
+  "scheduleManualTimeLabel": "وقت المنبه اليدوي",
+  "scheduleEmptyState": "لا يوجد جدول مواقيت محفوظ. اضغط لإعادة الحساب أوفلاين لـ 30 يوماً.",
+  "scheduleErrorLockWindow": "لا يمكن تعديل المنبه خلال نافذة القفل قبل الفجر (30 دقيقة قبل الموعد)."
 }
 
