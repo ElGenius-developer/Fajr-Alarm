@@ -24,6 +24,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Fajr Alarm uses AlarmKit to ring reliably for Fajr prayer even when your iPhone is muted or locked.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Fajr Alarm uses the camera to verify you are standing on your prayer rug or scanning your bathroom barcode.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
