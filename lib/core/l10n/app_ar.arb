@@ -1,0 +1,18 @@
+{
+  "@@locale": "ar",
+  "appTitle": "منبه الفجر",
+  "commonRetry": "إعادة المحاولة",
+  "commonCancel": "إلغاء",
+  "commonSave": "حفظ",
+  "commonContinue": "متابعة",
+  "commonBack": "رجوع",
+  "commonSkip": "تخطي الآن",
+  "commonDone": "تم",
+  "commonErrorGeneric": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "navSchedule": "المواقيت",
+  "navSettings": "الإعدادات",
+  "navChallenge": "تحدي إثبات الفعل",
+  "navAlarm": "منبه الفجر",
+  "navOnboarding": "الإعداد الأولي"
+}
+
