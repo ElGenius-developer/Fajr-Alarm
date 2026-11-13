@@ -463,6 +463,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid value.'**
   String get settingsErrorValidation;
+
+  /// No description provided for @alarmRingingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr Alarm'**
+  String get alarmRingingTitle;
+
+  /// No description provided for @alarmStatusIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Scheduled'**
+  String get alarmStatusIdle;
+
+  /// No description provided for @alarmStatusLockedPreFajr.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Fajr Lock Window Active'**
+  String get alarmStatusLockedPreFajr;
+
+  /// No description provided for @alarmStatusRingingInitial.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for Fajr!'**
+  String get alarmStatusRingingInitial;
+
+  /// No description provided for @alarmStatusSnoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed — 5 Minutes'**
+  String get alarmStatusSnoozed;
+
+  /// No description provided for @alarmStatusRingingRelentless.
+  ///
+  /// In en, this message translates to:
+  /// **'Relentless Ringing — Wake Up!'**
+  String get alarmStatusRingingRelentless;
+
+  /// No description provided for @alarmStatusChallengeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge in Progress'**
+  String get alarmStatusChallengeActive;
+
+  /// No description provided for @alarmStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Fajr Alarm Completed'**
+  String get alarmStatusCompleted;
+
+  /// No description provided for @alarmStatusVacationFrozen.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation Mode Active'**
+  String get alarmStatusVacationFrozen;
+
+  /// No description provided for @alarmSnoozeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze (5 min)'**
+  String get alarmSnoozeButton;
+
+  /// No description provided for @alarmStartChallengeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Proof-of-Action Challenge'**
+  String get alarmStartChallengeButton;
+
+  /// No description provided for @alarmEmergencyHoldButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold 60s for Emergency Override'**
+  String get alarmEmergencyHoldButton;
+
+  /// No description provided for @alarmEmergencyMutedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio muted — keep holding ({seconds}s left)'**
+  String alarmEmergencyMutedHint(int seconds);
+
+  /// No description provided for @alarmEmergencyReleasedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Released early — timer reset and alarm resumed.'**
+  String get alarmEmergencyReleasedError;
+
+  /// No description provided for @alarmEmergencyNoQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'No emergency overrides remaining this month.'**
+  String get alarmEmergencyNoQuota;
+
+  /// No description provided for @alarmDryRunBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Dry-Run Test Alarm'**
+  String get alarmDryRunBadge;
+
+  /// No description provided for @alarmSnoozeCountdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Next ring in {time}'**
+  String alarmSnoozeCountdown(String time);
+
+  /// No description provided for @alarmRelentlessLoopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ringing every 1 minute until challenge is completed'**
+  String get alarmRelentlessLoopHint;
+
+  /// No description provided for @alarmEmergencyRemainingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency overrides left: {count}'**
+  String alarmEmergencyRemainingCount(int count);
 }
 
 class _AppLocalizationsDelegate
