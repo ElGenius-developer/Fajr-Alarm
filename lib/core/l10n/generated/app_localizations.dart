@@ -301,6 +301,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot modify alarm during Pre-Fajr Lock Window (T - 30m).'**
   String get scheduleErrorLockWindow;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsKpisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Local-Only KPIs & Streak'**
+  String get settingsKpisTitle;
+
+  /// No description provided for @settingsCurrentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get settingsCurrentStreak;
+
+  /// No description provided for @settingsLongestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get settingsLongestStreak;
+
+  /// No description provided for @settingsStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String settingsStreakDays(int count);
+
+  /// No description provided for @settingsStreakFrozenBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Frozen (Vacation)'**
+  String get settingsStreakFrozenBadge;
+
+  /// No description provided for @settingsCompletionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Rate'**
+  String get settingsCompletionRate;
+
+  /// No description provided for @settingsAvgTimeToWake.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Time-to-Wake'**
+  String get settingsAvgTimeToWake;
+
+  /// No description provided for @settingsMinutesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String settingsMinutesValue(String minutes);
+
+  /// No description provided for @settingsLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguageTitle;
+
+  /// No description provided for @settingsLanguageArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get settingsLanguageArabic;
+
+  /// No description provided for @settingsLanguageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingsLanguageEnglish;
+
+  /// No description provided for @settingsVacationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation Mode'**
+  String get settingsVacationTitle;
+
+  /// No description provided for @settingsVacationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Fajr alarms with Streak Freeze for a fixed number of days.'**
+  String get settingsVacationSubtitle;
+
+  /// No description provided for @settingsVacationDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (days)'**
+  String get settingsVacationDurationLabel;
+
+  /// No description provided for @settingsVacationActivateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Vacation Mode'**
+  String get settingsVacationActivateButton;
+
+  /// No description provided for @settingsVacationActiveUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Active until {date}'**
+  String settingsVacationActiveUntil(String date);
+
+  /// No description provided for @settingsEmergencyQuotaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Emergency Override Quota'**
+  String get settingsEmergencyQuotaTitle;
+
+  /// No description provided for @settingsEmergencyQuotaRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{remaining} of {total} remaining this month'**
+  String settingsEmergencyQuotaRemaining(int remaining, int total);
+
+  /// No description provided for @settingsDryRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'10-Second Dry-Run Alarm'**
+  String get settingsDryRunTitle;
+
+  /// No description provided for @settingsDryRunSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test alarm audio, lock screen, and camera without affecting your streak.'**
+  String get settingsDryRunSubtitle;
+
+  /// No description provided for @settingsDryRunButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Alarm Now (10s)'**
+  String get settingsDryRunButton;
+
+  /// No description provided for @settingsDryRunScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Dry-run alarm scheduled for 10 seconds from now.'**
+  String get settingsDryRunScheduled;
+
+  /// No description provided for @settingsLockWindowNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Fajr Lock Window active (T - 30m): alarm, quota, and vacation changes are locked.'**
+  String get settingsLockWindowNotice;
+
+  /// No description provided for @settingsErrorLockWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Action blocked during the 30-minute Pre-Fajr Lock Window.'**
+  String get settingsErrorLockWindow;
+
+  /// No description provided for @settingsErrorQuotaExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly emergency override quota exceeded.'**
+  String get settingsErrorQuotaExceeded;
+
+  /// No description provided for @settingsErrorValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid value.'**
+  String get settingsErrorValidation;
 }
 
 class _AppLocalizationsDelegate
