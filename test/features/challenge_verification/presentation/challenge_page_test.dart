@@ -76,16 +76,16 @@ void main() {
       );
       expect(captureButton.onPressed, isNull);
 
-      // Emit valid standing tilt (-60°)
-      tiltController.add(Right(TiltAngleReading.fromPitch(-60.0)));
+      // Emit valid standing tilt (5°)
+      tiltController.add(Right(TiltAngleReading.fromPitch(5.0)));
       await tester.pump(Duration.zero);
       await tester.pump();
 
       captureButton = tester.widget<FilledButton>(find.byType(FilledButton));
       expect(captureButton.onPressed, isNotNull);
 
-      // Emit invalid flat tilt (-10°)
-      tiltController.add(Right(TiltAngleReading.fromPitch(-10.0)));
+      // Emit invalid flat/steep tilt (-45°)
+      tiltController.add(Right(TiltAngleReading.fromPitch(-45.0)));
       await tester.pump(Duration.zero);
       await tester.pump();
 
@@ -121,7 +121,7 @@ void main() {
       when(() => repository.hasRegisteredBathroomBarcode())
           .thenAnswer((_) async => const Right(true));
       when(() => repository.getCurrentTiltAngle())
-          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-60.0)));
+          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(5.0)));
       when(
         () => repository.verifyPrayerRugPhoto(
           imageBytes: any(named: 'imageBytes'),
@@ -139,7 +139,7 @@ void main() {
       await tester.pump();
       expect(cubit.state.isTorchOn, isTrue);
 
-      tiltController.add(Right(TiltAngleReading.fromPitch(-60.0)));
+      tiltController.add(Right(TiltAngleReading.fromPitch(5.0)));
       await tester.pump(Duration.zero);
       await tester.pump();
 

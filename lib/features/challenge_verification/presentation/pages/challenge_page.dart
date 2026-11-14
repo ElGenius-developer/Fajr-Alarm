@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -147,10 +148,20 @@ class _ChallengePageState extends State<ChallengePage> {
     }
   }
 
+  Future<void> _disposePhotoCamera({bool updateUi = true}) async {
+    final CameraController? controller = _cameraController;
+    _cameraController = null;
+    if (updateUi && mounted && _cameraInitialized) {
+      setState(() => _cameraInitialized = false);
+    } else {
+      _cameraInitialized = false;
+    }
+    await controller?.dispose();
+  }
+
   @override
   void dispose() {
-    _cameraController?.dispose();
-    _scannerController?.dispose();
+    unawaited(_disposePhotoCamera(updateUi: false));
     super.dispose();
   }
 
@@ -160,6 +171,10 @@ class _ChallengePageState extends State<ChallengePage> {
 
     return BlocConsumer<ChallengeCubit, ChallengeState>(
       listener: (BuildContext context, ChallengeState state) {
+        if (state.mode != ChallengeMode.photoVision &&
+            _cameraController != null) {
+          unawaited(_disposePhotoCamera());
+        }
         if (state.status == ChallengeStatus.verified) {
           widget.onChallengeCompleted?.call();
         }
@@ -216,7 +231,7 @@ class _ChallengePageState extends State<ChallengePage> {
                         l10n: l10n,
                         state: state,
                         scannerOverride: widget.scannerOverride,
-                        onControllerCreated: (MobileScannerController ctrl) {
+                        onControllerCreated: (MobileScannerController? ctrl) {
                           _scannerController = ctrl;
                         },
                         onBarcodeDetected: (String code) {
@@ -307,7 +322,14 @@ class _TiltStatusIndicator extends StatelessWidget {
     final bool valid = reading?.isWithinStandingRange ?? false;
     final double pitch = reading?.pitchDegrees ?? 0.0;
     final String degrees = pitch.toStringAsFixed(0);
-    final double progress = ((-pitch) / 90.0).clamp(0.0, 1.0);
+    final double distance = pitch < TiltAngleReading.minValidPitchDegrees
+        ? (TiltAngleReading.minValidPitchDegrees - pitch)
+        : (pitch > TiltAngleReading.maxValidPitchDegrees
+              ? (pitch - TiltAngleReading.maxValidPitchDegrees)
+              : 0.0);
+    final double progress = valid
+        ? 1.0
+        : (1.0 - (distance / 65.0)).clamp(0.0, 1.0);
     final Color signalColor = valid ? tokens.emeraldSignal : tokens.clayError;
 
     return Container(
@@ -529,7 +551,7 @@ class _BathroomBarcodeView extends StatefulWidget {
   final AppLocalizations l10n;
   final ChallengeState state;
   final Widget? scannerOverride;
-  final ValueChanged<MobileScannerController> onControllerCreated;
+  final ValueChanged<MobileScannerController?> onControllerCreated;
   final ValueChanged<String> onBarcodeDetected;
 
   @override
@@ -537,13 +559,26 @@ class _BathroomBarcodeView extends StatefulWidget {
 }
 
 class _BathroomBarcodeViewState extends State<_BathroomBarcodeView> {
-  late final MobileScannerController _controller;
+  MobileScannerController? _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = MobileScannerController();
-    widget.onControllerCreated(_controller);
+    if (widget.scannerOverride == null) {
+      _controller = MobileScannerController();
+      widget.onControllerCreated(_controller);
+    }
+  }
+
+  @override
+  void dispose() {
+    final MobileScannerController? controller = _controller;
+    _controller = null;
+    widget.onControllerCreated(null);
+    if (controller != null) {
+      unawaited(controller.dispose());
+    }
+    super.dispose();
   }
 
   @override
@@ -564,7 +599,7 @@ class _BathroomBarcodeViewState extends State<_BathroomBarcodeView> {
             child:
                 widget.scannerOverride ??
                 MobileScanner(
-                  controller: _controller,
+                  controller: _controller!,
                   onDetect: (BarcodeCapture capture) {
                     for (final Barcode barcode in capture.barcodes) {
                       final String? value = barcode.rawValue;

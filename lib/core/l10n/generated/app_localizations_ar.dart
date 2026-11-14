@@ -287,7 +287,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get challengePhotoInstruction =>
-      'قف على سجادة الصلاة ووجّه الكاميرا للأسفل نحو قدميك بزاوية (-45° إلى -90°) والتقط صورة حية.';
+      'قف على سجادة الصلاة ووجّه الكاميرا نحو قدميك بزاوية (-15° إلى 25°) والتقط صورة حية.';
 
   @override
   String challengeTiltValid(String degrees) {
@@ -296,7 +296,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String challengeTiltInvalid(String degrees) {
-    return 'وجّه الهاتف للأسفل بين -45° و -90° (الحالية: $degrees°)';
+    return 'اضبط زاوية الهاتف بين -15° و 25° (الحالية: $degrees°)';
   }
 
   @override
@@ -336,7 +336,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get challengeTypingInstruction =>
-      'احمل الهاتف بزاوية الوقوف (-45° إلى -90°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.';
+      'احمل الهاتف بزاوية الوقوف (-15° إلى 25°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.';
 
   @override
   String challengeTypingCounter(int current, int target) {
@@ -681,4 +681,61 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get alarmChallengeRuleHint =>
       'لا يمكن إغلاق المنبّه قبل إتمام تحدي إثبات الفعل.';
+
+  @override
+  String get settingsBarcodeTitle => 'باركود الحمام (البديل الأوفلاين)';
+
+  @override
+  String get settingsBarcodeSubtitle =>
+      'يُستخدم للتحقق من استيقاظك عند انقطاع الإنترنت أو تعذر الاتصال بـ Gemini.';
+
+  @override
+  String settingsBarcodeRegistered(String code) {
+    return 'الباركود المسجل: $code';
+  }
+
+  @override
+  String get settingsBarcodeNotSet => 'لم يتم تسجيل باركود للحمام بعد';
+
+  @override
+  String get settingsBarcodeScanOrEditButton => 'مسح أو تعديل الباركود';
+
+  @override
+  String get settingsBarcodeClearButton => 'حذف الباركود';
+
+  @override
+  String get settingsBarcodeSavedMessage => 'تم حفظ باركود الحمام بنجاح.';
+
+  @override
+  String get settingsBarcodeClearedMessage => 'تم حذف باركود الحمام.';
+
+  @override
+  String get settingsApiKeyTitle => 'مفتاح Gemini API والخصوصية';
+
+  @override
+  String get settingsApiKeyVerified => 'مفتاح API مُفعّل ومحفوظ بأمان';
+
+  @override
+  String get settingsApiKeyNotSet => 'لم يتم إعداد مفتاح Gemini API مفعّل';
+
+  @override
+  String get settingsApiKeyUpdateButton => 'تحديث مفتاح Gemini API';
+
+  @override
+  String get settingsAlarmAndLocationTitle =>
+      'وقت المنبه والموقع وطريقة الحساب';
+
+  @override
+  String get settingsEditLocationMethodButton =>
+      'تعديل المدينة والإحداثيات وطريقة الحساب';
+
+  @override
+  String get settingsPermissionsTitle => 'حالة صلاحيات النظام الإلزامية';
+
+  @override
+  String get settingsVacationDeactivateButton => 'إنهاء وضع الإجازة الآن';
+
+  @override
+  String get settingsAlarmAndLocationSavedMessage =>
+      'تم حفظ إعدادات المنبه والموقع.';
 }

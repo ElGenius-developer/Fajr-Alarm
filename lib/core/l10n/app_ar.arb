@@ -111,7 +111,7 @@
     }
   },
   "challengeTitle": "تحدي إثبات الفعل",
-  "challengePhotoInstruction": "قف على سجادة الصلاة ووجّه الكاميرا للأسفل نحو قدميك بزاوية (-45° إلى -90°) والتقط صورة حية.",
+  "challengePhotoInstruction": "قف على سجادة الصلاة ووجّه الكاميرا نحو قدميك بزاوية (-15° إلى 25°) والتقط صورة حية.",
   "challengeTiltValid": "زاوية الوقوف صحيحة ({degrees}°)",
   "@challengeTiltValid": {
     "placeholders": {
@@ -120,7 +120,7 @@
       }
     }
   },
-  "challengeTiltInvalid": "وجّه الهاتف للأسفل بين -45° و -90° (الحالية: {degrees}°)",
+  "challengeTiltInvalid": "اضبط زاوية الهاتف بين -15° و 25° (الحالية: {degrees}°)",
   "@challengeTiltInvalid": {
     "placeholders": {
       "degrees": {
@@ -138,7 +138,7 @@
   "challengeBarcodeInstruction": "انهض وامشِ إلى الحمام وامسح باركود المنتج المسجل مسبقاً.",
   "challengeBarcodeMismatch": "الباركود الممسوح لا يطابق المنتج المسجل.",
   "challengeTypingTitle": "تحدي الكتابة واقفاً",
-  "challengeTypingInstruction": "احمل الهاتف بزاوية الوقوف (-45° إلى -90°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.",
+  "challengeTypingInstruction": "احمل الهاتف بزاوية الوقوف (-15° إلى 25°) واكتب نص الأذكار من 120 حرفاً بدقة تامة دون لصق.",
   "challengeTypingCounter": "{current} / {target}",
   "@challengeTypingCounter": {
     "placeholders": {
@@ -263,5 +263,29 @@
   "appearanceDesignVelvet": "مخمل منتصف الليل",
   "appearanceDesignVelvetDesc": "ليلي مخملي عميق ومدار ذهبي وردي",
   "challengeRamOnlyBadge": "في الذاكرة فقط • يُحذف خلال < 500ms",
-  "alarmChallengeRuleHint": "لا يمكن إغلاق المنبّه قبل إتمام تحدي إثبات الفعل."
+  "alarmChallengeRuleHint": "لا يمكن إغلاق المنبّه قبل إتمام تحدي إثبات الفعل.",
+  "settingsBarcodeTitle": "باركود الحمام (البديل الأوفلاين)",
+  "settingsBarcodeSubtitle": "يُستخدم للتحقق من استيقاظك عند انقطاع الإنترنت أو تعذر الاتصال بـ Gemini.",
+  "settingsBarcodeRegistered": "الباركود المسجل: {code}",
+  "@settingsBarcodeRegistered": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsBarcodeNotSet": "لم يتم تسجيل باركود للحمام بعد",
+  "settingsBarcodeScanOrEditButton": "مسح أو تعديل الباركود",
+  "settingsBarcodeClearButton": "حذف الباركود",
+  "settingsBarcodeSavedMessage": "تم حفظ باركود الحمام بنجاح.",
+  "settingsBarcodeClearedMessage": "تم حذف باركود الحمام.",
+  "settingsApiKeyTitle": "مفتاح Gemini API والخصوصية",
+  "settingsApiKeyVerified": "مفتاح API مُفعّل ومحفوظ بأمان",
+  "settingsApiKeyNotSet": "لم يتم إعداد مفتاح Gemini API مفعّل",
+  "settingsApiKeyUpdateButton": "تحديث مفتاح Gemini API",
+  "settingsAlarmAndLocationTitle": "وقت المنبه والموقع وطريقة الحساب",
+  "settingsEditLocationMethodButton": "تعديل المدينة والإحداثيات وطريقة الحساب",
+  "settingsPermissionsTitle": "حالة صلاحيات النظام الإلزامية",
+  "settingsVacationDeactivateButton": "إنهاء وضع الإجازة الآن",
+  "settingsAlarmAndLocationSavedMessage": "تم حفظ إعدادات المنبه والموقع."
 }

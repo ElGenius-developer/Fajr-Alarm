@@ -48,11 +48,11 @@ void main() {
 
       final Future<TiltAngleReading> nextReading = dataSource
           .getCurrentTiltAngle();
-      controller.add(AccelerometerEvent(0, 6.93, 6.93, DateTime.now()));
+      controller.add(AccelerometerEvent(0, 0, 9.8, DateTime.now()));
       final TiltAngleReading reading = await nextReading;
 
       expect(reading.isWithinStandingRange, isTrue);
-      expect(reading.pitchDegrees, closeTo(-45.0, 0.5));
+      expect(reading.pitchDegrees, closeTo(0.0, 0.1));
       await controller.close();
     });
   });
@@ -206,7 +206,7 @@ void main() {
         final sub = repository.watchTiltAngle().listen((either) {
           either.fold((_) {}, readings.add);
         });
-        accelController.add(AccelerometerEvent(0, 6.93, 6.93, DateTime.now()));
+        accelController.add(AccelerometerEvent(0, 0, 9.8, DateTime.now()));
         await Future<void>.delayed(Duration.zero);
         expect(readings, hasLength(1));
         expect(readings.first.isWithinStandingRange, isTrue);
