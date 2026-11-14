@@ -1,6 +1,7 @@
 # Fajr-Alarm Session History
 
 <!-- Newest entries on top. Format: - YYYY-MM-DD: <topic> → <filename> -->
+- 2026-11-15: PR #14 merge (d3f4c9e), AlarmKit ringing, [-15,25] tilt, full Settings UI, iPhone deploy → 2026-11-15_alarmkit-tilt-settings-and-pr14-merge.md
 - 2026-11-14: PR #12 merge (55a2130), barcode scan, Quiet Dawn icon, iPhone Release deploy, and tracker update → 2026-11-14_ui-polish-quiet-dawn-icon-and-device-deploy.md
 - 2026-11-14: PR #11 QA fixes, 234 tests (>81% layer cov), Hydrogen PASS, Argon APPROVE, and merge → 2026-11-14_qa-fixes-argon-approve-and-merge.md
 - 2026-11-14: v1.0 phases 0–7, Cairo prayer fix, 7 Light/Dark themes, and Google Stitch MCP setup → 2026-11-14_v1-build-themes-and-stitch-mcp.md

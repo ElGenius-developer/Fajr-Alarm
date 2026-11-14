@@ -4,6 +4,13 @@
 <!-- Do not edit manually. Rebuilt via /rebuild-digest. -->
 <!-- Updated automatically by /save-session (Step 2.5). -->
 
+## 2026-11-15 | alarmkit-tilt-settings-and-pr14-merge
+keywords: 15.0°, 25.0, d3f4c9e, main, ios/Runner/AlarmKitManager.swift, FajrOpenChallengeIntent, alarmUpdates, lib/features/challenge_verification, tilt_angle_reading.dart, tilt_sensor_datasource.dart, verify_standing_typing_usecase.dart, challenge_page.dart, challenge_cubit.dart, lib/features/settings_and_streak, settings_page.dart, settings_extended_cards.dart
+decisions: Standing tilt pitch range changed to `[-15.0°, 25.0°]` — `[45°, 90°]` prevented users from aiming the phone downward toward their feet... | No `DEVELOPMENT_TEAM` in `project.pbxproj` — pass `DEVELOPMENT_TEAM=J52H7284YY CODE_SIGN_STYLE=Automatic` exclusively on `... | Shared `BarcodeScannerInput` & `location_method_helpers.dart` — eliminate duplication between Onboarding/Schedule and the extended Settings s...
+files: AlarmKitManager.swift, barcode_scanner_input.dart, location_method_helpers.dart
+status: in-progress
+---
+
 ## 2026-11-14 | v1-build-themes-and-stitch-mcp
 keywords: feat/fajr-alarm-v1, 2b2bf12, lib/main.dart, lib/core/theme/app_theme.dart, lib/core/theme/appearance_sheet.dart, lib/core/l10n/app_{ar,en}.arb, lib/features/prayer_schedule/data/repositories/prayer_schedule_repository_impl.dart, lib/features/prayer_schedule/presentation/pages/prayer_schedule_page.dart, lib/features/settings_and_streak/domain/entities/user_settings.dart, data/datasources/settings_local_data_source.dart, presentation/cubit/settings_cubit.dart, presentation/pages/settings_page.dart, gemini/antigravity/mcp_config.json, gemini/config/mcp_config.json, AppDesignStyle
 decisions: 7 selectable `AppDesignStyle` presets + `ThemeMode` persisted in `UserSettings` (`Hive` backward-compatible `reader.availableBytes > 0`) — lets user preview and choose a flagship design direction live without breakin... | Streamable HTTP (`serverUrl` + `X-Goog-Api-Key`) for Google Stitch MCP — `gcloud` is not installed on this machine, and `browser-use` confirmed Antigr...
