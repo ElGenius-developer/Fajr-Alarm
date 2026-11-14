@@ -4,7 +4,7 @@ import 'package:fajr_alarm/features/challenge_verification/domain/entities/tilt_
 import 'package:sensors_plus/sensors_plus.dart';
 
 /// Reads accelerometer data via `sensors_plus` and computes downward pitch
-/// angle in degrees (`-45°` to `-90°` indicates standing POV orientation).
+/// angle in degrees (`-15°` to `25°` indicates standing POV orientation).
 class TiltSensorDataSource {
   TiltSensorDataSource({this._accelerometerStream});
 
@@ -15,9 +15,9 @@ class TiltSensorDataSource {
 
   /// Computes pitch in degrees from accelerometer axes `(x, y, z)`.
   ///
-  /// - Flat screen-up (`y = 0, z = +9.8`): `0°` (invalid)
-  /// - Tilted 45° downward (`y = +6.93, z = +6.93`): `-45°` (valid boundary)
-  /// - Vertical downward (`y = +9.8, z = 0`): `-90°` (valid boundary)
+  /// - Screen-up / shallow forward tilt (`y = 0, z = +9.8`): `0°` (within `-15°..25°`)
+  /// - Steep tilt (`y = +6.93, z = +6.93`): `-45°` (outside standing range)
+  /// - Vertical (`y = +9.8, z = 0`): `-90°` (outside standing range)
   static double calculatePitchDegrees(double x, double y, double z) {
     if (y == 0 && z == 0) {
       return 0.0;

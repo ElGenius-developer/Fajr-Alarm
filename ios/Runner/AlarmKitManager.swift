@@ -17,11 +17,13 @@ import SwiftUI
 struct OpenFajrChallengeIntent: LiveActivityIntent {
   static var title: LocalizedStringResource = "Open Fajr Challenge"
   static var openAppWhenRun: Bool = true
+  static var supportedModes: IntentModes = .foreground(.immediate)
 
   @MainActor
   func perform() async throws -> some IntentResult {
+    UserDefaults.standard.set(true, forKey: AlarmKitManager.pendingTriggerDefaultsKey)
     NotificationCenter.default.post(
-      name: Notification.Name("com.elgenius.fajralarm.openChallenge"),
+      name: AlarmKitManager.openChallengeNotificationName,
       object: nil
     )
     return .result()
@@ -38,6 +40,11 @@ struct FajrAlarmMetadata: AlarmMetadata {}
 final class AlarmKitManager {
   static let channelName = "com.elgenius.fajralarm/alarm_platform"
   static let permissionsChannelName = "com.elgenius.fajralarm/onboarding_permissions"
+  static let pendingTriggerDefaultsKey = "fajr_alarm_pending_trigger"
+  static let openChallengeNotificationName = Notification.Name(
+    "com.elgenius.fajralarm.openChallenge"
+  )
+
   private static let cascadeIdsDefaultsKey = "fajr_alarm_cascade_ids"
   private static let lastDryRunDefaultsKey = "fajr_alarm_last_is_dry_run"
 
@@ -48,37 +55,147 @@ final class AlarmKitManager {
 
   private var audioPlayer: AVAudioPlayer?
   private var isMuted = false
+  private var isRinging = false
   private weak var methodChannel: FlutterMethodChannel?
   private var pendingTrigger: [String: Any]?
+  private var handledAlertingAlarmIds: Set<UUID> = []
+  private var alarmUpdatesTask: Task<Void, Never>?
   private var openChallengeObserver: NSObjectProtocol?
+  private var didBecomeActiveObserver: NSObjectProtocol?
+  private var audioInterruptionObserver: NSObjectProtocol?
 
   init() {
     openChallengeObserver = NotificationCenter.default.addObserver(
-      forName: Notification.Name("com.elgenius.fajralarm.openChallenge"),
+      forName: Self.openChallengeNotificationName,
       object: nil,
       queue: .main
     ) { [weak self] _ in
       self?.handleOpenChallengeNotification()
     }
+
+    didBecomeActiveObserver = NotificationCenter.default.addObserver(
+      forName: UIApplication.didBecomeActiveNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] _ in
+      self?.deliverPendingTriggerIfActive()
+    }
+
+    audioInterruptionObserver = NotificationCenter.default.addObserver(
+      forName: AVAudioSession.interruptionNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] notification in
+      self?.handleAudioSessionInterruption(notification)
+    }
+
+    #if canImport(AlarmKit)
+    if #available(iOS 26.0, *) {
+      alarmUpdatesTask = Task { @MainActor [weak self] in
+        for await alarms in AlarmManager.shared.alarmUpdates {
+          guard let self, !Task.isCancelled else { break }
+          self.handleAlarmUpdates(alarms)
+        }
+      }
+    }
+    #endif
   }
 
   deinit {
+    alarmUpdatesTask?.cancel()
     if let observer = openChallengeObserver {
+      NotificationCenter.default.removeObserver(observer)
+    }
+    if let observer = didBecomeActiveObserver {
+      NotificationCenter.default.removeObserver(observer)
+    }
+    if let observer = audioInterruptionObserver {
       NotificationCenter.default.removeObserver(observer)
     }
   }
 
   func attachChannel(_ channel: FlutterMethodChannel) {
     methodChannel = channel
+    deliverPendingTriggerIfActive()
   }
 
   private func handleOpenChallengeNotification() {
+    UserDefaults.standard.set(true, forKey: Self.pendingTriggerDefaultsKey)
     let isDryRun = UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
-    let payload: [String: Any] = ["isDryRun": isDryRun]
-    if let channel = methodChannel {
-      channel.invokeMethod("onAlarmTriggered", arguments: payload)
-    } else {
-      pendingTrigger = payload
+    pendingTrigger = ["isDryRun": isDryRun]
+    if UIApplication.shared.applicationState == .active && methodChannel != nil {
+      deliverPendingTriggerIfActive()
+    }
+  }
+
+  #if canImport(AlarmKit)
+  @available(iOS 26.0, *)
+  @MainActor
+  private func handleAlarmUpdates(_ alarms: [Alarm]) {
+    let newlyAlerting = alarms.filter {
+      $0.state == .alerting && !handledAlertingAlarmIds.contains($0.id)
+    }
+    guard !newlyAlerting.isEmpty else {
+      return
+    }
+    for alarm in newlyAlerting {
+      handledAlertingAlarmIds.insert(alarm.id)
+    }
+    UserDefaults.standard.set(true, forKey: Self.pendingTriggerDefaultsKey)
+    if UIApplication.shared.applicationState == .active {
+      for alarm in newlyAlerting {
+        try? AlarmManager.shared.stop(id: alarm.id)
+      }
+      deliverPendingTriggerIfActive()
+    }
+  }
+
+  @available(iOS 26.0, *)
+  private func stopCurrentlyAlertingAlarms() -> Bool {
+    let alarms = (try? AlarmManager.shared.alarms) ?? []
+    var foundAlerting = false
+    for alarm in alarms where alarm.state == .alerting {
+      foundAlerting = true
+      handledAlertingAlarmIds.insert(alarm.id)
+      try? AlarmManager.shared.stop(id: alarm.id)
+    }
+    return foundAlerting
+  }
+  #endif
+
+  private func takePendingTriggerPayload() -> [String: Any]? {
+    let hadPendingFlag = UserDefaults.standard.bool(forKey: Self.pendingTriggerDefaultsKey)
+    let hadInMemoryTrigger = pendingTrigger != nil
+    var hadAlertingAlarm = false
+    #if canImport(AlarmKit)
+    if #available(iOS 26.0, *) {
+      hadAlertingAlarm = stopCurrentlyAlertingAlarms()
+    }
+    #endif
+    guard hadPendingFlag || hadInMemoryTrigger || hadAlertingAlarm else {
+      return nil
+    }
+    pendingTrigger = nil
+    UserDefaults.standard.set(false, forKey: Self.pendingTriggerDefaultsKey)
+    let isDryRun = UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
+    return ["isDryRun": isDryRun]
+  }
+
+  private func deliverPendingTriggerIfActive() {
+    guard
+      UIApplication.shared.applicationState == .active,
+      let channel = methodChannel,
+      let payload = takePendingTriggerPayload()
+    else {
+      return
+    }
+    channel.invokeMethod("onAlarmTriggered", arguments: payload) { [weak self] callbackResult in
+      if let callbackResult,
+         !(callbackResult is NSNull),
+         !(callbackResult is FlutterError) {
+        self?.pendingTrigger = payload
+        UserDefaults.standard.set(true, forKey: Self.pendingTriggerDefaultsKey)
+      }
     }
   }
 
@@ -121,6 +238,9 @@ final class AlarmKitManager {
     case "unmuteRingingAudio":
       isMuted = false
       audioPlayer?.volume = 1.0
+      if isRinging && audioPlayer?.isPlaying != true {
+        audioPlayer?.play()
+      }
       result(nil)
 
     case "enableScreenPinning",
@@ -134,13 +254,26 @@ final class AlarmKitManager {
       result(true)
 
     case "consumePendingAlarmTrigger":
-      let trigger = pendingTrigger
-      pendingTrigger = nil
-      result(trigger)
+      result(takePendingTriggerPayload())
 
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+
+  private static func isArabicPreferredLanguage() -> Bool {
+    Locale.preferredLanguages.first?.hasPrefix("ar") == true
+  }
+
+  private static func localizedAlarmTitle(isDryRun: Bool) -> String {
+    if isArabicPreferredLanguage() {
+      return isDryRun ? "منبه الفجر التجريبي" : "منبه صلاة الفجر"
+    }
+    return isDryRun ? "Fajr Dry-Run Alarm" : "Fajr Prayer Alarm"
+  }
+
+  private static func localizedChallengeButtonTitle() -> String {
+    isArabicPreferredLanguage() ? "بدء التحدي" : "Open Challenge"
   }
 
   private func scheduleAlarmCascade(
@@ -150,40 +283,54 @@ final class AlarmKitManager {
   ) {
     #if canImport(AlarmKit)
     if #available(iOS 26.0, *) {
-      Task {
+      Task { @MainActor [weak self] in
+        guard let self else { return }
         do {
           let authState = try await AlarmManager.shared.requestAuthorization()
           guard authState == .authorized else {
-            await MainActor.run {
-              result(
-                FlutterError(
-                  code: "PERMISSION_DENIED",
-                  message: "AlarmKit authorization denied",
-                  details: nil
-                )
+            result(
+              FlutterError(
+                code: "PERMISSION_DENIED",
+                message: "AlarmKit authorization denied",
+                details: nil
               )
-            }
+            )
             return
           }
 
-          await cancelStoredCascade()
+          self.cancelStoredCascade()
           UserDefaults.standard.set(isDryRun, forKey: Self.lastDryRunDefaultsKey)
 
           var scheduledIds: [String] = []
+          let title = LocalizedStringResource(
+            stringLiteral: Self.localizedAlarmTitle(isDryRun: isDryRun)
+          )
+          let challengeButton = AlarmButton(
+            text: LocalizedStringResource(
+              stringLiteral: Self.localizedChallengeButtonTitle()
+            ),
+            textColor: .white,
+            systemImageName: "camera.viewfinder"
+          )
+
           for offset in Self.cascadeOffsetsSeconds {
             let fireDate = scheduledAt.addingTimeInterval(offset)
             let alarmId = UUID()
-            let title = isDryRun
-              ? LocalizedStringResource("Fajr Dry-Run Alarm")
-              : LocalizedStringResource("Fajr Prayer Alarm")
-            let alert = AlarmPresentation.Alert(
-              title: title,
-              stopButton: AlarmButton(
-                text: LocalizedStringResource("Open Challenge"),
-                textColor: .white,
-                systemImageName: "camera.viewfinder"
+            let alert: AlarmPresentation.Alert
+            if #available(iOS 26.1, *) {
+              alert = AlarmPresentation.Alert(
+                title: title,
+                secondaryButton: challengeButton,
+                secondaryButtonBehavior: .custom
               )
-            )
+            } else {
+              alert = AlarmPresentation.Alert(
+                title: title,
+                stopButton: challengeButton,
+                secondaryButton: challengeButton,
+                secondaryButtonBehavior: .custom
+              )
+            }
             let attributes = AlarmAttributes<FajrAlarmMetadata>(
               presentation: AlarmPresentation(alert: alert),
               tintColor: .green
@@ -191,6 +338,7 @@ final class AlarmKitManager {
             let config = AlarmManager.AlarmConfiguration(
               schedule: .fixed(fireDate),
               attributes: attributes,
+              stopIntent: OpenFajrChallengeIntent(),
               secondaryIntent: OpenFajrChallengeIntent()
             )
             _ = try await AlarmManager.shared.schedule(id: alarmId, configuration: config)
@@ -198,19 +346,15 @@ final class AlarmKitManager {
           }
 
           UserDefaults.standard.set(scheduledIds, forKey: Self.cascadeIdsDefaultsKey)
-          await MainActor.run {
-            result(nil)
-          }
+          result(nil)
         } catch {
-          await MainActor.run {
-            result(
-              FlutterError(
-                code: "ALARMKIT_ERROR",
-                message: error.localizedDescription,
-                details: nil
-              )
+          result(
+            FlutterError(
+              code: "ALARMKIT_ERROR",
+              message: error.localizedDescription,
+              details: nil
             )
-          }
+          )
         }
       }
       return
@@ -230,12 +374,8 @@ final class AlarmKitManager {
     stopForegroundAudio()
     #if canImport(AlarmKit)
     if #available(iOS 26.0, *) {
-      Task {
-        await cancelStoredCascade()
-        await MainActor.run {
-          result(nil)
-        }
-      }
+      cancelStoredCascade()
+      result(nil)
       return
     }
     #endif
@@ -244,29 +384,144 @@ final class AlarmKitManager {
 
   #if canImport(AlarmKit)
   @available(iOS 26.0, *)
-  private func cancelStoredCascade() async {
+  private func cancelStoredCascade() {
     let stored = UserDefaults.standard.stringArray(forKey: Self.cascadeIdsDefaultsKey) ?? []
     for rawId in stored {
       if let uuid = UUID(uuidString: rawId) {
-        try? await AlarmManager.shared.cancel(id: uuid)
+        try? AlarmManager.shared.stop(id: uuid)
+        try? AlarmManager.shared.cancel(id: uuid)
       }
     }
+    let activeAlarms = (try? AlarmManager.shared.alarms) ?? []
+    for alarm in activeAlarms {
+      try? AlarmManager.shared.stop(id: alarm.id)
+      try? AlarmManager.shared.cancel(id: alarm.id)
+    }
     UserDefaults.standard.removeObject(forKey: Self.cascadeIdsDefaultsKey)
+    UserDefaults.standard.removeObject(forKey: Self.pendingTriggerDefaultsKey)
+    pendingTrigger = nil
+    handledAlertingAlarmIds.removeAll()
   }
   #endif
 
   private func startForegroundAudio() {
-    let session = AVAudioSession.sharedInstance()
-    try? session.setCategory(.playback, mode: .default, options: [])
-    try? session.setActive(true)
+    isRinging = true
     isMuted = false
-    audioPlayer?.volume = 1.0
-    audioPlayer?.play()
+    configurePlaybackSession()
+
+    if audioPlayer == nil {
+      let wavData = Self.makeAlarmToneWavData()
+      if let player = try? AVAudioPlayer(data: wavData, fileTypeHint: AVFileType.wav.rawValue) {
+        player.numberOfLoops = -1
+        audioPlayer = player
+      }
+    }
+
+    guard let player = audioPlayer else {
+      return
+    }
+    player.volume = 1.0
+    player.prepareToPlay()
+    if !player.isPlaying {
+      player.currentTime = 0
+      player.play()
+    }
   }
 
   private func stopForegroundAudio() {
-    audioPlayer?.stop()
+    isRinging = false
     isMuted = false
+    audioPlayer?.stop()
+    audioPlayer?.currentTime = 0
+  }
+
+  private func configurePlaybackSession() {
+    let session = AVAudioSession.sharedInstance()
+    try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+    try? session.setActive(true)
+  }
+
+  private func handleAudioSessionInterruption(_ notification: Notification) {
+    guard
+      isRinging,
+      let userInfo = notification.userInfo,
+      let rawType = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+      let interruptionType = AVAudioSession.InterruptionType(rawValue: rawType),
+      interruptionType == .ended
+    else {
+      return
+    }
+    configurePlaybackSession()
+    audioPlayer?.volume = isMuted ? 0.0 : 1.0
+    if audioPlayer?.isPlaying != true {
+      audioPlayer?.play()
+    }
+  }
+
+  private static func makeAlarmToneWavData() -> Data {
+    let sampleRate: UInt32 = 44_100
+    let durationSeconds = 2.0
+    let totalSamples = Int(Double(sampleRate) * durationSeconds)
+    let numChannels: UInt16 = 1
+    let bitsPerSample: UInt16 = 16
+    let bytesPerSample = Int(bitsPerSample / 8)
+    let dataSize = UInt32(totalSamples * bytesPerSample)
+    let riffChunkSize = UInt32(36) + dataSize
+    let byteRate = sampleRate * UInt32(numChannels) * UInt32(bytesPerSample)
+    let blockAlign = numChannels * UInt16(bytesPerSample)
+
+    var data = Data()
+    data.reserveCapacity(44 + Int(dataSize))
+
+    func appendLittleEndian<T: FixedWidthInteger>(_ value: T) {
+      var little = value.littleEndian
+      withUnsafeBytes(of: &little) { data.append(contentsOf: $0) }
+    }
+
+    data.append(contentsOf: [0x52, 0x49, 0x46, 0x46]) // RIFF
+    appendLittleEndian(riffChunkSize)
+    data.append(contentsOf: [0x57, 0x41, 0x56, 0x45]) // WAVE
+    data.append(contentsOf: [0x66, 0x6D, 0x74, 0x20]) // fmt 
+    appendLittleEndian(UInt32(16))
+    appendLittleEndian(UInt16(1))
+    appendLittleEndian(numChannels)
+    appendLittleEndian(sampleRate)
+    appendLittleEndian(byteRate)
+    appendLittleEndian(blockAlign)
+    appendLittleEndian(bitsPerSample)
+    data.append(contentsOf: [0x64, 0x61, 0x74, 0x61]) // data
+    appendLittleEndian(dataSize)
+
+    let slotDuration = 0.5
+    let pulseDuration = 0.35
+    let fadeDuration = 0.01
+    let maxAmplitude = 0.85
+
+    for i in 0..<totalSamples {
+      let time = Double(i) / Double(sampleRate)
+      let slotIndex = Int(time / slotDuration)
+      let slotTime = time - Double(slotIndex) * slotDuration
+
+      let int16Sample: Int16
+      if slotTime < pulseDuration {
+        let frequency = (slotIndex % 2 == 0) ? 880.0 : 1174.66
+        let envelope: Double
+        if slotTime < fadeDuration {
+          envelope = slotTime / fadeDuration
+        } else if slotTime > pulseDuration - fadeDuration {
+          envelope = max(0.0, (pulseDuration - slotTime) / fadeDuration)
+        } else {
+          envelope = 1.0
+        }
+        let sampleValue = sin(2.0 * Double.pi * frequency * time) * maxAmplitude * envelope
+        int16Sample = Int16(max(-1.0, min(1.0, sampleValue)) * Double(Int16.max))
+      } else {
+        int16Sample = 0
+      }
+      appendLittleEndian(int16Sample)
+    }
+
+    return data
   }
 
   func handleOnboardingPermissions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

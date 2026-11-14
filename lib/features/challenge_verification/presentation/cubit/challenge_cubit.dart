@@ -247,8 +247,10 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       NetworkFailure() => true,
       QuotaExceededFailure() => true,
       ApiFailure(:final int? statusCode) =>
-        statusCode == 429 ||
+        statusCode == 400 ||
+            statusCode == 401 ||
             statusCode == 403 ||
+            statusCode == 429 ||
             (statusCode != null && statusCode >= 500),
       _ => false,
     };

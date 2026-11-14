@@ -28,17 +28,18 @@ void main() {
   });
 
   group('TiltAngleReading.fromPitch', () {
-    test('accepts boundaries -45.0° and -90.0° and values between', () {
-      expect(TiltAngleReading.fromPitch(-45.0).isWithinStandingRange, isTrue);
-      expect(TiltAngleReading.fromPitch(-67.5).isWithinStandingRange, isTrue);
-      expect(TiltAngleReading.fromPitch(-90.0).isWithinStandingRange, isTrue);
+    test('accepts boundaries -15.0° and 25.0° and values between', () {
+      expect(TiltAngleReading.fromPitch(-15.0).isWithinStandingRange, isTrue);
+      expect(TiltAngleReading.fromPitch(0.0).isWithinStandingRange, isTrue);
+      expect(TiltAngleReading.fromPitch(10.0).isWithinStandingRange, isTrue);
+      expect(TiltAngleReading.fromPitch(25.0).isWithinStandingRange, isTrue);
     });
 
-    test('rejects angles outside -45.0°..-90.0°', () {
-      expect(TiltAngleReading.fromPitch(-44.9).isWithinStandingRange, isFalse);
-      expect(TiltAngleReading.fromPitch(-90.1).isWithinStandingRange, isFalse);
-      expect(TiltAngleReading.fromPitch(0.0).isWithinStandingRange, isFalse);
-      expect(TiltAngleReading.fromPitch(45.0).isWithinStandingRange, isFalse);
+    test('rejects angles outside -15.0°..25.0°', () {
+      expect(TiltAngleReading.fromPitch(-15.1).isWithinStandingRange, isFalse);
+      expect(TiltAngleReading.fromPitch(25.1).isWithinStandingRange, isFalse);
+      expect(TiltAngleReading.fromPitch(-45.0).isWithinStandingRange, isFalse);
+      expect(TiltAngleReading.fromPitch(60.0).isWithinStandingRange, isFalse);
     });
   });
 
@@ -62,7 +63,7 @@ void main() {
       'returns SensorFailure and zeroes RAM buffer when tilt is invalid',
       () async {
         when(() => repository.getCurrentTiltAngle())
-            .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-20.0)));
+            .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-45.0)));
         final Uint8List buffer = Uint8List.fromList(<int>[10, 20, 30, 40]);
 
         final result = await useCase(imageBytes: buffer, localeCode: 'en');
@@ -84,7 +85,7 @@ void main() {
 
     test('returns verified result and zeroes RAM buffer on success', () async {
       when(() => repository.getCurrentTiltAngle())
-          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-65.0)));
+          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(5.0)));
       const expected = ChallengeVerificationResult(
         isPrayerRugPresent: true,
         areFeetOnRug: true,
@@ -111,7 +112,7 @@ void main() {
 
     test('zeroes RAM buffer even when repository throws', () async {
       when(() => repository.getCurrentTiltAngle())
-          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-65.0)));
+          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(5.0)));
       when(
         () => repository.verifyPrayerRugPhoto(
           imageBytes: any(named: 'imageBytes'),
@@ -173,9 +174,9 @@ void main() {
       },
     );
 
-    test('returns SensorFailure if tilt is outside -45°..-90°', () async {
+    test('returns SensorFailure if tilt is outside -15°..25°', () async {
       when(() => repository.getCurrentTiltAngle())
-          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-10.0)));
+          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-45.0)));
 
       final result = await useCase(
         typedText: validPrompt,
@@ -190,7 +191,7 @@ void main() {
 
     test('returns Right(false) when typed text does not match', () async {
       when(() => repository.getCurrentTiltAngle())
-          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-60.0)));
+          .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(5.0)));
 
       final result = await useCase(
         typedText: '${'a' * 119}b',
@@ -203,7 +204,7 @@ void main() {
       'returns Right(true) on exact 120-char match with valid tilt',
       () async {
         when(() => repository.getCurrentTiltAngle())
-            .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(-75.0)));
+            .thenAnswer((_) async => Right(TiltAngleReading.fromPitch(10.0)));
         when(
           () => repository.verifyStandingTyping(
             typedText: validPrompt,
