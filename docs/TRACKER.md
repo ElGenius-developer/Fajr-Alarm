@@ -58,6 +58,13 @@ git history on `main`.
   passed 234/234 unit and widget tests (`90.97%` domain coverage, `87.21%` data
   repository coverage, `81.36%` bloc/cubit coverage), earned Hydrogen
   `QA_VERDICT: PASS` and Argon `VERDICT: APPROVE`, and merged PR #11 into `main`.
+- [x] **UX polish, live barcode scanner, Quiet Dawn icon, and physical device deploy (`55a2130`, PR #12)**
+  Added live `MobileScanner` onboarding scan UI, locale-aware English/Arabic
+  typography refinements, single-line `SegmentedButton` labels, updated Arabic
+  escalation copy, installed full-bleed Quiet Dawn iOS/Android icons, captured
+  12 dark/light AR/EN screenshots in `docs/screenshots/`, passed 238/238 tests,
+  merged PR #12 into `main`, and installed and launched a Release build over
+  Wi-Fi on a physical `iPhone 16 Pro Max` (`iOS 27.2.1`).
 
 ---
 
@@ -117,6 +124,22 @@ before distributing store builds.
 
 These initiatives require separate design review, architecture approval, and
 dedicated feature branches before any implementation begins.
+
+### Onboarding BYOK quick-launch button (next version)
+
+Improve Step 3 (`PrivacyKeyStepView`) onboarding so users who do not yet have a
+Gemini API key can generate one directly without leaving setup manually.
+
+- **Status:** `[ ] Scheduled for next version (v1.1)`
+- **Target surface:** `lib/features/onboarding/presentation/widgets/privacy_key_step_view.dart`
+  and `lib/features/onboarding/presentation/pages/onboarding_page.dart`
+- **Scope:**
+  1. [ ] Add a localized **Get Key from Google AI Studio** action button
+     (`ar` and `en` in `.arb` files) that launches
+     `https://aistudio.google.com/apikey` in the system browser.
+  2. [ ] Expose an injectable URL-launching abstraction (either zero-dependency
+     `openExternalUrl` on existing Android/iOS channels or approved
+     `url_launcher`) with graceful error feedback and widget/unit tests.
 
 ### Interactive step-by-step user guide (`tutorial_coach_mark`)
 
