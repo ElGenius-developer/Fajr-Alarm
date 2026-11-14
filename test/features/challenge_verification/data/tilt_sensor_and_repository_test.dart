@@ -7,6 +7,7 @@ import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/features/challenge_verification/data/datasources/gemini_vision_remote_datasource.dart';
 import 'package:fajr_alarm/features/challenge_verification/data/datasources/tilt_sensor_datasource.dart';
 import 'package:fajr_alarm/features/challenge_verification/data/repositories/challenge_verification_repository_impl.dart';
+import 'package:fajr_alarm/features/challenge_verification/domain/entities/challenge_verification_result.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/tilt_angle_reading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -212,5 +213,148 @@ void main() {
         await sub.cancel();
       },
     );
+
+    test('returns verified result and maps GeminiApiException/Timeout/unexpected/generic Dio', () async {
+      const verifiedResult = ChallengeVerificationResult(
+        isPrayerRugPresent: true,
+        areFeetOnRug: true,
+        isRealLivePhoto: true,
+        verified: true,
+        rejectionReason: '',
+      );
+      when(
+        () => remote.verifyPrayerRugPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: 'en',
+        ),
+      ).thenAnswer((_) async => verifiedResult);
+
+      final ok = await repository.verifyPrayerRugPhoto(
+        imageBytes: Uint8List.fromList(<int>[1, 2]),
+        localeCode: 'en',
+      );
+      expect(ok.getOrElse((_) => throw Exception()), verifiedResult);
+
+      when(
+        () => remote.verifyPrayerRugPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: 'en',
+        ),
+      ).thenThrow(
+        const GeminiApiException(message: 'bad key', statusCode: 401),
+      );
+      final apiErr = await repository.verifyPrayerRugPhoto(
+        imageBytes: Uint8List.fromList(<int>[1]),
+        localeCode: 'en',
+      );
+      apiErr.fold(
+        (f) => expect(f, isA<ApiFailure>()),
+        (_) => fail('Expected ApiFailure'),
+      );
+
+      when(
+        () => remote.verifyPrayerRugPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: 'en',
+        ),
+      ).thenThrow(TimeoutException('slow'));
+      final timeoutErr = await repository.verifyPrayerRugPhoto(
+        imageBytes: Uint8List.fromList(<int>[1]),
+        localeCode: 'en',
+      );
+      timeoutErr.fold(
+        (f) => expect(f, isA<NetworkFailure>()),
+        (_) => fail('Expected NetworkFailure'),
+      );
+
+      when(
+        () => remote.verifyPrayerRugPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: 'en',
+        ),
+      ).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(path: ''),
+          type: DioExceptionType.cancel,
+        ),
+      );
+      final dioOther = await repository.verifyPrayerRugPhoto(
+        imageBytes: Uint8List.fromList(<int>[1]),
+        localeCode: 'en',
+      );
+      dioOther.fold(
+        (f) => expect(f, isA<NetworkFailure>()),
+        (_) => fail('Expected NetworkFailure'),
+      );
+
+      when(
+        () => remote.verifyPrayerRugPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: 'en',
+        ),
+      ).thenThrow(StateError('boom'));
+      final unexpectedErr = await repository.verifyPrayerRugPhoto(
+        imageBytes: Uint8List.fromList(<int>[1]),
+        localeCode: 'en',
+      );
+      unexpectedErr.fold(
+        (f) => expect(f, isA<UnexpectedFailure>()),
+        (_) => fail('Expected UnexpectedFailure'),
+      );
+    });
+
+    test('maps getCurrentTiltAngle, watchTiltAngle errors, and secure storage failures', () async {
+      final futureReading = repository.getCurrentTiltAngle();
+      accelController.add(AccelerometerEvent(0, 6.93, 6.93, DateTime.now()));
+      final readingResult = await futureReading;
+      expect(readingResult.isRight(), isTrue);
+
+      final errors = <Failure>[];
+      final errSub = repository.watchTiltAngle().listen((either) {
+        either.fold(errors.add, (_) {});
+      });
+      accelController.addError(StateError('sensor error'));
+      await Future<void>.delayed(Duration.zero);
+      expect(errors, hasLength(1));
+      expect(errors.first, isA<SensorFailure>());
+      await errSub.cancel();
+
+      final closedRepo = ChallengeVerificationRepositoryImpl(
+        remoteDataSource: remote,
+        tiltSensorDataSource: TiltSensorDataSource(
+          accelerometerStream: const Stream<AccelerometerEvent>.empty(),
+        ),
+        secureStorage: secureStorage,
+      );
+      final closedTilt = await closedRepo.getCurrentTiltAngle();
+      closedTilt.fold(
+        (f) => expect(f, isA<SensorFailure>()),
+        (_) => fail('Expected SensorFailure'),
+      );
+
+      final timeoutRepo = ChallengeVerificationRepositoryImpl(
+        remoteDataSource: remote,
+        tiltSensorDataSource: TiltSensorDataSource(
+          accelerometerStream: Stream<AccelerometerEvent>.error(
+            TimeoutException('sensor timeout'),
+          ),
+        ),
+        secureStorage: secureStorage,
+      );
+      final timeoutTilt = await timeoutRepo.getCurrentTiltAngle();
+      timeoutTilt.fold(
+        (f) => expect(f, isA<SensorFailure>()),
+        (_) => fail('Expected SensorFailure'),
+      );
+
+      when(() => secureStorage.read(key: any(named: 'key')))
+          .thenThrow(Exception('keychain err'));
+      final verifyErr = await repository.verifyBathroomBarcode(
+        scannedBarcode: '123',
+      );
+      final hasErr = await repository.hasRegisteredBathroomBarcode();
+      expect(verifyErr.isLeft(), isTrue);
+      expect(hasErr.isLeft(), isTrue);
+    });
   });
 }

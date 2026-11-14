@@ -3,7 +3,7 @@ import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce/hive.dart';
 
-/// Local persistence contract for onboarding state (`hive_ce`) and BYOK key (`FlutterSecureStorage`).
+/// Local persistence contract for onboarding state (`hive_ce`) and secure credentials/keys (`FlutterSecureStorage`).
 abstract interface class OnboardingLocalDataSource {
   Future<OnboardingStateEntity> getOnboardingState();
   Future<OnboardingStateEntity> saveOnboardingState(
@@ -11,6 +11,7 @@ abstract interface class OnboardingLocalDataSource {
   );
   Future<void> saveGeminiKey(String apiKey);
   Future<String?> getGeminiKey();
+  Future<void> saveBathroomBarcode(String? barcode);
 }
 
 /// Default implementation backed by `hive_ce` and `FlutterSecureStorage`.
@@ -22,6 +23,7 @@ final class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
 
   static const String stateKey = 'onboarding_state';
   static const String geminiApiKeyStorageKey = 'fajr_alarm_gemini_api_key';
+  static const String bathroomBarcodeStorageKey = 'bathroom_barcode';
 
   final Box<OnboardingStateModel> _stateBox;
   final FlutterSecureStorage _secureStorage;
@@ -51,5 +53,18 @@ final class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
   @override
   Future<String?> getGeminiKey() async {
     return _secureStorage.read(key: geminiApiKeyStorageKey);
+  }
+
+  @override
+  Future<void> saveBathroomBarcode(String? barcode) async {
+    final String? normalized = barcode?.trim();
+    if (normalized == null || normalized.isEmpty) {
+      await _secureStorage.delete(key: bathroomBarcodeStorageKey);
+      return;
+    }
+    await _secureStorage.write(
+      key: bathroomBarcodeStorageKey,
+      value: normalized,
+    );
   }
 }

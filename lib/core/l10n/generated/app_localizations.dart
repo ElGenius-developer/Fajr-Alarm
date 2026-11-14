@@ -434,11 +434,23 @@ abstract class AppLocalizations {
   /// **'Test Alarm Now (10s)'**
   String get settingsDryRunButton;
 
+  /// No description provided for @settingsDryRunCancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Dry-Run Alarm'**
+  String get settingsDryRunCancelButton;
+
   /// No description provided for @settingsDryRunScheduled.
   ///
   /// In en, this message translates to:
   /// **'Dry-run alarm scheduled for 10 seconds from now.'**
   String get settingsDryRunScheduled;
+
+  /// No description provided for @settingsDryRunCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Dry-run alarm cancelled.'**
+  String get settingsDryRunCancelled;
 
   /// No description provided for @settingsLockWindowNotice.
   ///

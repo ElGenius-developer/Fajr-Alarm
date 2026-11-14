@@ -1,3 +1,4 @@
+import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
 import 'package:fajr_alarm/features/onboarding/domain/repositories/onboarding_repository.dart';
@@ -131,6 +132,43 @@ void main() {
 
       expect(find.byKey(const Key('onboarding_error_banner')), findsOneWidget);
       verifyNever(() => repository.validateGeminiKey(any()));
+    },
+  );
+
+  testWidgets(
+    'Step 3 shows API key invalid message instead of consent error when consent is checked',
+    (WidgetTester tester) async {
+      when(() => repository.validateGeminiKey('AIzaInvalid')).thenAnswer(
+        (_) async => const Left(Failure.validation(message: 'Bad key')),
+      );
+
+      await cubit.goToStep(2);
+      await cubit.setPrivacyConsent(true);
+      await tester.pumpWidget(buildTestApp());
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+        find.byKey(const Key('onboarding_api_key_field')),
+        'AIzaInvalid',
+      );
+      final Finder testKeyButton = find.byKey(
+        const Key('onboarding_test_key_button'),
+      );
+      await tester.ensureVisible(testKeyButton);
+      await tester.tap(testKeyButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('onboarding_error_banner')), findsOneWidget);
+      expect(
+        find.text('API key validation failed. Check your key and connection.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'You must accept the privacy disclosure before saving your API key.',
+        ),
+        findsNothing,
+      );
     },
   );
 

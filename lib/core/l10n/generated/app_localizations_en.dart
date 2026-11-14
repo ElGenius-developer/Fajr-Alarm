@@ -194,8 +194,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDryRunButton => 'Test Alarm Now (10s)';
 
   @override
+  String get settingsDryRunCancelButton => 'Cancel Dry-Run Alarm';
+
+  @override
   String get settingsDryRunScheduled =>
       'Dry-run alarm scheduled for 10 seconds from now.';
+
+  @override
+  String get settingsDryRunCancelled => 'Dry-run alarm cancelled.';
 
   @override
   String get settingsLockWindowNotice =>

@@ -48,6 +48,7 @@ import 'package:fajr_alarm/features/settings_and_streak/domain/entities/user_set
 import 'package:fajr_alarm/features/settings_and_streak/domain/repositories/settings_and_streak_repository.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/activate_vacation_mode_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/auto_resume_vacation_usecase.dart';
+import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/cancel_dry_run_alarm_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/consume_emergency_quota_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/get_settings_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/get_streak_stats_usecase.dart';
@@ -140,7 +141,7 @@ Future<void> initDependencies({String? hivePath}) async {
       () => PrayerScheduleLocalDataSourceImpl(Hive),
     )
     ..registerLazySingleton<PrayerScheduleRepository>(
-      () => PrayerScheduleRepositoryImpl(sl()),
+      () => PrayerScheduleRepositoryImpl(sl(), alarmPlatformRepository: sl()),
     )
     ..registerLazySingleton<Calculate30DayFajrScheduleUseCase>(
       () => Calculate30DayFajrScheduleUseCase(sl()),
@@ -199,6 +200,17 @@ Future<void> initDependencies({String? hivePath}) async {
             isDryRun: true,
           );
         },
+        onCancelDryRunAlarm: () async {
+          final cancelResult = await sl<AlarmPlatformRepository>()
+              .cancelAllAlarms();
+          if (cancelResult.isLeft()) {
+            return cancelResult;
+          }
+          await sl<RescheduleTomorrowFajrUseCase>()(
+            completedAt: DateTime.now(),
+          );
+          return cancelResult;
+        },
       ),
     )
     ..registerLazySingleton<GetSettingsUseCase>(() => GetSettingsUseCase(sl()))
@@ -223,6 +235,9 @@ Future<void> initDependencies({String? hivePath}) async {
     ..registerLazySingleton<TriggerDryRunAlarmUseCase>(
       () => TriggerDryRunAlarmUseCase(sl()),
     )
+    ..registerLazySingleton<CancelDryRunAlarmUseCase>(
+      () => CancelDryRunAlarmUseCase(sl()),
+    )
     ..registerLazySingleton<SettingsCubit>(
       () => SettingsCubit(
         getSettings: sl(),
@@ -231,6 +246,12 @@ Future<void> initDependencies({String? hivePath}) async {
         activateVacationMode: sl(),
         autoResumeVacation: sl(),
         triggerDryRunAlarm: sl(),
+        cancelDryRunAlarm: sl(),
+        nextAlarmProvider: () async {
+          final result = await sl<PrayerScheduleRepository>()
+              .getNextScheduledAlarm();
+          return result.getOrElse((_) => null);
+        },
       ),
     );
 
@@ -272,6 +293,8 @@ Future<void> initDependencies({String? hivePath}) async {
         remoteDataSource: sl(),
         tiltSensorDataSource: sl(),
         secureStorage: sl(),
+        barcodeStorageKey:
+            OnboardingLocalDataSourceImpl.bathroomBarcodeStorageKey,
       ),
     )
     ..registerLazySingleton<VerifyPrayerRugPhotoUseCase>(
@@ -315,6 +338,7 @@ Future<void> initDependencies({String? hivePath}) async {
         localDataSource: sl(),
         geminiKeyValidatorDataSource: sl(),
         permissionsDataSource: sl(),
+        prayerScheduleRepository: sl(),
       ),
     )
     ..registerLazySingleton<SaveLocationUseCase>(

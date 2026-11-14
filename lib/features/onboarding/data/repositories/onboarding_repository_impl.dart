@@ -4,6 +4,8 @@ import 'package:fajr_alarm/features/onboarding/data/datasources/onboarding_local
 import 'package:fajr_alarm/features/onboarding/data/datasources/onboarding_permissions_data_source.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
 import 'package:fajr_alarm/features/onboarding/domain/repositories/onboarding_repository.dart';
+import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_config.dart';
+import 'package:fajr_alarm/features/prayer_schedule/domain/repositories/prayer_schedule_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -13,11 +15,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     required this._localDataSource,
     required this._geminiKeyValidatorDataSource,
     required this._permissionsDataSource,
+    this._prayerScheduleRepository,
   });
 
   final OnboardingLocalDataSource _localDataSource;
   final GeminiKeyValidatorDataSource _geminiKeyValidatorDataSource;
   final OnboardingPermissionsDataSource _permissionsDataSource;
+  final PrayerScheduleRepository? _prayerScheduleRepository;
 
   @override
   Future<Either<Failure, OnboardingStateEntity>> getOnboardingState() async {
@@ -45,6 +49,29 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
         cityName: cityName,
       );
       await _localDataSource.saveOnboardingState(updated);
+
+      if (_prayerScheduleRepository != null) {
+        final Either<Failure, FajrAlarmConfig> configResult =
+            await _prayerScheduleRepository.getAlarmConfig();
+        final Failure? syncFailure = await configResult.fold(
+          (Failure failure) async => failure,
+          (FajrAlarmConfig config) async {
+            final Either<Failure, Unit> saveResult =
+                await _prayerScheduleRepository.saveAlarmConfig(
+                  config.copyWith(
+                    latitude: latitude,
+                    longitude: longitude,
+                    cityName: cityName,
+                  ),
+                );
+            return saveResult.fold((Failure f) => f, (_) => null);
+          },
+        );
+        if (syncFailure != null) {
+          return Left<Failure, OnboardingStateEntity>(syncFailure);
+        }
+      }
+
       return Right(updated);
     } catch (e) {
       return Left(Failure.cache(message: e.toString()));
@@ -159,10 +186,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   @override
   Future<Either<Failure, Unit>> registerBathroomBarcode(String? barcode) async {
     try {
+      final String? raw = barcode?.trim();
+      final String? normalized = (raw == null || raw.isEmpty) ? null : raw;
+      await _localDataSource.saveBathroomBarcode(normalized);
       final OnboardingStateEntity current = await _localDataSource
           .getOnboardingState();
       await _localDataSource.saveOnboardingState(
-        current.copyWith(registeredBarcode: barcode),
+        current.copyWith(registeredBarcode: normalized),
       );
       return const Right(unit);
     } catch (e) {

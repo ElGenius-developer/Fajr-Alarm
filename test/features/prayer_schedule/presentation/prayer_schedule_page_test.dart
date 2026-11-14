@@ -17,6 +17,12 @@ class MockPrayerScheduleCubit extends MockCubit<PrayerScheduleState>
 void main() {
   late MockPrayerScheduleCubit mockCubit;
 
+  setUpAll(() {
+    registerFallbackValue(
+      const FajrAlarmConfig(latitude: 30.0444, longitude: 31.2357),
+    );
+  });
+
   setUp(() {
     mockCubit = MockPrayerScheduleCubit();
   });
@@ -108,6 +114,99 @@ void main() {
       expect(find.text('Retry'), findsOneWidget);
       await tester.tap(find.text('Retry'));
       verify(() => mockCubit.loadSchedule()).called(1);
+    });
+
+    testWidgets(
+      'renders offset chips in relative before mode and updates offsetMinutes',
+      (tester) async {
+        const initialConfig = FajrAlarmConfig(
+          latitude: 30.0444,
+          longitude: 31.2357,
+          mode: FajrAlarmMode.relativeToAdhan,
+          offsetDirection: FajrOffsetDirection.before,
+          offsetMinutes: 15,
+        );
+        final today = DateTime.now();
+        final todayFajr = DateTime(today.year, today.month, today.day, 4, 25);
+        when(() => mockCubit.state).thenReturn(
+          PrayerScheduleState.loaded(
+            config: initialConfig,
+            schedules: [
+              PrayerSchedule(
+                date: DateTime(today.year, today.month, today.day),
+                fajrTime: todayFajr,
+                sunriseTime: DateTime(
+                  today.year,
+                  today.month,
+                  today.day,
+                  5,
+                  55,
+                ),
+                latitude: 30.0444,
+                longitude: 31.2357,
+                calculationMethod: 'egyptian',
+                madhab: 'shafi',
+              ),
+            ],
+            nextAlarmTime: todayFajr.subtract(const Duration(minutes: 15)),
+            isWithinLockWindow: false,
+          ),
+        );
+        when(() => mockCubit.updateConfig(any())).thenAnswer((_) async {});
+
+        await tester.pumpWidget(buildTestable(const Locale('en')));
+        await tester.pumpAndSettle();
+
+        final chip30 = find.byKey(const Key('schedule_offset_chip_30'));
+        expect(chip30, findsOneWidget);
+        await tester.ensureVisible(chip30);
+        await tester.tap(chip30);
+        await tester.pump();
+
+        verify(
+          () =>
+              mockCubit.updateConfig(initialConfig.copyWith(offsetMinutes: 30)),
+        ).called(1);
+      },
+    );
+
+    testWidgets('renders manual time picker tile in manualTime mode', (
+      tester,
+    ) async {
+      final today = DateTime.now();
+      const manualConfig = FajrAlarmConfig(
+        latitude: 30.0444,
+        longitude: 31.2357,
+        mode: FajrAlarmMode.manualTime,
+        manualHour: 4,
+        manualMinute: 45,
+      );
+      when(() => mockCubit.state).thenReturn(
+        PrayerScheduleState.loaded(
+          config: manualConfig,
+          schedules: [
+            PrayerSchedule(
+              date: DateTime(today.year, today.month, today.day),
+              fajrTime: DateTime(today.year, today.month, today.day, 4, 20),
+              sunriseTime: DateTime(today.year, today.month, today.day, 5, 50),
+              latitude: 30.0444,
+              longitude: 31.2357,
+              calculationMethod: 'egyptian',
+              madhab: 'shafi',
+            ),
+          ],
+          nextAlarmTime: DateTime(today.year, today.month, today.day, 4, 45),
+          isWithinLockWindow: false,
+        ),
+      );
+
+      await tester.pumpWidget(buildTestable(const Locale('en')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('schedule_manual_time_picker')),
+        findsOneWidget,
+      );
     });
   });
 }

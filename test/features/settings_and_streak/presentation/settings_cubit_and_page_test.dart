@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
@@ -7,6 +9,7 @@ import 'package:fajr_alarm/features/settings_and_streak/domain/entities/vacation
 import 'package:fajr_alarm/features/settings_and_streak/domain/repositories/settings_and_streak_repository.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/activate_vacation_mode_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/auto_resume_vacation_usecase.dart';
+import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/cancel_dry_run_alarm_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/get_settings_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/get_streak_stats_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/trigger_dry_run_alarm_usecase.dart';
@@ -36,7 +39,10 @@ void main() {
     repository = MockSettingsAndStreakRepository();
   });
 
-  SettingsCubit buildCubit({DateTime Function()? nowProvider}) {
+  SettingsCubit buildCubit({
+    DateTime Function()? nowProvider,
+    Future<DateTime?> Function()? nextAlarmProvider,
+  }) {
     return SettingsCubit(
       getSettings: GetSettingsUseCase(repository),
       getStreakStats: GetStreakStatsUseCase(repository),
@@ -44,6 +50,8 @@ void main() {
       activateVacationMode: ActivateVacationModeUseCase(repository),
       autoResumeVacation: AutoResumeVacationUseCase(repository),
       triggerDryRunAlarm: TriggerDryRunAlarmUseCase(repository),
+      cancelDryRunAlarm: CancelDryRunAlarmUseCase(repository),
+      nextAlarmProvider: nextAlarmProvider,
       nowProvider: nowProvider ?? () => fixedNow,
     );
   }
@@ -146,8 +154,52 @@ void main() {
       expect: () => [
         SettingsState(
           dryRunScheduledAt: fixedNow.add(const Duration(seconds: 10)),
+          dryRunJustScheduled: true,
         ),
       ],
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'cancelDryRunAlarm clears active dryRunScheduledAt and sets dryRunCancelled',
+      build: () {
+        when(
+          () => repository.scheduleDryRunAlarm(
+            scheduledAt: any(named: 'scheduledAt'),
+          ),
+        ).thenAnswer((_) async => const Right(unit));
+        when(() => repository.cancelDryRunAlarm())
+            .thenAnswer((_) async => const Right(unit));
+        return buildCubit(
+          nextAlarmProvider: () async => fixedNow.add(const Duration(hours: 5)),
+        );
+      },
+      act: (cubit) async {
+        await cubit.triggerDryRunAlarm();
+        await cubit.cancelDryRunAlarm();
+      },
+      verify: (cubit) {
+        expect(cubit.state.dryRunScheduledAt, isNull);
+        expect(cubit.state.dryRunCancelled, isTrue);
+        verify(() => repository.cancelDryRunAlarm()).called(1);
+      },
+    );
+
+    blocTest<SettingsCubit, SettingsState>(
+      'load uses nextAlarmProvider to detect active T-30m lock window',
+      build: () {
+        when(() => repository.getSettings())
+            .thenAnswer((_) async => const Right(initialSettings));
+        when(() => repository.getStreakStats())
+            .thenAnswer((_) async => const Right(initialStats));
+        return buildCubit(
+          nextAlarmProvider: () async =>
+              fixedNow.add(const Duration(minutes: 10)),
+        );
+      },
+      act: (cubit) => cubit.load(),
+      verify: (cubit) {
+        expect(cubit.state.isWithinLockWindow, isTrue);
+      },
     );
 
     blocTest<SettingsCubit, SettingsState>(
@@ -204,6 +256,8 @@ void main() {
             scheduledAt: any(named: 'scheduledAt'),
           ),
         ).thenAnswer((_) async => const Right(unit));
+        when(() => repository.cancelDryRunAlarm())
+            .thenAnswer((_) async => const Right(unit));
 
         final cubit = buildCubit();
         await cubit.load();
@@ -232,6 +286,19 @@ void main() {
           find.text('Dry-run alarm scheduled for 10 seconds from now.'),
           findsOneWidget,
         );
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+        final cancelButton = find.byKey(
+          const Key('settings_cancel_dry_run_button'),
+        );
+        expect(cancelButton, findsOneWidget);
+        await tester.ensureVisible(cancelButton);
+        await tester.pumpAndSettle();
+        await tester.tap(cancelButton);
+        await tester.pumpAndSettle();
+
+        expect(cancelButton, findsNothing);
+        verify(() => repository.cancelDryRunAlarm()).called(1);
       },
     );
 
@@ -257,5 +324,39 @@ void main() {
       expect(find.text('الإعدادات'), findsOneWidget);
       expect(find.byIcon(Icons.lock_clock), findsOneWidget);
     });
+
+    test(
+      'SettingsCubit does not throw when closed while load is in flight',
+      () async {
+        final settingsCompleter = Completer<Either<Failure, UserSettings>>();
+        when(() => repository.getSettings())
+            .thenAnswer((_) => settingsCompleter.future);
+        when(() => repository.getStreakStats())
+            .thenAnswer((_) async => const Right(StreakStats()));
+
+        final cubit = buildCubit();
+        final future = cubit.load();
+        await cubit.close();
+        settingsCompleter.complete(const Right(UserSettings()));
+        await future;
+      },
+    );
+
+    test(
+      'SettingsCubit does not throw when closed while load is in flight',
+      () async {
+        final settingsCompleter = Completer<Either<Failure, UserSettings>>();
+        when(() => repository.getSettings())
+            .thenAnswer((_) => settingsCompleter.future);
+        when(() => repository.getStreakStats())
+            .thenAnswer((_) async => const Right(StreakStats()));
+
+        final cubit = buildCubit();
+        final future = cubit.load();
+        await cubit.close();
+        settingsCompleter.complete(const Right(UserSettings()));
+        await future;
+      },
+    );
   });
 }

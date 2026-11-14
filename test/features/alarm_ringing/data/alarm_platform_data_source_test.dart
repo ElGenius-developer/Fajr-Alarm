@@ -122,6 +122,43 @@ void main() {
       expect(recordedCalls.single.method, 'requestIgnoreBatteryOptimizations');
     });
 
+    test('consumePendingAlarmTrigger returns pending payload map', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            recordedCalls.add(call);
+            if (call.method == 'consumePendingAlarmTrigger') {
+              return <String, dynamic>{'isDryRun': true};
+            }
+            return null;
+          });
+
+      final payload = await dataSource.consumePendingAlarmTrigger();
+
+      expect(payload, <String, dynamic>{'isDryRun': true});
+      expect(recordedCalls.single.method, 'consumePendingAlarmTrigger');
+    });
+
+    test(
+      'setAlarmTriggeredHandler invokes callback on onAlarmTriggered',
+      () async {
+        bool? receivedDryRun;
+        dataSource.setAlarmTriggeredHandler(({required bool isDryRun}) {
+          receivedDryRun = isDryRun;
+        });
+
+        final ByteData message = const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('onAlarmTriggered', <String, Object?>{
+            'isDryRun': true,
+          }),
+        );
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(channel.name, message, (_) {});
+
+        expect(receivedDryRun, isTrue);
+        dataSource.setAlarmTriggeredHandler(null);
+      },
+    );
+
     test('propagates PlatformException from channel', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {

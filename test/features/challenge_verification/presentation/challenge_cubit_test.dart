@@ -198,5 +198,35 @@ void main() {
         ),
       ],
     );
+
+    test('does not throw when closed while submitPhoto is in flight', () async {
+      final completer =
+          Completer<Either<Failure, ChallengeVerificationResult>>();
+      when(
+        () => verifyPhoto(
+          imageBytes: any(named: 'imageBytes'),
+          localeCode: any(named: 'localeCode'),
+        ),
+      ).thenAnswer((_) => completer.future);
+
+      final cubit = buildCubit();
+      final future = cubit.submitPhoto(
+        imageBytes: Uint8List.fromList(<int>[1, 2]),
+        localeCode: 'en',
+      );
+      await cubit.close();
+      completer.complete(
+        const Right(
+          ChallengeVerificationResult(
+            isPrayerRugPresent: true,
+            areFeetOnRug: true,
+            isRealLivePhoto: true,
+            verified: true,
+            rejectionReason: '',
+          ),
+        ),
+      );
+      await future;
+    });
   });
 }

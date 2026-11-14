@@ -117,5 +117,30 @@ void main() {
         verify(() => mockRepository.save30DaySchedule(any())).called(1);
       },
     );
+
+    test('returns saved overview with actionFailure when saveNextScheduledAlarm fails', () async {
+      final alarmTime = DateTime(2026, 5, 1, 4, 30);
+      when(() => mockRepository.getNextScheduledAlarm())
+          .thenAnswer((_) async => Right(alarmTime));
+      when(() => mockRepository.saveAlarmConfig(any()))
+          .thenAnswer((_) async => const Right(unit));
+      when(() => mockRepository.save30DaySchedule(any()))
+          .thenAnswer((_) async => const Right(unit));
+      when(() => mockRepository.saveNextScheduledAlarm(any())).thenAnswer(
+        (_) async => const Left(Failure.platform(message: 'OS error')),
+      );
+
+      final result = await updateUseCase(
+        newConfig: config.copyWith(offsetMinutes: 10),
+        now: DateTime(2026, 5, 1, 2, 0),
+      );
+
+      result.fold((failure) => fail('Expected Right overview, got $failure'), (
+        overview,
+      ) {
+        expect(overview.config.offsetMinutes, 10);
+        expect(overview.actionFailure, isA<PlatformFailure>());
+      });
+    });
   });
 }

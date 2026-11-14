@@ -1,4 +1,5 @@
 import 'package:fajr_alarm/core/error/failures.dart';
+import 'package:fajr_alarm/features/alarm_ringing/domain/repositories/alarm_platform_repository.dart';
 import 'package:fajr_alarm/features/prayer_schedule/data/datasources/prayer_schedule_local_data_source.dart';
 import 'package:fajr_alarm/features/prayer_schedule/data/models/fajr_alarm_config_hive_model.dart';
 import 'package:fajr_alarm/features/prayer_schedule/data/models/prayer_schedule_hive_model.dart';
@@ -7,11 +8,16 @@ import 'package:fajr_alarm/features/prayer_schedule/domain/entities/prayer_sched
 import 'package:fajr_alarm/features/prayer_schedule/domain/repositories/prayer_schedule_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Repository implementation backed by [PrayerScheduleLocalDataSource].
+/// Repository implementation backed by [PrayerScheduleLocalDataSource] and
+/// optional [AlarmPlatformRepository] for OS alarm scheduling.
 class PrayerScheduleRepositoryImpl implements PrayerScheduleRepository {
-  const PrayerScheduleRepositoryImpl(this._localDataSource);
+  const PrayerScheduleRepositoryImpl(
+    this._localDataSource, {
+    this._alarmPlatformRepository,
+  });
 
   final PrayerScheduleLocalDataSource _localDataSource;
+  final AlarmPlatformRepository? _alarmPlatformRepository;
 
   /// Default Cairo coordinates when no user config has been persisted yet.
   static const FajrAlarmConfig defaultConfig = FajrAlarmConfig(
@@ -91,11 +97,24 @@ class PrayerScheduleRepositoryImpl implements PrayerScheduleRepository {
   ) async {
     try {
       await _localDataSource.saveNextScheduledAlarm(alarmTime);
-      return const Right(unit);
     } catch (e) {
       return Left(
         Failure.cache(message: 'Failed to save next scheduled alarm: $e'),
       );
     }
+
+    final AlarmPlatformRepository? platformRepository =
+        _alarmPlatformRepository;
+    if (platformRepository == null) {
+      return const Right(unit);
+    }
+
+    if (alarmTime != null) {
+      return platformRepository.scheduleAlarm(
+        scheduledAt: alarmTime,
+        isDryRun: false,
+      );
+    }
+    return platformRepository.cancelAllAlarms();
   }
 }

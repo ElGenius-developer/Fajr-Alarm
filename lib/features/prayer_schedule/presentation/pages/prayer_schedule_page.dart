@@ -140,6 +140,18 @@ class _ScheduleLoadedBody extends StatelessWidget {
     final dateFormat = DateFormat.MMMd(locale);
     final cubit = context.read<PrayerScheduleCubit>();
 
+    final now = DateTime.now();
+    PrayerSchedule? todaySchedule;
+    if (schedules.isNotEmpty) {
+      todaySchedule = schedules.firstWhere(
+        (day) =>
+            day.date.year == now.year &&
+            day.date.month == now.month &&
+            day.date.day == now.day,
+        orElse: () => schedules.first,
+      );
+    }
+
     final heroCard = _NextAlarmHeroCard(
       label: l10n.scheduleNextAlarmLabel,
       timeText: nextAlarmTime != null
@@ -152,12 +164,12 @@ class _ScheduleLoadedBody extends StatelessWidget {
           ? null
           : () => _showLocationMethodSheet(context, config, cubit),
       todayFajrLabel: l10n.scheduleTodayFajrLabel,
-      todayFajrText: schedules.isNotEmpty
-          ? timeFormat.format(schedules.first.fajrTime)
+      todayFajrText: todaySchedule != null
+          ? timeFormat.format(todaySchedule.fajrTime)
           : '--:--',
       sunriseLabel: l10n.scheduleSunriseLabel,
-      sunriseText: schedules.isNotEmpty
-          ? timeFormat.format(schedules.first.sunriseTime)
+      sunriseText: todaySchedule != null
+          ? timeFormat.format(todaySchedule.sunriseTime)
           : '--:--',
     );
 
@@ -682,9 +694,82 @@ class _AlarmConfigCard extends StatelessWidget {
                 selected: {config.offsetDirection},
                 onSelectionChanged: isLocked
                     ? null
-                    : (selection) => onConfigChanged(
-                        config.copyWith(offsetDirection: selection.first),
-                      ),
+                    : (selection) {
+                        final direction = selection.first;
+                        final nextMinutes = direction == FajrOffsetDirection.at
+                            ? 0
+                            : (config.offsetMinutes <= 0
+                                  ? 15
+                                  : config.offsetMinutes);
+                        onConfigChanged(
+                          config.copyWith(
+                            offsetDirection: direction,
+                            offsetMinutes: nextMinutes,
+                          ),
+                        );
+                      },
+              ),
+              if (config.offsetDirection != FajrOffsetDirection.at) ...[
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: <int>[5, 10, 15, 20, 30, 45, 60]
+                      .map(
+                        (int minutes) => ChoiceChip(
+                          key: Key('schedule_offset_chip_$minutes'),
+                          label: Text(l10n.scheduleOffsetMinutesLabel(minutes)),
+                          selected: config.offsetMinutes == minutes,
+                          onSelected: isLocked
+                              ? null
+                              : (bool selected) {
+                                  if (selected) {
+                                    onConfigChanged(
+                                      config.copyWith(offsetMinutes: minutes),
+                                    );
+                                  }
+                                },
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ] else ...[
+              const SizedBox(height: 12),
+              ListTile(
+                key: const Key('schedule_manual_time_picker'),
+                contentPadding: EdgeInsetsDirectional.zero,
+                leading: const Icon(Icons.access_time_rounded),
+                title: Text(l10n.scheduleManualTimeLabel),
+                trailing: Text(
+                  TimeOfDay(
+                    hour: config.manualHour,
+                    minute: config.manualMinute,
+                  ).format(context),
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                enabled: !isLocked,
+                onTap: isLocked
+                    ? null
+                    : () async {
+                        final picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                            hour: config.manualHour,
+                            minute: config.manualMinute,
+                          ),
+                        );
+                        if (picked != null && context.mounted) {
+                          onConfigChanged(
+                            config.copyWith(
+                              manualHour: picked.hour,
+                              manualMinute: picked.minute,
+                            ),
+                          );
+                        }
+                      },
               ),
             ],
           ],

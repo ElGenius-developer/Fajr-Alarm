@@ -75,6 +75,36 @@ void main() {
     expect(key, 'AIzaSecret');
   });
 
+  test('writes and deletes bathroom barcode in FlutterSecureStorage', () async {
+    when(
+      () => secureStorage.write(
+        key: OnboardingLocalDataSourceImpl.bathroomBarcodeStorageKey,
+        value: 'BAR-123',
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      () => secureStorage.delete(
+        key: OnboardingLocalDataSourceImpl.bathroomBarcodeStorageKey,
+      ),
+    ).thenAnswer((_) async {});
+
+    await dataSource.saveBathroomBarcode('  BAR-123  ');
+    await dataSource.saveBathroomBarcode(null);
+    await dataSource.saveBathroomBarcode('   ');
+
+    verify(
+      () => secureStorage.write(
+        key: OnboardingLocalDataSourceImpl.bathroomBarcodeStorageKey,
+        value: 'BAR-123',
+      ),
+    ).called(1);
+    verify(
+      () => secureStorage.delete(
+        key: OnboardingLocalDataSourceImpl.bathroomBarcodeStorageKey,
+      ),
+    ).called(2);
+  });
+
   test('OnboardingStateModelAdapter writes and reads all fields via BinaryWriter/BinaryReader', () {
     final OnboardingStateModelAdapter adapter = OnboardingStateModelAdapter();
     expect(adapter.typeId, 30);

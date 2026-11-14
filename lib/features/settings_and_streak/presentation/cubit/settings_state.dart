@@ -16,5 +16,7 @@ abstract class SettingsState with _$SettingsState {
     @Default(false) bool isWithinLockWindow,
     Failure? failure,
     DateTime? dryRunScheduledAt,
+    @Default(false) bool dryRunJustScheduled,
+    @Default(false) bool dryRunCancelled,
   }) = _SettingsState;
 }

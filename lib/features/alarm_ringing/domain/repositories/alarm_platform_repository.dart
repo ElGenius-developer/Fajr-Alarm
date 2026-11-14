@@ -44,4 +44,12 @@ abstract class AlarmPlatformRepository {
 
   /// Requests the system to ignore battery optimizations for this app.
   Future<Either<Failure, Unit>> requestIgnoreBatteryOptimizations();
+
+  /// Returns and clears any pending native alarm-ringing trigger payload.
+  Future<Either<Failure, Map<String, dynamic>?>> consumePendingAlarmTrigger();
+
+  /// Registers or clears a live callback when native alarms start ringing.
+  void listenForAlarmTriggers(
+    void Function({required bool isDryRun})? onTriggered,
+  );
 }

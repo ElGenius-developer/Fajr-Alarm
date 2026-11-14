@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
@@ -302,5 +304,35 @@ void main() {
         isSubmitting: false,
       ),
     ],
+  );
+
+  test(
+    'does not throw when closed while loadOnboarding is in flight',
+    () async {
+      final completer = Completer<Either<Failure, OnboardingStateEntity>>();
+      when(() => repository.getOnboardingState())
+          .thenAnswer((_) => completer.future);
+
+      final OnboardingCubit cubit = buildCubit();
+      final Future<void> future = cubit.loadOnboarding();
+      await cubit.close();
+      completer.complete(const Right(OnboardingStateEntity()));
+      await future;
+    },
+  );
+
+  test(
+    'does not throw when closed while loadOnboarding is in flight',
+    () async {
+      final completer = Completer<Either<Failure, OnboardingStateEntity>>();
+      when(() => repository.getOnboardingState())
+          .thenAnswer((_) => completer.future);
+
+      final OnboardingCubit cubit = buildCubit();
+      final Future<void> future = cubit.loadOnboarding();
+      await cubit.close();
+      completer.complete(const Right(OnboardingStateEntity()));
+      await future;
+    },
   );
 }

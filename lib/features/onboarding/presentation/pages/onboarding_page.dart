@@ -18,7 +18,12 @@ class OnboardingPage extends StatelessWidget {
 
   static const int _totalSteps = 4;
 
-  String _mapFailureMessage(Failure failure, AppLocalizations l10n, int step) {
+  String _mapFailureMessage(
+    Failure failure,
+    AppLocalizations l10n,
+    int step, {
+    bool consentAccepted = false,
+  }) {
     return failure.when(
       cache: (_) => l10n.commonErrorGeneric,
       network: (_) => l10n.onboardingApiKeyInvalidError,
@@ -27,7 +32,11 @@ class OnboardingPage extends StatelessWidget {
       platform: (_) => l10n.onboardingPermGateBlocked,
       validation: (_) {
         if (step == 0) return l10n.onboardingLocationErrorInvalid;
-        if (step == 2) return l10n.onboardingConsentRequiredError;
+        if (step == 2) {
+          return consentAccepted
+              ? l10n.onboardingApiKeyInvalidError
+              : l10n.onboardingConsentRequiredError;
+        }
         return l10n.onboardingIncompleteError;
       },
       sensor: (_) => l10n.commonErrorGeneric,
@@ -97,7 +106,12 @@ class OnboardingPage extends StatelessWidget {
                     MaterialBanner(
                       key: const Key('onboarding_error_banner'),
                       content: Text(
-                        _mapFailureMessage(state.error!, l10n, currentStep),
+                        _mapFailureMessage(
+                          state.error!,
+                          l10n,
+                          currentStep,
+                          consentAccepted: state.entity.privacyConsentAccepted,
+                        ),
                       ),
                       actions: <Widget>[
                         TextButton(

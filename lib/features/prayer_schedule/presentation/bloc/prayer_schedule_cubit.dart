@@ -20,8 +20,10 @@ class PrayerScheduleCubit extends Cubit<PrayerScheduleState> {
 
   /// Loads the persisted config and 30-day rolling schedule.
   Future<void> loadSchedule({DateTime? now}) async {
+    if (isClosed) return;
     emit(const PrayerScheduleState.loading());
     final result = await _loadSchedule(now: now);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(PrayerScheduleState.error(failure: failure)),
       (overview) => emit(
@@ -30,6 +32,7 @@ class PrayerScheduleCubit extends Cubit<PrayerScheduleState> {
           schedules: overview.schedules,
           nextAlarmTime: overview.nextAlarmTime,
           isWithinLockWindow: overview.isWithinLockWindow,
+          actionFailure: overview.actionFailure,
         ),
       ),
     );
@@ -39,6 +42,7 @@ class PrayerScheduleCubit extends Cubit<PrayerScheduleState> {
   Future<void> updateConfig(FajrAlarmConfig newConfig, {DateTime? now}) async {
     final currentState = state;
     final result = await _updateConfig(newConfig: newConfig, now: now);
+    if (isClosed) return;
     result.fold(
       (failure) {
         if (currentState is PrayerScheduleLoaded) {
@@ -53,6 +57,7 @@ class PrayerScheduleCubit extends Cubit<PrayerScheduleState> {
           schedules: overview.schedules,
           nextAlarmTime: overview.nextAlarmTime,
           isWithinLockWindow: overview.isWithinLockWindow,
+          actionFailure: overview.actionFailure,
         ),
       ),
     );
@@ -61,6 +66,7 @@ class PrayerScheduleCubit extends Cubit<PrayerScheduleState> {
   /// Triggers automatic rescheduling for tomorrow's Fajr after `[COMPLETED]`.
   Future<void> rescheduleAfterCompletion({DateTime? completedAt}) async {
     final result = await _rescheduleTomorrow(completedAt: completedAt);
+    if (isClosed) return;
     await result.fold((failure) async {
       final currentState = state;
       if (currentState is PrayerScheduleLoaded) {

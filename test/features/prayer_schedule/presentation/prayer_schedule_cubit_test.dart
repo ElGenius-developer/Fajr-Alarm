@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_config.dart';
@@ -166,5 +168,22 @@ void main() {
         ),
       ],
     );
+
+    test('does not throw if closed while loadSchedule is in flight', () async {
+      final completer = Completer<Either<Failure, PrayerScheduleOverview>>();
+      when(() => mockLoad(now: any(named: 'now')))
+          .thenAnswer((_) => completer.future);
+
+      final cubit = PrayerScheduleCubit(
+        loadSchedule: mockLoad,
+        updateConfig: mockUpdate,
+        rescheduleTomorrow: mockReschedule,
+      );
+
+      final future = cubit.loadSchedule();
+      await cubit.close();
+      completer.complete(Right(overview));
+      await future;
+    });
   });
 }

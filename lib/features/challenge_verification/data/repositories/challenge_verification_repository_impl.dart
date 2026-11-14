@@ -76,14 +76,32 @@ class ChallengeVerificationRepositoryImpl
 
   @override
   Stream<Either<Failure, TiltAngleReading>> watchTiltAngle() {
-    return _tiltSensorDataSource
-        .watchTiltAngle()
-        .map<Either<Failure, TiltAngleReading>>(Right.new)
-        .handleError((Object error) {
-          return Left<Failure, TiltAngleReading>(
-            Failure.sensor(message: error.toString()),
-          );
-        });
+    return _tiltSensorDataSource.watchTiltAngle().transform(
+      StreamTransformer<
+        TiltAngleReading,
+        Either<Failure, TiltAngleReading>
+      >.fromHandlers(
+        handleData:
+            (
+              TiltAngleReading reading,
+              EventSink<Either<Failure, TiltAngleReading>> sink,
+            ) {
+              sink.add(Right<Failure, TiltAngleReading>(reading));
+            },
+        handleError:
+            (
+              Object error,
+              StackTrace stackTrace,
+              EventSink<Either<Failure, TiltAngleReading>> sink,
+            ) {
+              sink.add(
+                Left<Failure, TiltAngleReading>(
+                  Failure.sensor(message: error.toString()),
+                ),
+              );
+            },
+      ),
+    );
   }
 
   @override
