@@ -452,9 +452,9 @@ class _NextAlarmHeroCard extends StatelessWidget {
                                   ? tokens.textPrimary
                                   : tokens.textMuted,
                               fontWeight: isEditorial
-                                  ? FontWeight.w700
+                                  ? FontWeight.w600
                                   : FontWeight.w500,
-                              letterSpacing: -1.0,
+                              letterSpacing: isEditorial ? -0.7 : -0.3,
                             ),
                       ),
                     ),
@@ -629,6 +629,13 @@ class _AlarmConfigCard extends StatelessWidget {
   final bool isLocked;
   final ValueChanged<FajrAlarmConfig> onConfigChanged;
 
+  Widget _segmentLabel(String text) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(text, maxLines: 1, softWrap: false),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -646,7 +653,7 @@ class _AlarmConfigCard extends StatelessWidget {
               title: Text(
                 l10n.scheduleEnableSwitchLabel,
                 style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               value: config.isEnabled,
@@ -658,14 +665,15 @@ class _AlarmConfigCard extends StatelessWidget {
             Divider(color: tokens.borderSubtle, height: 1),
             const SizedBox(height: 14),
             SegmentedButton<FajrAlarmMode>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: FajrAlarmMode.relativeToAdhan,
-                  label: Text(l10n.scheduleModeRelative),
+                  label: _segmentLabel(l10n.scheduleModeRelative),
                 ),
                 ButtonSegment(
                   value: FajrAlarmMode.manualTime,
-                  label: Text(l10n.scheduleModeManual),
+                  label: _segmentLabel(l10n.scheduleModeManual),
                 ),
               ],
               selected: {config.mode},
@@ -677,18 +685,19 @@ class _AlarmConfigCard extends StatelessWidget {
             if (config.mode == FajrAlarmMode.relativeToAdhan) ...[
               const SizedBox(height: 12),
               SegmentedButton<FajrOffsetDirection>(
+                showSelectedIcon: false,
                 segments: [
                   ButtonSegment(
                     value: FajrOffsetDirection.before,
-                    label: Text(l10n.scheduleOffsetBefore),
+                    label: _segmentLabel(l10n.scheduleOffsetBefore),
                   ),
                   ButtonSegment(
                     value: FajrOffsetDirection.at,
-                    label: Text(l10n.scheduleOffsetAt),
+                    label: _segmentLabel(l10n.scheduleOffsetAt),
                   ),
                   ButtonSegment(
                     value: FajrOffsetDirection.after,
-                    label: Text(l10n.scheduleOffsetAfter),
+                    label: _segmentLabel(l10n.scheduleOffsetAfter),
                   ),
                 ],
                 selected: {config.offsetDirection},

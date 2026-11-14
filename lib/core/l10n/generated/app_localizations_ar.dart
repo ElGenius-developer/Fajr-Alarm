@@ -233,7 +233,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get alarmStatusSnoozed => 'غفوة — 5 دقائق';
 
   @override
-  String get alarmStatusRingingRelentless => 'رنّ ملحّ — استيقظ الآن!';
+  String get alarmStatusRingingRelentless => 'رنين متواصل — استيقظ الآن!';
 
   @override
   String get alarmStatusChallengeActive => 'التحدي قيد التنفيذ';
@@ -516,6 +516,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingBarcodeHint => 'امسح أو أدخل باركود المنتج';
+
+  @override
+  String get onboardingScanBarcodeButton => 'مسح الباركود بالكاميرا';
+
+  @override
+  String get onboardingScanBarcodeHint =>
+      'وجّه الكاميرا نحو باركود منتج في الحمام (مثل معجون الأسنان)';
+
+  @override
+  String get onboardingStopScanButton => 'إغلاق الكاميرا';
+
+  @override
+  String get onboardingOrEnterManually => 'أو أدخل الباركود يدوياً';
+
+  @override
+  String onboardingBarcodeScannedBadge(String code) {
+    return 'تم مسح الباركود: $code';
+  }
+
+  @override
+  String get onboardingScannerUnavailable =>
+      'ماسح الكاميرا غير متاح هنا. يمكنك كتابة الرمز بالأسفل.';
+
+  @override
+  String get onboardingToggleFlashTooltip => 'تشغيل أو إيقاف الفلاش';
 
   @override
   String get onboardingRegisterBarcodeButton => 'حفظ الباركود والإنهاء';

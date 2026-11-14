@@ -12,9 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// 4-Step Onboarding page coordinating Location, Permissions Gate, BYOK Consent & Key, and Barcode.
 class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({super.key, this.onCompleted});
+  const OnboardingPage({
+    super.key,
+    this.onCompleted,
+    this.barcodeScannerBuilder,
+  });
 
   final VoidCallback? onCompleted;
+  final BarcodeScannerBuilder? barcodeScannerBuilder;
 
   static const int _totalSteps = 4;
 
@@ -151,6 +156,7 @@ class OnboardingPage extends StatelessWidget {
                     _ => BarcodeStepView(
                       initialBarcode: state.entity.registeredBarcode,
                       isSubmitting: state.isSubmitting,
+                      scannerBuilder: barcodeScannerBuilder,
                       onRegisterBarcode: (String code) =>
                           cubit.registerBarcodeAndComplete(code),
                       onSkip: () => cubit.registerBarcodeAndComplete(null),
