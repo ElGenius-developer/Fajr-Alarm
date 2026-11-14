@@ -1,0 +1,291 @@
+{
+  "@@locale": "en",
+  "appTitle": "Fajr-Alarm",
+  "commonRetry": "Retry",
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonContinue": "Continue",
+  "commonBack": "Back",
+  "commonSkip": "Skip for now",
+  "commonDone": "Done",
+  "commonErrorGeneric": "An unexpected error occurred. Please try again.",
+  "navSchedule": "Schedule",
+  "navSettings": "Settings",
+  "navChallenge": "Proof-of-Action Challenge",
+  "navAlarm": "Fajr Alarm",
+  "navOnboarding": "Setup",
+  "scheduleTitle": "Fajr Schedule",
+  "scheduleNextAlarmLabel": "Next Fajr Alarm",
+  "scheduleAlarmDisabled": "Alarm is disabled",
+  "scheduleTodayFajrLabel": "Today's Fajr Adhan",
+  "scheduleSunriseLabel": "Sunrise",
+  "scheduleLockWindowActiveBanner": "Pre-Fajr Lock Window active: alarm changes are locked until the challenge is completed.",
+  "scheduleModeRelative": "Relative to Adhan",
+  "scheduleModeManual": "Manual Fixed Time",
+  "scheduleOffsetBefore": "Before Adhan",
+  "scheduleOffsetAt": "At Adhan",
+  "scheduleOffsetAfter": "After Adhan",
+  "scheduleOffsetMinutesLabel": "{minutes} min",
+  "@scheduleOffsetMinutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleLocationLabel": "Location",
+  "scheduleCalculationMethodLabel": "Calculation Method",
+  "schedule30DayTitle": "30-Day Rolling Schedule",
+  "scheduleRecalculateButton": "Recalculate 30-Day Schedule",
+  "scheduleEnableSwitchLabel": "Enable Fajr Alarm",
+  "scheduleManualTimeLabel": "Manual Alarm Time",
+  "scheduleEmptyState": "No cached prayer schedule found. Tap recalculate to generate 30 days offline.",
+  "scheduleErrorLockWindow": "Cannot modify alarm during Pre-Fajr Lock Window (T - 30m).",
+  "settingsTitle": "Settings",
+  "settingsKpisTitle": "Local-Only KPIs & Streak",
+  "settingsCurrentStreak": "Current Streak",
+  "settingsLongestStreak": "Longest Streak",
+  "settingsStreakDays": "{count} days",
+  "@settingsStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsStreakFrozenBadge": "Streak Frozen (Vacation)",
+  "settingsCompletionRate": "Completion Rate",
+  "settingsAvgTimeToWake": "Avg. Time-to-Wake",
+  "settingsMinutesValue": "{minutes} min",
+  "@settingsMinutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageArabic": "العربية",
+  "settingsLanguageEnglish": "English",
+  "settingsVacationTitle": "Vacation Mode",
+  "settingsVacationSubtitle": "Pause Fajr alarms with Streak Freeze for a fixed number of days.",
+  "settingsVacationDurationLabel": "Duration (days)",
+  "settingsVacationActivateButton": "Activate Vacation Mode",
+  "settingsVacationActiveUntil": "Active until {date}",
+  "@settingsVacationActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsEmergencyQuotaTitle": "Monthly Emergency Override Quota",
+  "settingsEmergencyQuotaRemaining": "{remaining} of {total} remaining this month",
+  "@settingsEmergencyQuotaRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDryRunTitle": "10-Second Dry-Run Alarm",
+  "settingsDryRunSubtitle": "Test alarm audio, lock screen, and camera without affecting your streak.",
+  "settingsDryRunButton": "Test Alarm Now (10s)",
+  "settingsDryRunCancelButton": "Cancel Dry-Run Alarm",
+  "settingsDryRunScheduled": "Dry-run alarm scheduled for 10 seconds from now.",
+  "settingsDryRunCancelled": "Dry-run alarm cancelled.",
+  "settingsLockWindowNotice": "Pre-Fajr Lock Window active (T - 30m): alarm, quota, and vacation changes are locked.",
+  "settingsErrorLockWindow": "Action blocked during the 30-minute Pre-Fajr Lock Window.",
+  "settingsErrorQuotaExceeded": "Monthly emergency override quota exceeded.",
+  "settingsErrorValidation": "Please enter a valid value.",
+  "alarmRingingTitle": "Fajr Alarm",
+  "alarmStatusIdle": "Alarm Scheduled",
+  "alarmStatusLockedPreFajr": "Pre-Fajr Lock Window Active",
+  "alarmStatusRingingInitial": "Time for Fajr!",
+  "alarmStatusSnoozed": "Snoozed — 5 Minutes",
+  "alarmStatusRingingRelentless": "Relentless Ringing — Wake Up!",
+  "alarmStatusChallengeActive": "Challenge in Progress",
+  "alarmStatusCompleted": "Fajr Alarm Completed",
+  "alarmStatusVacationFrozen": "Vacation Mode Active",
+  "alarmSnoozeButton": "Snooze (5 min)",
+  "alarmStartChallengeButton": "Start Proof-of-Action Challenge",
+  "alarmEmergencyHoldButton": "Hold 60s for Emergency Override",
+  "alarmEmergencyMutedHint": "Audio muted — keep holding ({seconds}s left)",
+  "@alarmEmergencyMutedHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "alarmEmergencyReleasedError": "Released early — timer reset and alarm resumed.",
+  "alarmEmergencyNoQuota": "No emergency overrides remaining this month.",
+  "alarmDryRunBadge": "Dry-Run Test Alarm",
+  "alarmSnoozeCountdown": "Next ring in {time}",
+  "@alarmSnoozeCountdown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "alarmRelentlessLoopHint": "Ringing every 1 minute until challenge is completed",
+  "alarmEmergencyRemainingCount": "Emergency overrides left: {count}",
+  "@alarmEmergencyRemainingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeTitle": "Proof-of-Action Challenge",
+  "challengePhotoInstruction": "Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.",
+  "challengeTiltValid": "Standing angle OK ({degrees}°)",
+  "@challengeTiltValid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTiltInvalid": "Point phone downward between -45° and -90° (current: {degrees}°)",
+  "@challengeTiltInvalid": {
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeCapturePhoto": "Capture Live Photo",
+  "challengeToggleTorch": "Toggle Flash",
+  "challengeVerifying": "Verifying...",
+  "challengeVerifiedSuccess": "Challenge completed! Alarm dismissed.",
+  "challengeRejectedDefault": "Verification failed. Please stand on the prayer rug and try again.",
+  "challengeOfflineFallbackNotice": "Offline mode active. Complete the fallback challenge.",
+  "challengeBarcodeTitle": "Bathroom Barcode Challenge",
+  "challengeBarcodeInstruction": "Walk to the bathroom and scan your registered product barcode.",
+  "challengeBarcodeMismatch": "Scanned barcode does not match your registered bathroom product.",
+  "challengeTypingTitle": "Standing Typing Challenge",
+  "challengeTypingInstruction": "Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.",
+  "challengeTypingCounter": "{current} / {target}",
+  "@challengeTypingCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeTypingSubmit": "Verify Text",
+  "challengeTypingMismatch": "Text does not match exactly or is incomplete.",
+  "challengeCameraUnavailable": "Camera unavailable. Switching to Standing Typing Challenge.",
+  "challengeAdhkarPrompt": "SubhanAllah wa bihamdihi, SubhanAllahil Azeem, Astaghfirullah al-Azeem wa atubu ilayhi, La ilaha illa Allah wahdahu now.",
+  "onboardingTitle": "Fajr-Alarm Setup",
+  "onboardingStepOf": "Step {current} of {total}",
+  "@onboardingStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingStep1Title": "Location & City",
+  "onboardingStep1Subtitle": "Select your city or enter coordinates to calculate Fajr prayer times offline.",
+  "onboardingCityLabel": "City Name",
+  "onboardingCityHint": "e.g., Cairo",
+  "onboardingLatitudeLabel": "Latitude",
+  "onboardingLongitudeLabel": "Longitude",
+  "onboardingPresetCitiesLabel": "Quick Select City",
+  "onboardingCityCairo": "Cairo",
+  "onboardingCityMakkah": "Makkah",
+  "onboardingCityMadinah": "Madinah",
+  "onboardingCityRiyadh": "Riyadh",
+  "onboardingCityIstanbul": "Istanbul",
+  "onboardingCityLondon": "London",
+  "onboardingLocationSaveButton": "Save Location & Continue",
+  "onboardingLocationErrorInvalid": "Please enter a valid city name and coordinates.",
+  "onboardingStep2Title": "Mandatory Permissions Gate",
+  "onboardingStep2Subtitle": "Fajr-Alarm requires these system permissions to ring reliably over your lock screen and verify your wake-up.",
+  "onboardingPermFullScreenTitle": "Full-Screen Lock Bypass",
+  "onboardingPermFullScreenDesc": "Allows the alarm challenge to appear directly over the lock screen.",
+  "onboardingPermBatteryTitle": "Ignore Battery Optimizations",
+  "onboardingPermBatteryDesc": "Prevents the OS from killing the Fajr alarm before dawn.",
+  "onboardingPermCameraTitle": "Camera Access",
+  "onboardingPermCameraDesc": "Required for the live Proof-of-Action prayer rug photo and barcode scan.",
+  "onboardingPermAlarmTitle": "Exact Alarms / AlarmKit",
+  "onboardingPermAlarmDesc": "Schedules exact Fajr wake-up alarms on Android and iOS 26+.",
+  "onboardingPermGranted": "Granted",
+  "onboardingPermMissing": "Required",
+  "onboardingPermRequestButton": "Grant Permissions",
+  "onboardingPermRefreshButton": "Refresh Status",
+  "onboardingPermGateBlocked": "All mandatory permissions must be granted before continuing.",
+  "onboardingStep3Title": "Privacy & Gemini API Key",
+  "onboardingStep3Subtitle": "Fajr-Alarm uses your own Google AI Studio key (BYOK). No servers, no stored photos.",
+  "onboardingPrivacyNoticeTitle": "Privacy & Free Tier Disclosure",
+  "onboardingPrivacyNoticeBody": "Your challenge photos stay in RAM only and are purged immediately (< 500ms) without saving to disk or gallery. However, Google's Gemini API Free Tier may use submitted inputs and outputs to improve Google products and may be reviewed by human reviewers. You can enable billing in your Google AI Studio account to opt out of Google's free-tier data usage.",
+  "onboardingPrivacyConsentCheckbox": "I understand Google's Free Tier terms and explicitly consent to sending live challenge photos to Gemini using my own API key.",
+  "onboardingApiKeyLabel": "Gemini API Key",
+  "onboardingApiKeyHint": "Paste your Google AI Studio key",
+  "onboardingTestKeyButton": "Test & Save Key",
+  "onboardingTestingKey": "Testing key...",
+  "onboardingKeyValidated": "API key verified and saved securely.",
+  "onboardingConsentRequiredError": "You must accept the privacy disclosure before saving your API key.",
+  "onboardingApiKeyInvalidError": "API key validation failed. Check your key and connection.",
+  "onboardingStep4Title": "Bathroom Barcode (Offline Fallback)",
+  "onboardingStep4Subtitle": "Register a product barcode in your bathroom (e.g., toothpaste) as an offline Proof-of-Action fallback.",
+  "onboardingBarcodeLabel": "Barcode Value",
+  "onboardingBarcodeHint": "Scan or enter product barcode",
+  "onboardingRegisterBarcodeButton": "Save Barcode & Finish",
+  "onboardingSkipBarcodeButton": "Skip for now & Finish",
+  "onboardingCompletedMessage": "Setup complete! You are ready for Fajr.",
+  "onboardingIncompleteError": "Please complete all required setup steps first.",
+  "appearanceTitle": "Appearance & Design",
+  "appearanceThemeModeLabel": "Color Mode",
+  "appearanceThemeSystem": "System",
+  "appearanceThemeLight": "Light",
+  "appearanceThemeDark": "Dark",
+  "appearanceDesignLabel": "Visual Design",
+  "appearanceDesignHorizon": "Quiet Dawn (60-30-10)",
+  "appearanceDesignHorizonDesc": "Matte slate & limestone with muted champagne",
+  "appearanceDesignSanctuary": "Emerald Sanctuary",
+  "appearanceDesignSanctuaryDesc": "Deep forest & luminous jade",
+  "appearanceDesignEditorial": "Swiss Editorial",
+  "appearanceDesignEditorialDesc": "Crisp monochrome & vermilion",
+  "scheduleLocationMethodLabel": "City & Method",
+  "scheduleSelectCityTitle": "Select City",
+  "scheduleSelectMethodTitle": "Calculation Method",
+  "cityCairo": "Cairo",
+  "cityAlexandria": "Alexandria",
+  "cityMakkah": "Makkah",
+  "cityMadinah": "Madinah",
+  "cityRiyadh": "Riyadh",
+  "cityDubai": "Dubai",
+  "cityIstanbul": "Istanbul",
+  "cityLondon": "London",
+  "cityNewYork": "New York",
+  "methodEgyptian": "Egyptian General Authority",
+  "methodUmmAlQura": "Umm al-Qura",
+  "methodMuslimWorldLeague": "Muslim World League",
+  "methodNorthAmerica": "ISNA (North America)",
+  "methodKarachi": "Karachi",
+  "methodDubai": "Dubai",
+  "methodTurkey": "Diyanet (Turkey)",
+  "appearanceDesignLiquid": "Liquid Glass",
+  "appearanceDesignLiquidDesc": "Frosted arctic glass & luminous cyan",
+  "appearanceDesignDesert": "Desert Mirage",
+  "appearanceDesignDesertDesc": "Warm terracotta sand & burnished brass",
+  "appearanceDesignNordic": "Nordic Frost",
+  "appearanceDesignNordicDesc": "Scandinavian slate & crisp ice blue",
+  "appearanceDesignVelvet": "Midnight Velvet",
+  "appearanceDesignVelvetDesc": "Nocturnal plum & rose-gold orbit",
+  "challengeRamOnlyBadge": "RAM only • Purged < 500ms",
+  "alarmChallengeRuleHint": "Alarm stays active until Proof-of-Action is verified."
+}
