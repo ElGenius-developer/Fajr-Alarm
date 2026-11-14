@@ -402,13 +402,146 @@ abstract final class AppTheme {
     };
   }
 
+  static const String _softEnglishFont = 'Avenir Next';
+  static const List<String> _softFontFallback = <String>[
+    '.SF UI Rounded',
+    'Plus Jakarta Sans',
+    '.SF UI Text',
+    'Cairo',
+    'sans-serif',
+  ];
+
+  static TextTheme _buildTextTheme(
+    ColorScheme colorScheme,
+    FajrDesignTokens tokens, {
+    required bool isArabic,
+  }) {
+    final Typography typography = Typography.material2021(
+      platform: TargetPlatform.iOS,
+      colorScheme: colorScheme,
+    );
+    final TextTheme scriptTheme = isArabic
+        ? typography.tall
+        : typography.englishLike;
+    final TextTheme base = scriptTheme.merge(
+      colorScheme.brightness == Brightness.dark
+          ? ThemeData.dark().textTheme
+          : ThemeData.light().textTheme,
+    );
+    final String? softFamily = isArabic ? null : _softEnglishFont;
+    final List<String>? fallback = isArabic ? null : _softFontFallback;
+
+    TextStyle? soften(
+      TextStyle? style, {
+      FontWeight? weight,
+      double? letterSpacing,
+      double? height,
+      Color? color,
+    }) {
+      if (style == null) return null;
+      return style.copyWith(
+        fontFamily: softFamily,
+        fontFamilyFallback: fallback,
+        fontWeight: weight ?? style.fontWeight,
+        letterSpacing: letterSpacing ?? style.letterSpacing,
+        height: height ?? style.height,
+        color: color ?? style.color,
+      );
+    }
+
+    return base.copyWith(
+      displayLarge: soften(
+        base.displayLarge,
+        weight: FontWeight.w400,
+        letterSpacing: -0.4,
+        color: tokens.textPrimary,
+      ),
+      displayMedium: soften(
+        base.displayMedium,
+        weight: FontWeight.w400,
+        letterSpacing: -0.3,
+        color: tokens.textPrimary,
+      ),
+      headlineMedium: soften(
+        base.headlineMedium,
+        weight: FontWeight.w500,
+        letterSpacing: -0.1,
+        height: 1.3,
+        color: tokens.textPrimary,
+      ),
+      headlineSmall: soften(
+        base.headlineSmall,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        height: 1.35,
+        color: tokens.textPrimary,
+      ),
+      titleLarge: soften(
+        base.titleLarge,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        height: 1.35,
+        color: tokens.textPrimary,
+      ),
+      titleMedium: soften(
+        base.titleMedium,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        height: 1.4,
+        color: tokens.textPrimary,
+      ),
+      titleSmall: soften(
+        base.titleSmall,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        color: tokens.textPrimary,
+      ),
+      bodyLarge: soften(
+        base.bodyLarge,
+        weight: FontWeight.w400,
+        letterSpacing: 0.0,
+        height: 1.45,
+        color: tokens.textPrimary,
+      ),
+      bodyMedium: soften(
+        base.bodyMedium,
+        weight: FontWeight.w400,
+        letterSpacing: 0.0,
+        height: 1.45,
+        color: tokens.textSecondary,
+      ),
+      bodySmall: soften(
+        base.bodySmall,
+        weight: FontWeight.w400,
+        letterSpacing: 0.0,
+        height: 1.4,
+        color: tokens.textSecondary,
+      ),
+      labelLarge: soften(
+        base.labelLarge,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        color: tokens.textPrimary,
+      ),
+      labelMedium: soften(
+        base.labelMedium,
+        weight: FontWeight.w500,
+        letterSpacing: 0.0,
+        color: tokens.textSecondary,
+      ),
+    );
+  }
+
   static TextStyle tabular(TextStyle? base) {
     return (base ?? const TextStyle()).copyWith(
       fontFeatures: const <FontFeature>[FontFeature.tabularFigures()],
     );
   }
 
-  static ThemeData light([AppDesignStyle style = AppDesignStyle.horizon]) {
+  static ThemeData light([
+    AppDesignStyle style = AppDesignStyle.horizon,
+    bool isArabic = false,
+  ]) {
     final tokens = tokensFor(style, Brightness.light);
     final colorScheme = ColorScheme.light(
       primary: tokens.dawnAccent,
@@ -435,10 +568,17 @@ abstract final class AppTheme {
       outline: tokens.borderSubtle,
       outlineVariant: tokens.borderSubtle,
     );
-    return _buildTheme(colorScheme: colorScheme, tokens: tokens);
+    return _buildTheme(
+      colorScheme: colorScheme,
+      tokens: tokens,
+      isArabic: isArabic,
+    );
   }
 
-  static ThemeData dark([AppDesignStyle style = AppDesignStyle.horizon]) {
+  static ThemeData dark([
+    AppDesignStyle style = AppDesignStyle.horizon,
+    bool isArabic = false,
+  ]) {
     final tokens = tokensFor(style, Brightness.dark);
     final colorScheme = ColorScheme.dark(
       primary: tokens.dawnAccent,
@@ -465,7 +605,11 @@ abstract final class AppTheme {
       outline: tokens.borderSubtle,
       outlineVariant: tokens.borderSubtle,
     );
-    return _buildTheme(colorScheme: colorScheme, tokens: tokens);
+    return _buildTheme(
+      colorScheme: colorScheme,
+      tokens: tokens,
+      isArabic: isArabic,
+    );
   }
 
   static ThemeMode parseThemeMode(String mode) {
@@ -479,12 +623,17 @@ abstract final class AppTheme {
   static ThemeData _buildTheme({
     required ColorScheme colorScheme,
     required FajrDesignTokens tokens,
+    required bool isArabic,
   }) {
     final onPrimary = colorScheme.onPrimary;
+    final textTheme = _buildTextTheme(colorScheme, tokens, isArabic: isArabic);
+    final String? softFamily = isArabic ? null : _softEnglishFont;
+    final List<String>? fallback = isArabic ? null : _softFontFallback;
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: tokens.canvas,
+      textTheme: textTheme,
       extensions: <ThemeExtension<dynamic>>[tokens],
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -493,10 +642,12 @@ abstract final class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         titleTextStyle: TextStyle(
+          fontFamily: softFamily,
+          fontFamilyFallback: fallback,
           color: tokens.textPrimary,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
-          letterSpacing: -0.2,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.0,
         ),
       ),
       cardTheme: CardThemeData(
@@ -519,7 +670,7 @@ abstract final class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
+          minimumSize: const Size(64, 50),
           backgroundColor: tokens.dawnAccent,
           foregroundColor: onPrimary,
           disabledBackgroundColor: tokens.surfaceElevated,
@@ -532,7 +683,7 @@ abstract final class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
+          minimumSize: const Size(64, 50),
           backgroundColor: tokens.dawnAccent,
           foregroundColor: onPrimary,
           disabledBackgroundColor: tokens.surfaceElevated,
@@ -545,7 +696,7 @@ abstract final class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size.fromHeight(48),
+          minimumSize: const Size(64, 48),
           foregroundColor: tokens.textPrimary,
           backgroundColor: tokens.surfaceElevated,
           side: BorderSide(
@@ -581,6 +732,20 @@ abstract final class AppTheme {
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
+          visualDensity: VisualDensity.compact,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          ),
+          textStyle: WidgetStatePropertyAll<TextStyle?>(
+            TextStyle(
+              fontFamily: softFamily,
+              fontFamilyFallback: fallback,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.0,
+            ),
+          ),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
               return tokens.dawnAccent.withValues(alpha: 0.18);

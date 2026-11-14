@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_config.dart';
 import 'package:fajr_alarm/features/prayer_schedule/domain/entities/prayer_schedule.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_cubit.dart';
@@ -208,5 +209,70 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets(
+      'segmented buttons keep English labels single-line under soft AppTheme',
+      (tester) async {
+        final today = DateTime.now();
+        when(() => mockCubit.state).thenReturn(
+          PrayerScheduleState.loaded(
+            config: const FajrAlarmConfig(
+              latitude: 30.0444,
+              longitude: 31.2357,
+            ),
+            schedules: [
+              PrayerSchedule(
+                date: DateTime(today.year, today.month, today.day),
+                fajrTime: DateTime(today.year, today.month, today.day, 4, 50),
+                sunriseTime: DateTime(
+                  today.year,
+                  today.month,
+                  today.day,
+                  6,
+                  19,
+                ),
+                latitude: 30.0444,
+                longitude: 31.2357,
+                calculationMethod: 'egyptian',
+                madhab: 'shafi',
+              ),
+            ],
+            nextAlarmTime: DateTime(today.year, today.month, today.day, 4, 50),
+            isWithinLockWindow: false,
+          ),
+        );
+
+        await tester.binding.setSurfaceSize(const Size(390, 844));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: const Locale('en'),
+            theme: AppTheme.light(AppDesignStyle.horizon),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: BlocProvider<PrayerScheduleCubit>.value(
+              value: mockCubit,
+              child: const PrayerSchedulePage(),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        for (final label in const [
+          'Relative to Adhan',
+          'Manual Fixed Time',
+          'Before Adhan',
+          'At Adhan',
+          'After Adhan',
+        ]) {
+          final textWidget = tester.widget<Text>(find.text(label));
+          expect(textWidget.maxLines, 1);
+          expect(textWidget.softWrap, isFalse);
+          expect(tester.getSize(find.text(label)).height, lessThan(24));
+        }
+      },
+    );
   });
 }

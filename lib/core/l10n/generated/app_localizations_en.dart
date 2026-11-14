@@ -521,6 +521,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingBarcodeHint => 'Scan or enter product barcode';
 
   @override
+  String get onboardingScanBarcodeButton => 'Scan Barcode with Camera';
+
+  @override
+  String get onboardingScanBarcodeHint =>
+      'Point camera at a bathroom item barcode (e.g., toothpaste)';
+
+  @override
+  String get onboardingStopScanButton => 'Close Camera';
+
+  @override
+  String get onboardingOrEnterManually => 'or enter barcode manually';
+
+  @override
+  String onboardingBarcodeScannedBadge(String code) {
+    return 'Scanned: $code';
+  }
+
+  @override
+  String get onboardingScannerUnavailable =>
+      'Camera scanner unavailable here. Enter the code below.';
+
+  @override
+  String get onboardingToggleFlashTooltip => 'Toggle flash';
+
+  @override
   String get onboardingRegisterBarcodeButton => 'Save Barcode & Finish';
 
   @override
