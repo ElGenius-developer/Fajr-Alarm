@@ -24,14 +24,18 @@ class FajrAlarmApp extends StatelessWidget {
       value: sl<SettingsCubit>()..load(),
       child: BlocBuilder<SettingsCubit, SettingsState>(
         buildWhen: (SettingsState previous, SettingsState current) =>
-            previous.settings.locale != current.settings.locale,
+            previous.settings.locale != current.settings.locale ||
+            previous.settings.themeMode != current.settings.themeMode ||
+            previous.settings.designStyle != current.settings.designStyle,
         builder: (BuildContext context, SettingsState state) {
+          final style = AppDesignStyle.fromKey(state.settings.designStyle);
           return MaterialApp.router(
             locale: Locale(state.settings.locale),
             onGenerateTitle: (BuildContext context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: AppTheme.light(),
-            darkTheme: AppTheme.dark(),
+            theme: AppTheme.light(style),
+            darkTheme: AppTheme.dark(style),
+            themeMode: AppTheme.parseThemeMode(state.settings.themeMode),
             localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

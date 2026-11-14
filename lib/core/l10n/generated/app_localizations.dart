@@ -1009,6 +1009,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please complete all required setup steps first.'**
   String get onboardingIncompleteError;
+
+  /// No description provided for @appearanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance & Design'**
+  String get appearanceTitle;
+
+  /// No description provided for @appearanceThemeModeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Mode'**
+  String get appearanceThemeModeLabel;
+
+  /// No description provided for @appearanceThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get appearanceThemeSystem;
+
+  /// No description provided for @appearanceThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get appearanceThemeLight;
+
+  /// No description provided for @appearanceThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get appearanceThemeDark;
+
+  /// No description provided for @appearanceDesignLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual Design'**
+  String get appearanceDesignLabel;
+
+  /// No description provided for @appearanceDesignHorizon.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Dawn (60-30-10)'**
+  String get appearanceDesignHorizon;
+
+  /// No description provided for @appearanceDesignHorizonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Matte slate & limestone with muted champagne'**
+  String get appearanceDesignHorizonDesc;
+
+  /// No description provided for @appearanceDesignSanctuary.
+  ///
+  /// In en, this message translates to:
+  /// **'Emerald Sanctuary'**
+  String get appearanceDesignSanctuary;
+
+  /// No description provided for @appearanceDesignSanctuaryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep forest & luminous jade'**
+  String get appearanceDesignSanctuaryDesc;
+
+  /// No description provided for @appearanceDesignEditorial.
+  ///
+  /// In en, this message translates to:
+  /// **'Swiss Editorial'**
+  String get appearanceDesignEditorial;
+
+  /// No description provided for @appearanceDesignEditorialDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Crisp monochrome & vermilion'**
+  String get appearanceDesignEditorialDesc;
+
+  /// No description provided for @scheduleLocationMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'City & Method'**
+  String get scheduleLocationMethodLabel;
+
+  /// No description provided for @scheduleSelectCityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select City'**
+  String get scheduleSelectCityTitle;
+
+  /// No description provided for @scheduleSelectMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation Method'**
+  String get scheduleSelectMethodTitle;
+
+  /// No description provided for @cityCairo.
+  ///
+  /// In en, this message translates to:
+  /// **'Cairo'**
+  String get cityCairo;
+
+  /// No description provided for @cityAlexandria.
+  ///
+  /// In en, this message translates to:
+  /// **'Alexandria'**
+  String get cityAlexandria;
+
+  /// No description provided for @cityMakkah.
+  ///
+  /// In en, this message translates to:
+  /// **'Makkah'**
+  String get cityMakkah;
+
+  /// No description provided for @cityMadinah.
+  ///
+  /// In en, this message translates to:
+  /// **'Madinah'**
+  String get cityMadinah;
+
+  /// No description provided for @cityRiyadh.
+  ///
+  /// In en, this message translates to:
+  /// **'Riyadh'**
+  String get cityRiyadh;
+
+  /// No description provided for @cityDubai.
+  ///
+  /// In en, this message translates to:
+  /// **'Dubai'**
+  String get cityDubai;
+
+  /// No description provided for @cityIstanbul.
+  ///
+  /// In en, this message translates to:
+  /// **'Istanbul'**
+  String get cityIstanbul;
+
+  /// No description provided for @cityLondon.
+  ///
+  /// In en, this message translates to:
+  /// **'London'**
+  String get cityLondon;
+
+  /// No description provided for @cityNewYork.
+  ///
+  /// In en, this message translates to:
+  /// **'New York'**
+  String get cityNewYork;
+
+  /// No description provided for @methodEgyptian.
+  ///
+  /// In en, this message translates to:
+  /// **'Egyptian General Authority'**
+  String get methodEgyptian;
+
+  /// No description provided for @methodUmmAlQura.
+  ///
+  /// In en, this message translates to:
+  /// **'Umm al-Qura'**
+  String get methodUmmAlQura;
+
+  /// No description provided for @methodMuslimWorldLeague.
+  ///
+  /// In en, this message translates to:
+  /// **'Muslim World League'**
+  String get methodMuslimWorldLeague;
+
+  /// No description provided for @methodNorthAmerica.
+  ///
+  /// In en, this message translates to:
+  /// **'ISNA (North America)'**
+  String get methodNorthAmerica;
+
+  /// No description provided for @methodKarachi.
+  ///
+  /// In en, this message translates to:
+  /// **'Karachi'**
+  String get methodKarachi;
+
+  /// No description provided for @methodDubai.
+  ///
+  /// In en, this message translates to:
+  /// **'Dubai'**
+  String get methodDubai;
+
+  /// No description provided for @methodTurkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Diyanet (Turkey)'**
+  String get methodTurkey;
+
+  /// No description provided for @appearanceDesignLiquid.
+  ///
+  /// In en, this message translates to:
+  /// **'Liquid Glass'**
+  String get appearanceDesignLiquid;
+
+  /// No description provided for @appearanceDesignLiquidDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Frosted arctic glass & luminous cyan'**
+  String get appearanceDesignLiquidDesc;
+
+  /// No description provided for @appearanceDesignDesert.
+  ///
+  /// In en, this message translates to:
+  /// **'Desert Mirage'**
+  String get appearanceDesignDesert;
+
+  /// No description provided for @appearanceDesignDesertDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm terracotta sand & burnished brass'**
+  String get appearanceDesignDesertDesc;
+
+  /// No description provided for @appearanceDesignNordic.
+  ///
+  /// In en, this message translates to:
+  /// **'Nordic Frost'**
+  String get appearanceDesignNordic;
+
+  /// No description provided for @appearanceDesignNordicDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scandinavian slate & crisp ice blue'**
+  String get appearanceDesignNordicDesc;
+
+  /// No description provided for @appearanceDesignVelvet.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight Velvet'**
+  String get appearanceDesignVelvet;
+
+  /// No description provided for @appearanceDesignVelvetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Nocturnal plum & rose-gold orbit'**
+  String get appearanceDesignVelvetDesc;
+
+  /// No description provided for @challengeRamOnlyBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'RAM only • Purged < 500ms'**
+  String get challengeRamOnlyBadge;
+
+  /// No description provided for @alarmChallengeRuleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm stays active until Proof-of-Action is verified.'**
+  String get alarmChallengeRuleHint;
 }
 
 class _AppLocalizationsDelegate

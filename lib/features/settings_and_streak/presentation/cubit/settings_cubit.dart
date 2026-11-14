@@ -92,6 +92,40 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
   }
 
+  Future<void> switchThemeMode(
+    String themeMode, {
+    DateTime? nextFajrAlarmAt,
+    bool isAlarmRinging = false,
+  }) async {
+    final result = await _updateSettings(
+      newSettings: state.settings.copyWith(themeMode: themeMode),
+      now: _nowProvider(),
+      nextFajrAlarmAt: nextFajrAlarmAt,
+      isAlarmRinging: isAlarmRinging,
+    );
+    result.fold(
+      (failure) => emit(state.copyWith(failure: failure)),
+      (updated) => emit(state.copyWith(settings: updated, failure: null)),
+    );
+  }
+
+  Future<void> switchDesignStyle(
+    String designStyle, {
+    DateTime? nextFajrAlarmAt,
+    bool isAlarmRinging = false,
+  }) async {
+    final result = await _updateSettings(
+      newSettings: state.settings.copyWith(designStyle: designStyle),
+      now: _nowProvider(),
+      nextFajrAlarmAt: nextFajrAlarmAt,
+      isAlarmRinging: isAlarmRinging,
+    );
+    result.fold(
+      (failure) => emit(state.copyWith(failure: failure)),
+      (updated) => emit(state.copyWith(settings: updated, failure: null)),
+    );
+  }
+
   Future<void> updateMonthlyEmergencyQuota(
     int quota, {
     DateTime? nextFajrAlarmAt,

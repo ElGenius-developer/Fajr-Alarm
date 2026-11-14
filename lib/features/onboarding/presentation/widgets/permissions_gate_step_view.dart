@@ -1,4 +1,5 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -116,22 +117,20 @@ class _PermissionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final FajrDesignTokens tokens = FajrDesignTokens.of(context);
+    final Color statusColor = granted ? tokens.emeraldSignal : tokens.clayError;
     return Card(
       margin: const EdgeInsetsDirectional.only(bottom: 8),
       child: ListTile(
         leading: Icon(
           granted ? Icons.check_circle : Icons.warning_amber_rounded,
-          color: granted ? theme.colorScheme.primary : theme.colorScheme.error,
+          color: statusColor,
         ),
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: Text(
           granted ? grantedLabel : missingLabel,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: granted
-                ? theme.colorScheme.primary
-                : theme.colorScheme.error,
-          ),
+          style: theme.textTheme.labelMedium?.copyWith(color: statusColor),
         ),
       ),
     );

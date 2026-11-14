@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserSettings {
 
- String get locale; int get monthlyEmergencyQuota; int get emergencyQuotaUsed; int get emergencyQuotaResetMonth; String? get bathroomBarcode; int get alarmOffsetMinutes; int? get manualAlarmHour; int? get manualAlarmMinute; VacationModeConfig? get vacationMode;
+ String get locale; String get themeMode; String get designStyle; int get monthlyEmergencyQuota; int get emergencyQuotaUsed; int get emergencyQuotaResetMonth; String? get bathroomBarcode; int get alarmOffsetMinutes; int? get manualAlarmHour; int? get manualAlarmMinute; VacationModeConfig? get vacationMode;
 /// Create a copy of UserSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $UserSettingsCopyWith<UserSettings> get copyWith => _$UserSettingsCopyWithImpl<U
 @override
 bool operator ==(Object other) {
   final _this = this as UserSettings;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSettings&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.monthlyEmergencyQuota, _this.monthlyEmergencyQuota) || other.monthlyEmergencyQuota == _this.monthlyEmergencyQuota)&&(identical(other.emergencyQuotaUsed, _this.emergencyQuotaUsed) || other.emergencyQuotaUsed == _this.emergencyQuotaUsed)&&(identical(other.emergencyQuotaResetMonth, _this.emergencyQuotaResetMonth) || other.emergencyQuotaResetMonth == _this.emergencyQuotaResetMonth)&&(identical(other.bathroomBarcode, _this.bathroomBarcode) || other.bathroomBarcode == _this.bathroomBarcode)&&(identical(other.alarmOffsetMinutes, _this.alarmOffsetMinutes) || other.alarmOffsetMinutes == _this.alarmOffsetMinutes)&&(identical(other.manualAlarmHour, _this.manualAlarmHour) || other.manualAlarmHour == _this.manualAlarmHour)&&(identical(other.manualAlarmMinute, _this.manualAlarmMinute) || other.manualAlarmMinute == _this.manualAlarmMinute)&&(identical(other.vacationMode, _this.vacationMode) || other.vacationMode == _this.vacationMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSettings&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.themeMode, _this.themeMode) || other.themeMode == _this.themeMode)&&(identical(other.designStyle, _this.designStyle) || other.designStyle == _this.designStyle)&&(identical(other.monthlyEmergencyQuota, _this.monthlyEmergencyQuota) || other.monthlyEmergencyQuota == _this.monthlyEmergencyQuota)&&(identical(other.emergencyQuotaUsed, _this.emergencyQuotaUsed) || other.emergencyQuotaUsed == _this.emergencyQuotaUsed)&&(identical(other.emergencyQuotaResetMonth, _this.emergencyQuotaResetMonth) || other.emergencyQuotaResetMonth == _this.emergencyQuotaResetMonth)&&(identical(other.bathroomBarcode, _this.bathroomBarcode) || other.bathroomBarcode == _this.bathroomBarcode)&&(identical(other.alarmOffsetMinutes, _this.alarmOffsetMinutes) || other.alarmOffsetMinutes == _this.alarmOffsetMinutes)&&(identical(other.manualAlarmHour, _this.manualAlarmHour) || other.manualAlarmHour == _this.manualAlarmHour)&&(identical(other.manualAlarmMinute, _this.manualAlarmMinute) || other.manualAlarmMinute == _this.manualAlarmMinute)&&(identical(other.vacationMode, _this.vacationMode) || other.vacationMode == _this.vacationMode));
 }
 
 
 @override
 int get hashCode {
   final _this = this as UserSettings;
-  return Object.hash(runtimeType,_this.locale,_this.monthlyEmergencyQuota,_this.emergencyQuotaUsed,_this.emergencyQuotaResetMonth,_this.bathroomBarcode,_this.alarmOffsetMinutes,_this.manualAlarmHour,_this.manualAlarmMinute,_this.vacationMode);
+  return Object.hash(runtimeType,_this.locale,_this.themeMode,_this.designStyle,_this.monthlyEmergencyQuota,_this.emergencyQuotaUsed,_this.emergencyQuotaResetMonth,_this.bathroomBarcode,_this.alarmOffsetMinutes,_this.manualAlarmHour,_this.manualAlarmMinute,_this.vacationMode);
 }
 
 @override
 String toString() {
   final _this = this as UserSettings;
-  return 'UserSettings(locale: ${_this.locale}, monthlyEmergencyQuota: ${_this.monthlyEmergencyQuota}, emergencyQuotaUsed: ${_this.emergencyQuotaUsed}, emergencyQuotaResetMonth: ${_this.emergencyQuotaResetMonth}, bathroomBarcode: ${_this.bathroomBarcode}, alarmOffsetMinutes: ${_this.alarmOffsetMinutes}, manualAlarmHour: ${_this.manualAlarmHour}, manualAlarmMinute: ${_this.manualAlarmMinute}, vacationMode: ${_this.vacationMode})';
+  return 'UserSettings(locale: ${_this.locale}, themeMode: ${_this.themeMode}, designStyle: ${_this.designStyle}, monthlyEmergencyQuota: ${_this.monthlyEmergencyQuota}, emergencyQuotaUsed: ${_this.emergencyQuotaUsed}, emergencyQuotaResetMonth: ${_this.emergencyQuotaResetMonth}, bathroomBarcode: ${_this.bathroomBarcode}, alarmOffsetMinutes: ${_this.alarmOffsetMinutes}, manualAlarmHour: ${_this.manualAlarmHour}, manualAlarmMinute: ${_this.manualAlarmMinute}, vacationMode: ${_this.vacationMode})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $UserSettingsCopyWith<$Res>  {
   factory $UserSettingsCopyWith(UserSettings value, $Res Function(UserSettings) _then) = _$UserSettingsCopyWithImpl;
 @useResult
 $Res call({
- String locale, int monthlyEmergencyQuota, int emergencyQuotaUsed, int emergencyQuotaResetMonth, String? bathroomBarcode, int alarmOffsetMinutes, int? manualAlarmHour, int? manualAlarmMinute, VacationModeConfig? vacationMode
+ String locale, String themeMode, String designStyle, int monthlyEmergencyQuota, int emergencyQuotaUsed, int emergencyQuotaResetMonth, String? bathroomBarcode, int alarmOffsetMinutes, int? manualAlarmHour, int? manualAlarmMinute, VacationModeConfig? vacationMode
 });
 
 
@@ -68,9 +68,11 @@ class _$UserSettingsCopyWithImpl<$Res>
 
 /// Create a copy of UserSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? locale = null,Object? monthlyEmergencyQuota = null,Object? emergencyQuotaUsed = null,Object? emergencyQuotaResetMonth = null,Object? bathroomBarcode = freezed,Object? alarmOffsetMinutes = null,Object? manualAlarmHour = freezed,Object? manualAlarmMinute = freezed,Object? vacationMode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? locale = null,Object? themeMode = null,Object? designStyle = null,Object? monthlyEmergencyQuota = null,Object? emergencyQuotaUsed = null,Object? emergencyQuotaResetMonth = null,Object? bathroomBarcode = freezed,Object? alarmOffsetMinutes = null,Object? manualAlarmHour = freezed,Object? manualAlarmMinute = freezed,Object? vacationMode = freezed,}) {
   return _then(UserSettings(
 locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
+as String,designStyle: null == designStyle ? _self.designStyle : designStyle // ignore: cast_nullable_to_non_nullable
 as String,monthlyEmergencyQuota: null == monthlyEmergencyQuota ? _self.monthlyEmergencyQuota : monthlyEmergencyQuota // ignore: cast_nullable_to_non_nullable
 as int,emergencyQuotaUsed: null == emergencyQuotaUsed ? _self.emergencyQuotaUsed : emergencyQuotaUsed // ignore: cast_nullable_to_non_nullable
 as int,emergencyQuotaResetMonth: null == emergencyQuotaResetMonth ? _self.emergencyQuotaResetMonth : emergencyQuotaResetMonth // ignore: cast_nullable_to_non_nullable
@@ -176,10 +178,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String locale,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String locale,  String themeMode,  String designStyle,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserSettings() when $default != null:
-return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
+return $default(_that.locale,_that.themeMode,_that.designStyle,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
   return orElse();
 
 }
@@ -197,10 +199,10 @@ return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUse
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String locale,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String locale,  String themeMode,  String designStyle,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)  $default,) {final _that = this;
 switch (_that) {
 case _UserSettings():
-return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
+return $default(_that.locale,_that.themeMode,_that.designStyle,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -217,10 +219,10 @@ return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUse
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String locale,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String locale,  String themeMode,  String designStyle,  int monthlyEmergencyQuota,  int emergencyQuotaUsed,  int emergencyQuotaResetMonth,  String? bathroomBarcode,  int alarmOffsetMinutes,  int? manualAlarmHour,  int? manualAlarmMinute,  VacationModeConfig? vacationMode)?  $default,) {final _that = this;
 switch (_that) {
 case _UserSettings() when $default != null:
-return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
+return $default(_that.locale,_that.themeMode,_that.designStyle,_that.monthlyEmergencyQuota,_that.emergencyQuotaUsed,_that.emergencyQuotaResetMonth,_that.bathroomBarcode,_that.alarmOffsetMinutes,_that.manualAlarmHour,_that.manualAlarmMinute,_that.vacationMode);case _:
   return null;
 
 }
@@ -232,10 +234,12 @@ return $default(_that.locale,_that.monthlyEmergencyQuota,_that.emergencyQuotaUse
 
 
 class _UserSettings extends UserSettings {
-  const _UserSettings({this.locale = 'ar', this.monthlyEmergencyQuota = 3, this.emergencyQuotaUsed = 0, this.emergencyQuotaResetMonth = 0, this.bathroomBarcode, this.alarmOffsetMinutes = 0, this.manualAlarmHour, this.manualAlarmMinute, this.vacationMode}): super._();
+  const _UserSettings({this.locale = 'ar', this.themeMode = 'dark', this.designStyle = 'horizon', this.monthlyEmergencyQuota = 3, this.emergencyQuotaUsed = 0, this.emergencyQuotaResetMonth = 0, this.bathroomBarcode, this.alarmOffsetMinutes = 0, this.manualAlarmHour, this.manualAlarmMinute, this.vacationMode}): super._();
   
 
 @override@JsonKey() final  String locale;
+@override@JsonKey() final  String themeMode;
+@override@JsonKey() final  String designStyle;
 @override@JsonKey() final  int monthlyEmergencyQuota;
 @override@JsonKey() final  int emergencyQuotaUsed;
 @override@JsonKey() final  int emergencyQuotaResetMonth;
@@ -255,18 +259,18 @@ _$UserSettingsCopyWith<_UserSettings> get copyWith => __$UserSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSettings&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.monthlyEmergencyQuota, monthlyEmergencyQuota) || other.monthlyEmergencyQuota == monthlyEmergencyQuota)&&(identical(other.emergencyQuotaUsed, emergencyQuotaUsed) || other.emergencyQuotaUsed == emergencyQuotaUsed)&&(identical(other.emergencyQuotaResetMonth, emergencyQuotaResetMonth) || other.emergencyQuotaResetMonth == emergencyQuotaResetMonth)&&(identical(other.bathroomBarcode, bathroomBarcode) || other.bathroomBarcode == bathroomBarcode)&&(identical(other.alarmOffsetMinutes, alarmOffsetMinutes) || other.alarmOffsetMinutes == alarmOffsetMinutes)&&(identical(other.manualAlarmHour, manualAlarmHour) || other.manualAlarmHour == manualAlarmHour)&&(identical(other.manualAlarmMinute, manualAlarmMinute) || other.manualAlarmMinute == manualAlarmMinute)&&(identical(other.vacationMode, vacationMode) || other.vacationMode == vacationMode));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSettings&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.designStyle, designStyle) || other.designStyle == designStyle)&&(identical(other.monthlyEmergencyQuota, monthlyEmergencyQuota) || other.monthlyEmergencyQuota == monthlyEmergencyQuota)&&(identical(other.emergencyQuotaUsed, emergencyQuotaUsed) || other.emergencyQuotaUsed == emergencyQuotaUsed)&&(identical(other.emergencyQuotaResetMonth, emergencyQuotaResetMonth) || other.emergencyQuotaResetMonth == emergencyQuotaResetMonth)&&(identical(other.bathroomBarcode, bathroomBarcode) || other.bathroomBarcode == bathroomBarcode)&&(identical(other.alarmOffsetMinutes, alarmOffsetMinutes) || other.alarmOffsetMinutes == alarmOffsetMinutes)&&(identical(other.manualAlarmHour, manualAlarmHour) || other.manualAlarmHour == manualAlarmHour)&&(identical(other.manualAlarmMinute, manualAlarmMinute) || other.manualAlarmMinute == manualAlarmMinute)&&(identical(other.vacationMode, vacationMode) || other.vacationMode == vacationMode));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,locale,monthlyEmergencyQuota,emergencyQuotaUsed,emergencyQuotaResetMonth,bathroomBarcode,alarmOffsetMinutes,manualAlarmHour,manualAlarmMinute,vacationMode);
+    return Object.hash(runtimeType,locale,themeMode,designStyle,monthlyEmergencyQuota,emergencyQuotaUsed,emergencyQuotaResetMonth,bathroomBarcode,alarmOffsetMinutes,manualAlarmHour,manualAlarmMinute,vacationMode);
 }
 
 @override
 String toString() {
-    return 'UserSettings(locale: $locale, monthlyEmergencyQuota: $monthlyEmergencyQuota, emergencyQuotaUsed: $emergencyQuotaUsed, emergencyQuotaResetMonth: $emergencyQuotaResetMonth, bathroomBarcode: $bathroomBarcode, alarmOffsetMinutes: $alarmOffsetMinutes, manualAlarmHour: $manualAlarmHour, manualAlarmMinute: $manualAlarmMinute, vacationMode: $vacationMode)';
+    return 'UserSettings(locale: $locale, themeMode: $themeMode, designStyle: $designStyle, monthlyEmergencyQuota: $monthlyEmergencyQuota, emergencyQuotaUsed: $emergencyQuotaUsed, emergencyQuotaResetMonth: $emergencyQuotaResetMonth, bathroomBarcode: $bathroomBarcode, alarmOffsetMinutes: $alarmOffsetMinutes, manualAlarmHour: $manualAlarmHour, manualAlarmMinute: $manualAlarmMinute, vacationMode: $vacationMode)';
 }
 
 
@@ -277,7 +281,7 @@ abstract mixin class _$UserSettingsCopyWith<$Res> implements $UserSettingsCopyWi
   factory _$UserSettingsCopyWith(_UserSettings value, $Res Function(_UserSettings) _then) = __$UserSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- String locale, int monthlyEmergencyQuota, int emergencyQuotaUsed, int emergencyQuotaResetMonth, String? bathroomBarcode, int alarmOffsetMinutes, int? manualAlarmHour, int? manualAlarmMinute, VacationModeConfig? vacationMode
+ String locale, String themeMode, String designStyle, int monthlyEmergencyQuota, int emergencyQuotaUsed, int emergencyQuotaResetMonth, String? bathroomBarcode, int alarmOffsetMinutes, int? manualAlarmHour, int? manualAlarmMinute, VacationModeConfig? vacationMode
 });
 
 
@@ -294,9 +298,11 @@ class __$UserSettingsCopyWithImpl<$Res>
 
 /// Create a copy of UserSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? locale = null,Object? monthlyEmergencyQuota = null,Object? emergencyQuotaUsed = null,Object? emergencyQuotaResetMonth = null,Object? bathroomBarcode = freezed,Object? alarmOffsetMinutes = null,Object? manualAlarmHour = freezed,Object? manualAlarmMinute = freezed,Object? vacationMode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? locale = null,Object? themeMode = null,Object? designStyle = null,Object? monthlyEmergencyQuota = null,Object? emergencyQuotaUsed = null,Object? emergencyQuotaResetMonth = null,Object? bathroomBarcode = freezed,Object? alarmOffsetMinutes = null,Object? manualAlarmHour = freezed,Object? manualAlarmMinute = freezed,Object? vacationMode = freezed,}) {
   return _then(_UserSettings(
 locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
+as String,designStyle: null == designStyle ? _self.designStyle : designStyle // ignore: cast_nullable_to_non_nullable
 as String,monthlyEmergencyQuota: null == monthlyEmergencyQuota ? _self.monthlyEmergencyQuota : monthlyEmergencyQuota // ignore: cast_nullable_to_non_nullable
 as int,emergencyQuotaUsed: null == emergencyQuotaUsed ? _self.emergencyQuotaUsed : emergencyQuotaUsed // ignore: cast_nullable_to_non_nullable
 as int,emergencyQuotaResetMonth: null == emergencyQuotaResetMonth ? _self.emergencyQuotaResetMonth : emergencyQuotaResetMonth // ignore: cast_nullable_to_non_nullable
