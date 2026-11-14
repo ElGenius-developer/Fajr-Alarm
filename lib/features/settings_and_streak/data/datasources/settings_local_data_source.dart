@@ -73,9 +73,15 @@ class UserSettingsAdapter extends TypeAdapter<UserSettings> {
     final manualAlarmMinute = hasManualMinute ? reader.readInt() : null;
     final hasVacation = reader.readBool();
     final vacationMode = hasVacation ? _vacationAdapter.read(reader) : null;
+    final themeMode = reader.availableBytes > 0 ? reader.readString() : 'dark';
+    final designStyle = reader.availableBytes > 0
+        ? reader.readString()
+        : 'horizon';
 
     return UserSettings(
       locale: locale,
+      themeMode: themeMode,
+      designStyle: designStyle,
       monthlyEmergencyQuota: monthlyEmergencyQuota,
       emergencyQuotaUsed: emergencyQuotaUsed,
       emergencyQuotaResetMonth: emergencyQuotaResetMonth,
@@ -112,6 +118,9 @@ class UserSettingsAdapter extends TypeAdapter<UserSettings> {
     if (obj.vacationMode != null) {
       _vacationAdapter.write(writer, obj.vacationMode!);
     }
+    writer
+      ..writeString(obj.themeMode)
+      ..writeString(obj.designStyle);
   }
 }
 

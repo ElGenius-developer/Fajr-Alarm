@@ -527,4 +527,132 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingIncompleteError =>
       'Please complete all required setup steps first.';
+
+  @override
+  String get appearanceTitle => 'Appearance & Design';
+
+  @override
+  String get appearanceThemeModeLabel => 'Color Mode';
+
+  @override
+  String get appearanceThemeSystem => 'System';
+
+  @override
+  String get appearanceThemeLight => 'Light';
+
+  @override
+  String get appearanceThemeDark => 'Dark';
+
+  @override
+  String get appearanceDesignLabel => 'Visual Design';
+
+  @override
+  String get appearanceDesignHorizon => 'Quiet Dawn (60-30-10)';
+
+  @override
+  String get appearanceDesignHorizonDesc =>
+      'Matte slate & limestone with muted champagne';
+
+  @override
+  String get appearanceDesignSanctuary => 'Emerald Sanctuary';
+
+  @override
+  String get appearanceDesignSanctuaryDesc => 'Deep forest & luminous jade';
+
+  @override
+  String get appearanceDesignEditorial => 'Swiss Editorial';
+
+  @override
+  String get appearanceDesignEditorialDesc => 'Crisp monochrome & vermilion';
+
+  @override
+  String get scheduleLocationMethodLabel => 'City & Method';
+
+  @override
+  String get scheduleSelectCityTitle => 'Select City';
+
+  @override
+  String get scheduleSelectMethodTitle => 'Calculation Method';
+
+  @override
+  String get cityCairo => 'Cairo';
+
+  @override
+  String get cityAlexandria => 'Alexandria';
+
+  @override
+  String get cityMakkah => 'Makkah';
+
+  @override
+  String get cityMadinah => 'Madinah';
+
+  @override
+  String get cityRiyadh => 'Riyadh';
+
+  @override
+  String get cityDubai => 'Dubai';
+
+  @override
+  String get cityIstanbul => 'Istanbul';
+
+  @override
+  String get cityLondon => 'London';
+
+  @override
+  String get cityNewYork => 'New York';
+
+  @override
+  String get methodEgyptian => 'Egyptian General Authority';
+
+  @override
+  String get methodUmmAlQura => 'Umm al-Qura';
+
+  @override
+  String get methodMuslimWorldLeague => 'Muslim World League';
+
+  @override
+  String get methodNorthAmerica => 'ISNA (North America)';
+
+  @override
+  String get methodKarachi => 'Karachi';
+
+  @override
+  String get methodDubai => 'Dubai';
+
+  @override
+  String get methodTurkey => 'Diyanet (Turkey)';
+
+  @override
+  String get appearanceDesignLiquid => 'Liquid Glass';
+
+  @override
+  String get appearanceDesignLiquidDesc =>
+      'Frosted arctic glass & luminous cyan';
+
+  @override
+  String get appearanceDesignDesert => 'Desert Mirage';
+
+  @override
+  String get appearanceDesignDesertDesc =>
+      'Warm terracotta sand & burnished brass';
+
+  @override
+  String get appearanceDesignNordic => 'Nordic Frost';
+
+  @override
+  String get appearanceDesignNordicDesc =>
+      'Scandinavian slate & crisp ice blue';
+
+  @override
+  String get appearanceDesignVelvet => 'Midnight Velvet';
+
+  @override
+  String get appearanceDesignVelvetDesc => 'Nocturnal plum & rose-gold orbit';
+
+  @override
+  String get challengeRamOnlyBadge => 'RAM only • Purged < 500ms';
+
+  @override
+  String get alarmChallengeRuleHint =>
+      'Alarm stays active until Proof-of-Action is verified.';
 }

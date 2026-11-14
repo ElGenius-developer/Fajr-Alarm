@@ -4,6 +4,13 @@
 <!-- Do not edit manually. Rebuilt via /rebuild-digest. -->
 <!-- Updated automatically by /save-session (Step 2.5). -->
 
+## 2026-11-14 | v1-build-themes-and-stitch-mcp
+keywords: feat/fajr-alarm-v1, 2b2bf12, lib/main.dart, lib/core/theme/app_theme.dart, lib/core/theme/appearance_sheet.dart, lib/core/l10n/app_{ar,en}.arb, lib/features/prayer_schedule/data/repositories/prayer_schedule_repository_impl.dart, lib/features/prayer_schedule/presentation/pages/prayer_schedule_page.dart, lib/features/settings_and_streak/domain/entities/user_settings.dart, data/datasources/settings_local_data_source.dart, presentation/cubit/settings_cubit.dart, presentation/pages/settings_page.dart, gemini/antigravity/mcp_config.json, gemini/config/mcp_config.json, AppDesignStyle
+decisions: 7 selectable `AppDesignStyle` presets + `ThemeMode` persisted in `UserSettings` (`Hive` backward-compatible `reader.availableBytes > 0`) — lets user preview and choose a flagship design direction live without breakin... | Streamable HTTP (`serverUrl` + `X-Goog-Api-Key`) for Google Stitch MCP — `gcloud` is not installed on this machine, and `browser-use` confirmed Antigr...
+files: app_theme.dart, appearance_sheet.dart, app_en.arb, prayer_schedule_repository_impl.dart, prayer_schedule_page.dart, user_settings.dart, settings_local_data_source.dart, settings_cubit.dart
+status: in-progress
+---
+
 ## 2026-11-13 | wayfinder-srs-and-repo-onboarding
 keywords: wayfinder, save-session, ElGenius-developer/Fajr-Alarm, SRS-Fajr-alarm.md, claude, agents, CLAUDE.md, AGENTS.md, GEMINI.md, docs/agents, main, claude/CONSTITUTION.md, claude/rules/common, claude/rules/dart, claude/skills
 decisions: Personal-use + Open Source without secrets — removes Play/App Store review blockers for sideloaded Android permissions whi... | v1.0 target platforms: Android 10+ (`minSdk 29`, `targetSdk 35`) + iOS 26+ (`AlarmKit`) — owner's personal iPhone runs iOS 27; `iOS 15–25` 64-notification best-effort ... | Android Direct Boot & Onboarding Permission Gate — `LOCKED_BOOT_COMPLETED` + `deviceProtectedStorage` ensures alarms survive ove... | Relentless AlarmKit Cascade on iOS 26+ — Apple's `AlarmKit` Lock Screen UI includes an unhideable OS `Stop` button; pr... | Feature-Based Clean Architecture + local cache — pure-Dart `domain/`, `flutter_bloc`, `get_it`, `freezed`, `fpdart`, and local...

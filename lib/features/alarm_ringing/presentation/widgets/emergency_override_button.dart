@@ -1,4 +1,5 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Touch-Mute + 60s continuous hold button for Emergency Override (FR-6.2).
@@ -26,6 +27,7 @@ class EmergencyOverrideButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final tokens = FajrDesignTokens.of(context);
     final remainingSeconds = (totalSeconds - elapsedSeconds).clamp(
       0,
       totalSeconds,
@@ -48,20 +50,22 @@ class EmergencyOverrideButton extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsetsDirectional.symmetric(
                 horizontal: 16,
-                vertical: 16,
+                vertical: 15,
               ),
               decoration: BoxDecoration(
                 color: !hasQuota
-                    ? theme.colorScheme.surfaceContainerHighest
+                    ? tokens.surfaceElevated
                     : isMuted
-                    ? theme.colorScheme.errorContainer
-                    : theme.colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(12),
+                    ? tokens.clayError.withValues(alpha: 0.14)
+                    : tokens.surfaceElevated,
+                borderRadius: BorderRadius.circular(tokens.radiusControl),
                 border: Border.all(
                   color: !hasQuota
-                      ? theme.colorScheme.outlineVariant
-                      : theme.colorScheme.error,
-                  width: isMuted ? 2 : 1,
+                      ? tokens.borderSubtle
+                      : isMuted
+                      ? tokens.clayError
+                      : tokens.borderSubtle,
+                  width: isMuted ? 1.5 : tokens.borderWidth,
                 ),
               ),
               child: Column(
@@ -72,9 +76,8 @@ class EmergencyOverrideButton extends StatelessWidget {
                     children: [
                       Icon(
                         isMuted ? Icons.volume_off : Icons.emergency_outlined,
-                        color: hasQuota
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
+                        size: 20,
+                        color: hasQuota ? tokens.clayError : tokens.textMuted,
                       ),
                       const SizedBox(width: 8),
                       Flexible(
@@ -85,8 +88,8 @@ class EmergencyOverrideButton extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: hasQuota
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.onSurfaceVariant,
+                                ? tokens.textPrimary
+                                : tokens.textMuted,
                           ),
                         ),
                       ),
@@ -98,9 +101,9 @@ class EmergencyOverrideButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: progress,
-                        minHeight: 8,
-                        color: theme.colorScheme.error,
-                        backgroundColor: theme.colorScheme.surface,
+                        minHeight: 6,
+                        color: tokens.clayError,
+                        backgroundColor: tokens.surface,
                       ),
                     ),
                   ],
@@ -116,9 +119,7 @@ class EmergencyOverrideButton extends StatelessWidget {
               : l10n.alarmEmergencyNoQuota,
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: hasQuota
-                ? theme.colorScheme.onSurfaceVariant
-                : theme.colorScheme.error,
+            color: hasQuota ? tokens.textSecondary : tokens.clayError,
           ),
         ),
         if (releasedEarly) ...[
@@ -126,9 +127,7 @@ class EmergencyOverrideButton extends StatelessWidget {
           Text(
             l10n.alarmEmergencyReleasedError,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.error,
-            ),
+            style: theme.textTheme.bodySmall?.copyWith(color: tokens.clayError),
           ),
         ],
       ],

@@ -1,5 +1,6 @@
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/bloc/onboarding_cubit.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/widgets/barcode_step_view.dart';
@@ -66,11 +67,30 @@ class OnboardingPage extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     l10n.onboardingStepOf(currentStep + 1, _totalSteps),
-                    style: theme.textTheme.labelLarge,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: FajrDesignTokens.of(context).textSecondary,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: (currentStep + 1) / _totalSteps,
+                  const SizedBox(height: 10),
+                  Row(
+                    children: List<Widget>.generate(_totalSteps, (int index) {
+                      final tokens = FajrDesignTokens.of(context);
+                      final bool active = index <= currentStep;
+                      return Expanded(
+                        child: Container(
+                          height: 4,
+                          margin: EdgeInsetsDirectional.only(
+                            end: index < _totalSteps - 1 ? 6 : 0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: active
+                                ? tokens.dawnAccent
+                                : tokens.surfaceElevated,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   if (state.error != null) ...<Widget>[
                     const SizedBox(height: 16),

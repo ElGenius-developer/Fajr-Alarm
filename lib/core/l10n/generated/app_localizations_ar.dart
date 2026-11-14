@@ -524,4 +524,130 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get onboardingIncompleteError =>
       'يرجى إكمال جميع خطوات الإعداد المطلوبة أولاً.';
+
+  @override
+  String get appearanceTitle => 'المظهر والتصميم';
+
+  @override
+  String get appearanceThemeModeLabel => 'وضع الألوان';
+
+  @override
+  String get appearanceThemeSystem => 'تلقائي';
+
+  @override
+  String get appearanceThemeLight => 'فاتح';
+
+  @override
+  String get appearanceThemeDark => 'داكن';
+
+  @override
+  String get appearanceDesignLabel => 'اختر التصميم';
+
+  @override
+  String get appearanceDesignHorizon => 'فجر هادئ (60-30-10)';
+
+  @override
+  String get appearanceDesignHorizonDesc =>
+      'أردوازي وحجر جيري مطفي بلمسة رمليّة هادئة';
+
+  @override
+  String get appearanceDesignSanctuary => 'المحراب الزمردي';
+
+  @override
+  String get appearanceDesignSanctuaryDesc => 'زمردي عميق وخطوط معمارية هادئة';
+
+  @override
+  String get appearanceDesignEditorial => 'التحريري السويسري';
+
+  @override
+  String get appearanceDesignEditorialDesc =>
+      'تباين حاد وبساطة الساعات الكلاسيكية';
+
+  @override
+  String get scheduleLocationMethodLabel => 'المدينة وطريقة الحساب';
+
+  @override
+  String get scheduleSelectCityTitle => 'اختر المدينة';
+
+  @override
+  String get scheduleSelectMethodTitle => 'طريقة حساب المواقيت';
+
+  @override
+  String get cityCairo => 'القاهرة';
+
+  @override
+  String get cityAlexandria => 'الإسكندرية';
+
+  @override
+  String get cityMakkah => 'مكة المكرمة';
+
+  @override
+  String get cityMadinah => 'المدينة المنورة';
+
+  @override
+  String get cityRiyadh => 'الرياض';
+
+  @override
+  String get cityDubai => 'دبي';
+
+  @override
+  String get cityIstanbul => 'إسطنبول';
+
+  @override
+  String get cityLondon => 'لندن';
+
+  @override
+  String get cityNewYork => 'نيويورك';
+
+  @override
+  String get methodEgyptian => 'الهيئة المصرية العامة للمساحة';
+
+  @override
+  String get methodUmmAlQura => 'أم القرى';
+
+  @override
+  String get methodMuslimWorldLeague => 'رابطة العالم الإسلامي';
+
+  @override
+  String get methodNorthAmerica => 'أمريكا الشمالية (ISNA)';
+
+  @override
+  String get methodKarachi => 'كراتشي';
+
+  @override
+  String get methodDubai => 'دبي';
+
+  @override
+  String get methodTurkey => 'الشؤون الدينية التركية';
+
+  @override
+  String get appearanceDesignLiquid => 'الزجاج السائل';
+
+  @override
+  String get appearanceDesignLiquidDesc => 'زجاج جليدي شفاف ولمسة سماوية مضيئة';
+
+  @override
+  String get appearanceDesignDesert => 'سراب الصحراء';
+
+  @override
+  String get appearanceDesignDesertDesc => 'رمال دافئة وتيراكوتا ونحاس مصقول';
+
+  @override
+  String get appearanceDesignNordic => 'الصقيع الشمالي';
+
+  @override
+  String get appearanceDesignNordicDesc => 'بساطة إسكندنافية وأزرق جليدي نقي';
+
+  @override
+  String get appearanceDesignVelvet => 'مخمل منتصف الليل';
+
+  @override
+  String get appearanceDesignVelvetDesc => 'ليلي مخملي عميق ومدار ذهبي وردي';
+
+  @override
+  String get challengeRamOnlyBadge => 'في الذاكرة فقط • يُحذف خلال < 500ms';
+
+  @override
+  String get alarmChallengeRuleHint =>
+      'لا يمكن إغلاق المنبّه قبل إتمام تحدي إثبات الفعل.';
 }

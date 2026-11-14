@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
+import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/challenge_mode.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/tilt_angle_reading.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_cubit.dart';
@@ -180,17 +181,17 @@ class _ChallengePageState extends State<ChallengePage> {
                       message: state.isCameraAvailable
                           ? l10n.challengeOfflineFallbackNotice
                           : l10n.challengeCameraUnavailable,
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      accentColor: FajrDesignTokens.of(context).dawnAccent,
                     ),
                   if (state.status == ChallengeStatus.rejected)
                     _BannerMessage(
                       message: _resolveRejectionMessage(l10n, state),
-                      color: Theme.of(context).colorScheme.errorContainer,
+                      accentColor: FajrDesignTokens.of(context).clayError,
                     ),
                   if (state.status == ChallengeStatus.verified)
                     _BannerMessage(
                       message: l10n.challengeVerifiedSuccess,
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      accentColor: FajrDesignTokens.of(context).emeraldSignal,
                     ),
                   Expanded(
                     child: switch (state.mode) {
@@ -242,21 +243,45 @@ class _ChallengePageState extends State<ChallengePage> {
 }
 
 class _BannerMessage extends StatelessWidget {
-  const _BannerMessage({required this.message, required this.color});
+  const _BannerMessage({required this.message, required this.accentColor});
 
   final String message;
-  final Color color;
+  final Color accentColor;
 
   @override
   Widget build(BuildContext context) {
+    final tokens = FajrDesignTokens.of(context);
     return Container(
       margin: const EdgeInsetsDirectional.only(bottom: 12),
-      padding: const EdgeInsetsDirectional.all(12),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: 14,
+        vertical: 12,
       ),
-      child: Text(message),
+      decoration: BoxDecoration(
+        color: tokens.surfaceElevated,
+        borderRadius: BorderRadius.circular(tokens.radiusControl),
+        border: Border.all(color: accentColor.withValues(alpha: 0.45)),
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: accentColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: tokens.textPrimary),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -269,31 +294,53 @@ class _TiltStatusIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = FajrDesignTokens.of(context);
     final bool valid = reading?.isWithinStandingRange ?? false;
-    final String degrees = (reading?.pitchDegrees ?? 0.0).toStringAsFixed(0);
-    final ColorScheme colors = Theme.of(context).colorScheme;
+    final double pitch = reading?.pitchDegrees ?? 0.0;
+    final String degrees = pitch.toStringAsFixed(0);
+    final double progress = ((-pitch) / 90.0).clamp(0.0, 1.0);
+    final Color signalColor = valid ? tokens.emeraldSignal : tokens.clayError;
 
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: 12,
-        vertical: 8,
+        horizontal: 14,
+        vertical: 12,
       ),
       decoration: BoxDecoration(
-        color: valid ? colors.primaryContainer : colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
+        color: tokens.surface,
+        borderRadius: BorderRadius.circular(tokens.radiusControl),
+        border: Border.all(color: tokens.borderSubtle),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Icon(
-            valid ? Icons.check_circle : Icons.screen_rotation,
-            color: valid ? colors.primary : colors.error,
+          Row(
+            children: <Widget>[
+              Icon(
+                valid ? Icons.check_circle : Icons.screen_rotation,
+                size: 18,
+                color: signalColor,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  valid
+                      ? l10n.challengeTiltValid(degrees)
+                      : l10n.challengeTiltInvalid(degrees),
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: tokens.textPrimary),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              valid
-                  ? l10n.challengeTiltValid(degrees)
-                  : l10n.challengeTiltInvalid(degrees),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 5,
+              color: valid ? tokens.emeraldSignal : tokens.dawnAccent,
+              backgroundColor: tokens.surfaceElevated,
             ),
           ),
         ],
@@ -321,6 +368,7 @@ class _PhotoVisionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = FajrDesignTokens.of(context);
     final bool canCapture =
         (state.tiltReading?.isWithinStandingRange ?? false) &&
         state.status != ChallengeStatus.verifying;
@@ -328,24 +376,74 @@ class _PhotoVisionView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Container(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: 10,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: tokens.surfaceElevated,
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: tokens.borderSubtle),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(
+                  Icons.lock_outline_rounded,
+                  size: 14,
+                  color: tokens.emeraldSignal,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  l10n.challengeRamOnlyBadge,
+                  style: Theme.of(context).textTheme.labelSmall
+                      ?.copyWith(color: tokens.textSecondary),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
         Text(
           l10n.challengePhotoInstruction,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium
+              ?.copyWith(color: tokens.textSecondary),
+        ),
+        const SizedBox(height: 12),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: tokens.surface,
+              borderRadius: BorderRadius.circular(tokens.radiusCard),
+              border: Border.all(color: tokens.borderSubtle),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(tokens.radiusCard),
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  cameraPreviewOverride ??
+                      (cameraInitialized && cameraController != null
+                          ? CameraPreview(cameraController!)
+                          : const Center(child: CircularProgressIndicator())),
+                  IgnorePointer(
+                    child: CustomPaint(
+                      painter: _ViewfinderBracketsPainter(
+                        bracketColor: tokens.dawnAccent.withValues(alpha: 0.72),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         _TiltStatusIndicator(l10n: l10n, reading: state.tiltReading),
-        const SizedBox(height: 12),
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child:
-                cameraPreviewOverride ??
-                (cameraInitialized && cameraController != null
-                    ? CameraPreview(cameraController!)
-                    : const Center(child: CircularProgressIndicator())),
-          ),
-        ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
         FilledButton.icon(
           onPressed: canCapture ? onCapture : null,
           icon: state.status == ChallengeStatus.verifying
@@ -364,6 +462,50 @@ class _PhotoVisionView extends StatelessWidget {
       ],
     );
   }
+}
+
+class _ViewfinderBracketsPainter extends CustomPainter {
+  const _ViewfinderBracketsPainter({required this.bracketColor});
+
+  final Color bracketColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = bracketColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.2
+      ..strokeCap = StrokeCap.round;
+    const inset = 18.0;
+    const len = 22.0;
+
+    final left = inset;
+    final top = inset;
+    final right = size.width - inset;
+    final bottom = size.height - inset;
+    if (right <= left || bottom <= top) return;
+
+    canvas.drawPath(
+      Path()
+        ..moveTo(left, top + len)
+        ..lineTo(left, top)
+        ..lineTo(left + len, top)
+        ..moveTo(right - len, top)
+        ..lineTo(right, top)
+        ..lineTo(right, top + len)
+        ..moveTo(left, bottom - len)
+        ..lineTo(left, bottom)
+        ..lineTo(left + len, bottom)
+        ..moveTo(right - len, bottom)
+        ..lineTo(right, bottom)
+        ..lineTo(right, bottom - len),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ViewfinderBracketsPainter oldDelegate) =>
+      bracketColor != oldDelegate.bracketColor;
 }
 
 class _BathroomBarcodeView extends StatefulWidget {
@@ -457,14 +599,20 @@ class _StandingTypingView extends StatelessWidget {
           _TiltStatusIndicator(l10n: l10n, reading: state.tiltReading),
           const SizedBox(height: 12),
           Container(
-            padding: const EdgeInsetsDirectional.all(12),
+            padding: const EdgeInsetsDirectional.all(14),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(8),
+              color: FajrDesignTokens.of(context).surface,
+              borderRadius: BorderRadius.circular(
+                FajrDesignTokens.of(context).radiusControl,
+              ),
+              border: Border.all(
+                color: FajrDesignTokens.of(context).borderSubtle,
+              ),
             ),
             child: Text(
               state.typingPrompt,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge
+                  ?.copyWith(color: FajrDesignTokens.of(context).textPrimary),
             ),
           ),
           const SizedBox(height: 12),

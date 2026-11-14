@@ -11,6 +11,8 @@ abstract class UserSettings with _$UserSettings {
 
   const factory UserSettings({
     @Default('ar') String locale,
+    @Default('dark') String themeMode,
+    @Default('horizon') String designStyle,
     @Default(3) int monthlyEmergencyQuota,
     @Default(0) int emergencyQuotaUsed,
     @Default(0) int emergencyQuotaResetMonth,

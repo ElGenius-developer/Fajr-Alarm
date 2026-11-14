@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/l10n/generated/app_localizations.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/appearance_sheet.dart';
 import '../cubit/settings_cubit.dart';
 import '../cubit/settings_state.dart';
 
@@ -42,29 +44,45 @@ class _SettingsPageState extends State<SettingsPage> {
           appBar: AppBar(title: Text(l10n.settingsTitle)),
           body: state.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : ListView(
-                  padding: const EdgeInsetsDirectional.all(16),
-                  children: [
-                    if (state.isWithinLockWindow) ...[
-                      _LockWindowBanner(message: l10n.settingsLockWindowNotice),
-                      const SizedBox(height: 12),
-                    ],
-                    _KpisCard(state: state, l10n: l10n),
-                    const SizedBox(height: 12),
-                    _LanguageCard(state: state, l10n: l10n),
-                    const SizedBox(height: 12),
-                    _VacationModeCard(
-                      state: state,
-                      l10n: l10n,
-                      selectedDays: _selectedVacationDays,
-                      onDaysChanged: (days) =>
-                          setState(() => _selectedVacationDays = days),
+              : SafeArea(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 840),
+                      child: ListView(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                          18,
+                          12,
+                          18,
+                          28,
+                        ),
+                        children: [
+                          if (state.isWithinLockWindow) ...[
+                            _LockWindowBanner(
+                              message: l10n.settingsLockWindowNotice,
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+                          _KpisCard(state: state, l10n: l10n),
+                          const SizedBox(height: 14),
+                          _AppearanceCard(state: state, l10n: l10n),
+                          const SizedBox(height: 14),
+                          _LanguageCard(state: state, l10n: l10n),
+                          const SizedBox(height: 14),
+                          _VacationModeCard(
+                            state: state,
+                            l10n: l10n,
+                            selectedDays: _selectedVacationDays,
+                            onDaysChanged: (days) =>
+                                setState(() => _selectedVacationDays = days),
+                          ),
+                          const SizedBox(height: 14),
+                          _EmergencyQuotaCard(state: state, l10n: l10n),
+                          const SizedBox(height: 14),
+                          _DryRunCard(state: state, l10n: l10n),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    _EmergencyQuotaCard(state: state, l10n: l10n),
-                    const SizedBox(height: 12),
-                    _DryRunCard(state: state, l10n: l10n),
-                  ],
+                  ),
                 ),
         );
       },
@@ -88,21 +106,23 @@ class _LockWindowBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final tokens = FajrDesignTokens.of(context);
     return Container(
       padding: const EdgeInsetsDirectional.all(12),
       decoration: BoxDecoration(
-        color: colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(12),
+        color: tokens.surfaceElevated,
+        borderRadius: BorderRadius.circular(tokens.radiusControl),
+        border: Border.all(color: tokens.clayError.withValues(alpha: 0.45)),
       ),
       child: Row(
         children: [
-          Icon(Icons.lock_clock, color: colorScheme.onErrorContainer),
+          Icon(Icons.lock_clock, color: tokens.clayError, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: TextStyle(color: colorScheme.onErrorContainer),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: tokens.textPrimary),
             ),
           ),
         ],
@@ -136,9 +156,36 @@ class _KpisCard extends StatelessWidget {
                   ),
                 ),
                 if (stats.isFrozen)
-                  Chip(
-                    avatar: const Icon(Icons.ac_unit, size: 16),
-                    label: Text(l10n.settingsStreakFrozenBadge),
+                  Container(
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: FajrDesignTokens.of(context).surfaceElevated,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: FajrDesignTokens.of(context).emeraldSignal
+                            .withValues(alpha: 0.45),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.ac_unit,
+                          size: 14,
+                          color: FajrDesignTokens.of(context).emeraldSignal,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.settingsStreakFrozenBadge,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: FajrDesignTokens.of(context).textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),
@@ -194,13 +241,72 @@ class _KpiTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: theme.textTheme.bodySmall),
-        const SizedBox(height: 4),
-        Text(value, style: theme.textTheme.titleLarge),
-      ],
+    final tokens = FajrDesignTokens.of(context);
+    return Container(
+      margin: const EdgeInsetsDirectional.only(end: 8, bottom: 8),
+      padding: const EdgeInsetsDirectional.all(14),
+      decoration: BoxDecoration(
+        color: tokens.surfaceElevated,
+        borderRadius: BorderRadius.circular(tokens.radiusControl),
+        border: Border.all(color: tokens.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: tokens.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: AppTheme.tabular(
+              theme.textTheme.titleLarge,
+            ).copyWith(fontWeight: FontWeight.w600, color: tokens.textPrimary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AppearanceCard extends StatelessWidget {
+  const _AppearanceCard({required this.state, required this.l10n});
+
+  final SettingsState state;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final styleLabel = switch (state.settings.designStyle) {
+      'sanctuary' => l10n.appearanceDesignSanctuary,
+      'editorial' => l10n.appearanceDesignEditorial,
+      'liquid' => l10n.appearanceDesignLiquid,
+      'desert' => l10n.appearanceDesignDesert,
+      'nordic' => l10n.appearanceDesignNordic,
+      'velvet' => l10n.appearanceDesignVelvet,
+      _ => l10n.appearanceDesignHorizon,
+    };
+    final modeLabel = switch (state.settings.themeMode) {
+      'light' => l10n.appearanceThemeLight,
+      'dark' => l10n.appearanceThemeDark,
+      _ => l10n.appearanceThemeSystem,
+    };
+
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsetsDirectional.symmetric(
+          horizontal: 16,
+          vertical: 6,
+        ),
+        leading: const Icon(Icons.palette_outlined),
+        title: Text(l10n.appearanceTitle),
+        subtitle: Text('$styleLabel · $modeLabel'),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: () => showAppearanceSheet(context),
+      ),
     );
   }
 }

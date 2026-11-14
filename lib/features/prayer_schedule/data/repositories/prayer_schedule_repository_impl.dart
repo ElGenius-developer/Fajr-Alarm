@@ -13,12 +13,12 @@ class PrayerScheduleRepositoryImpl implements PrayerScheduleRepository {
 
   final PrayerScheduleLocalDataSource _localDataSource;
 
-  /// Default Makkah coordinates when no user config has been persisted yet.
+  /// Default Cairo coordinates when no user config has been persisted yet.
   static const FajrAlarmConfig defaultConfig = FajrAlarmConfig(
-    latitude: 21.4225,
-    longitude: 39.8262,
-    cityName: 'Makkah',
-    calculationMethod: FajrCalculationMethod.ummAlQura,
+    latitude: 30.0444,
+    longitude: 31.2357,
+    cityName: 'Cairo',
+    calculationMethod: FajrCalculationMethod.egyptian,
   );
 
   @override
