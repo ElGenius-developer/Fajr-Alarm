@@ -6,12 +6,19 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/appearance_sheet.dart';
+import '../../../../core/widgets/barcode_scanner_input.dart';
+import '../../../onboarding/domain/entities/onboarding_state_entity.dart';
+import '../../../prayer_schedule/domain/entities/fajr_alarm_config.dart';
 import '../cubit/settings_cubit.dart';
 import '../cubit/settings_state.dart';
+import '../widgets/settings_extended_cards.dart';
+import '../widgets/settings_sheets.dart';
 
 /// Settings, Local-Only KPIs, Vacation Mode, Emergency Quota, and Dry-Run screen.
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.barcodeScannerBuilder});
+
+  final BarcodeScannerBuilder? barcodeScannerBuilder;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -19,6 +26,29 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   int _selectedVacationDays = 3;
+  FajrAlarmConfig? _alarmConfig;
+  OnboardingStateEntity? _onboardingState;
+  PermissionsGateStatus? _permissionsStatus;
+  bool _isRequestingPermissions = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSupplementalSettings();
+  }
+
+  Future<void> _loadSupplementalSettings() async {
+    final cubit = context.read<SettingsCubit>();
+    final config = await cubit.loadAlarmConfig();
+    final onboarding = await cubit.loadOnboardingState();
+    final perms = await cubit.checkPermissions();
+    if (!mounted) return;
+    setState(() {
+      _alarmConfig = config;
+      _onboardingState = onboarding;
+      _permissionsStatus = perms;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +114,44 @@ class _SettingsPageState extends State<SettingsPage> {
                           _EmergencyQuotaCard(state: state, l10n: l10n),
                           const SizedBox(height: 14),
                           _DryRunCard(state: state, l10n: l10n),
+                          const SizedBox(height: 14),
+                          LocationAndAlarmCard(
+                            l10n: l10n,
+                            config: _alarmConfig,
+                            isLocked: state.isWithinLockWindow,
+                            onEditLocationMethod: () =>
+                                _openLocationMethodSheet(context),
+                            onConfigChanged: (updated) =>
+                                _handleAlarmConfigChange(context, updated),
+                          ),
+                          const SizedBox(height: 14),
+                          BathroomBarcodeCard(
+                            l10n: l10n,
+                            barcode:
+                                state.settings.bathroomBarcode ??
+                                _onboardingState?.registeredBarcode,
+                            isLocked: state.isWithinLockWindow,
+                            onOpenSheet: () => _openBarcodeSheet(
+                              context,
+                              state.settings.bathroomBarcode ??
+                                  _onboardingState?.registeredBarcode,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          GeminiApiKeyCard(
+                            l10n: l10n,
+                            onboardingState: _onboardingState,
+                            isLocked: state.isWithinLockWindow,
+                            onOpenSheet: () => _openApiKeySheet(context),
+                          ),
+                          const SizedBox(height: 14),
+                          PermissionsStatusCard(
+                            l10n: l10n,
+                            status: _permissionsStatus,
+                            isRequesting: _isRequestingPermissions,
+                            onRequestPermissions: _requestPermissions,
+                            onRefreshPermissions: _refreshPermissions,
+                          ),
                         ],
                       ),
                     ),
@@ -94,11 +162,118 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  Future<void> _handleAlarmConfigChange(
+    BuildContext context,
+    FajrAlarmConfig updated,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<SettingsCubit>();
+    final ok = await cubit.updateAlarmConfig(updated);
+    if (!mounted || !ok) return;
+    setState(() => _alarmConfig = updated);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.settingsAlarmAndLocationSavedMessage)),
+    );
+  }
+
+  Future<void> _openLocationMethodSheet(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<SettingsCubit>();
+    final initial =
+        _alarmConfig ??
+        const FajrAlarmConfig(
+          latitude: 30.0444,
+          longitude: 31.2357,
+          cityName: 'Cairo',
+        );
+    final saved = await showLocationMethodSheet(
+      context,
+      initialConfig: initial,
+      onSaveConfig: cubit.updateAlarmConfig,
+    );
+    if (!mounted || saved == null) return;
+    setState(() => _alarmConfig = saved);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.settingsAlarmAndLocationSavedMessage)),
+    );
+  }
+
+  Future<void> _openBarcodeSheet(
+    BuildContext context,
+    String? currentBarcode,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<SettingsCubit>();
+    final result = await showBathroomBarcodeSheet(
+      context,
+      initialBarcode: currentBarcode,
+      scannerBuilder: widget.barcodeScannerBuilder,
+      onSaveBarcode: cubit.updateBathroomBarcode,
+    );
+    if (!mounted || result == null) return;
+    final onboarding = await cubit.loadOnboardingState();
+    if (!mounted) return;
+    setState(() => _onboardingState = onboarding);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result.cleared
+              ? l10n.settingsBarcodeClearedMessage
+              : l10n.settingsBarcodeSavedMessage,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openApiKeySheet(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<SettingsCubit>();
+    final saved = await showGeminiKeySheet(
+      context,
+      initialConsentAccepted: _onboardingState?.privacyConsentAccepted ?? false,
+      onSaveApiKey: (apiKey, consent) =>
+          cubit.updateGeminiApiKey(apiKey: apiKey, consentAccepted: consent),
+    );
+    if (!mounted || saved != true) return;
+    final onboarding = await cubit.loadOnboardingState();
+    if (!mounted) return;
+    setState(() => _onboardingState = onboarding);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(l10n.onboardingKeyValidated)));
+  }
+
+  Future<void> _requestPermissions() async {
+    if (_isRequestingPermissions) return;
+    setState(() => _isRequestingPermissions = true);
+    final perms = await context.read<SettingsCubit>().requestPermissions();
+    if (!mounted) return;
+    setState(() {
+      _permissionsStatus = perms ?? _permissionsStatus;
+      _isRequestingPermissions = false;
+    });
+  }
+
+  Future<void> _refreshPermissions() async {
+    if (_isRequestingPermissions) return;
+    setState(() => _isRequestingPermissions = true);
+    final perms = await context.read<SettingsCubit>().checkPermissions();
+    if (!mounted) return;
+    setState(() {
+      _permissionsStatus = perms ?? _permissionsStatus;
+      _isRequestingPermissions = false;
+    });
+  }
+
   String _localizeFailure(AppLocalizations l10n, Failure failure) {
     return switch (failure) {
       LockWindowFailure() => l10n.settingsErrorLockWindow,
       QuotaExceededFailure() => l10n.settingsErrorQuotaExceeded,
       ValidationFailure() => l10n.settingsErrorValidation,
+      ApiFailure() => l10n.onboardingApiKeyInvalidError,
       _ => l10n.commonErrorGeneric,
     };
   }
@@ -400,14 +575,24 @@ class _VacationModeCard extends StatelessWidget {
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
-            if (dateStr != null)
+            if (dateStr != null) ...[
               Text(
                 l10n.settingsVacationActiveUntil(dateStr),
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: theme.colorScheme.primary,
                 ),
-              )
-            else ...[
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                key: const Key('settings_deactivate_vacation_button'),
+                onPressed: state.isWithinLockWindow
+                    ? null
+                    : () => context
+                          .read<SettingsCubit>()
+                          .deactivateVacationMode(),
+                child: Text(l10n.settingsVacationDeactivateButton),
+              ),
+            ] else ...[
               Row(
                 children: [
                   Expanded(child: Text(l10n.settingsVacationDurationLabel)),

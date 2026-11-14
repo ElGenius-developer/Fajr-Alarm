@@ -4,7 +4,7 @@ import 'package:fajr_alarm/features/challenge_verification/domain/repositories/c
 import 'package:fpdart/fpdart.dart';
 
 /// Verifies the 120-character Standing Typing Challenge with 0 errors and
-/// an active standing tilt angle (-45° to -90°).
+/// an active standing tilt angle (-15° to 25°).
 class VerifyStandingTypingUseCase {
   const VerifyStandingTypingUseCase(this._repository);
 

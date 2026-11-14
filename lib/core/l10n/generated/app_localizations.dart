@@ -599,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @challengePhotoInstruction.
   ///
   /// In en, this message translates to:
-  /// **'Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.'**
+  /// **'Stand on your prayer rug, point the camera down at your feet (-15° to 25°), and take a live photo.'**
   String get challengePhotoInstruction;
 
   /// No description provided for @challengeTiltValid.
@@ -611,7 +611,7 @@ abstract class AppLocalizations {
   /// No description provided for @challengeTiltInvalid.
   ///
   /// In en, this message translates to:
-  /// **'Point phone downward between -45° and -90° (current: {degrees}°)'**
+  /// **'Hold phone at a standing angle between -15° and 25° (current: {degrees}°)'**
   String challengeTiltInvalid(String degrees);
 
   /// No description provided for @challengeCapturePhoto.
@@ -677,7 +677,7 @@ abstract class AppLocalizations {
   /// No description provided for @challengeTypingInstruction.
   ///
   /// In en, this message translates to:
-  /// **'Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.'**
+  /// **'Hold your phone at a standing angle (-15° to 25°) and type the 120-character text exactly without pasting.'**
   String get challengeTypingInstruction;
 
   /// No description provided for @challengeTypingCounter.
@@ -1309,6 +1309,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Alarm stays active until Proof-of-Action is verified.'**
   String get alarmChallengeRuleHint;
+
+  /// No description provided for @settingsBarcodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom Barcode (Offline Fallback)'**
+  String get settingsBarcodeTitle;
+
+  /// No description provided for @settingsBarcodeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to verify wake-up when offline or when Gemini API is unreachable.'**
+  String get settingsBarcodeSubtitle;
+
+  /// No description provided for @settingsBarcodeRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered barcode: {code}'**
+  String settingsBarcodeRegistered(String code);
+
+  /// No description provided for @settingsBarcodeNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No bathroom barcode registered yet'**
+  String get settingsBarcodeNotSet;
+
+  /// No description provided for @settingsBarcodeScanOrEditButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan or Edit Barcode'**
+  String get settingsBarcodeScanOrEditButton;
+
+  /// No description provided for @settingsBarcodeClearButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Barcode'**
+  String get settingsBarcodeClearButton;
+
+  /// No description provided for @settingsBarcodeSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom barcode saved.'**
+  String get settingsBarcodeSavedMessage;
+
+  /// No description provided for @settingsBarcodeClearedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom barcode removed.'**
+  String get settingsBarcodeClearedMessage;
+
+  /// No description provided for @settingsApiKeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API Key & Privacy'**
+  String get settingsApiKeyTitle;
+
+  /// No description provided for @settingsApiKeyVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'API key verified and stored securely'**
+  String get settingsApiKeyVerified;
+
+  /// No description provided for @settingsApiKeyNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No verified Gemini API key'**
+  String get settingsApiKeyNotSet;
+
+  /// No description provided for @settingsApiKeyUpdateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Gemini API Key'**
+  String get settingsApiKeyUpdateButton;
+
+  /// No description provided for @settingsAlarmAndLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Timing, Location & Method'**
+  String get settingsAlarmAndLocationTitle;
+
+  /// No description provided for @settingsEditLocationMethodButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit City, Coordinates & Method'**
+  String get settingsEditLocationMethodButton;
+
+  /// No description provided for @settingsPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'System Permissions Status'**
+  String get settingsPermissionsTitle;
+
+  /// No description provided for @settingsVacationDeactivateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'End Vacation Mode Now'**
+  String get settingsVacationDeactivateButton;
+
+  /// No description provided for @settingsAlarmAndLocationSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm and location settings saved.'**
+  String get settingsAlarmAndLocationSavedMessage;
 }
 
 class _AppLocalizationsDelegate

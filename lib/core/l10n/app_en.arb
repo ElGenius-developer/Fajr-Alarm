@@ -142,7 +142,7 @@
     }
   },
   "challengeTitle": "Proof-of-Action Challenge",
-  "challengePhotoInstruction": "Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.",
+  "challengePhotoInstruction": "Stand on your prayer rug, point the camera down at your feet (-15° to 25°), and take a live photo.",
   "challengeTiltValid": "Standing angle OK ({degrees}°)",
   "@challengeTiltValid": {
     "placeholders": {
@@ -151,7 +151,7 @@
       }
     }
   },
-  "challengeTiltInvalid": "Point phone downward between -45° and -90° (current: {degrees}°)",
+  "challengeTiltInvalid": "Hold phone at a standing angle between -15° and 25° (current: {degrees}°)",
   "@challengeTiltInvalid": {
     "placeholders": {
       "degrees": {
@@ -169,7 +169,7 @@
   "challengeBarcodeInstruction": "Walk to the bathroom and scan your registered product barcode.",
   "challengeBarcodeMismatch": "Scanned barcode does not match your registered bathroom product.",
   "challengeTypingTitle": "Standing Typing Challenge",
-  "challengeTypingInstruction": "Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.",
+  "challengeTypingInstruction": "Hold your phone at a standing angle (-15° to 25°) and type the 120-character text exactly without pasting.",
   "challengeTypingCounter": "{current} / {target}",
   "@challengeTypingCounter": {
     "placeholders": {
@@ -301,5 +301,29 @@
   "appearanceDesignVelvet": "Midnight Velvet",
   "appearanceDesignVelvetDesc": "Nocturnal plum & rose-gold orbit",
   "challengeRamOnlyBadge": "RAM only • Purged < 500ms",
-  "alarmChallengeRuleHint": "Alarm stays active until Proof-of-Action is verified."
+  "alarmChallengeRuleHint": "Alarm stays active until Proof-of-Action is verified.",
+  "settingsBarcodeTitle": "Bathroom Barcode (Offline Fallback)",
+  "settingsBarcodeSubtitle": "Used to verify wake-up when offline or when Gemini API is unreachable.",
+  "settingsBarcodeRegistered": "Registered barcode: {code}",
+  "@settingsBarcodeRegistered": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsBarcodeNotSet": "No bathroom barcode registered yet",
+  "settingsBarcodeScanOrEditButton": "Scan or Edit Barcode",
+  "settingsBarcodeClearButton": "Remove Barcode",
+  "settingsBarcodeSavedMessage": "Bathroom barcode saved.",
+  "settingsBarcodeClearedMessage": "Bathroom barcode removed.",
+  "settingsApiKeyTitle": "Gemini API Key & Privacy",
+  "settingsApiKeyVerified": "API key verified and stored securely",
+  "settingsApiKeyNotSet": "No verified Gemini API key",
+  "settingsApiKeyUpdateButton": "Update Gemini API Key",
+  "settingsAlarmAndLocationTitle": "Alarm Timing, Location & Method",
+  "settingsEditLocationMethodButton": "Edit City, Coordinates & Method",
+  "settingsPermissionsTitle": "System Permissions Status",
+  "settingsVacationDeactivateButton": "End Vacation Mode Now",
+  "settingsAlarmAndLocationSavedMessage": "Alarm and location settings saved."
 }

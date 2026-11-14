@@ -8,6 +8,7 @@ import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_c
 import 'package:fajr_alarm/features/prayer_schedule/domain/entities/prayer_schedule.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_cubit.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_state.dart';
+import 'package:fajr_alarm/features/prayer_schedule/presentation/widgets/location_method_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -159,7 +160,7 @@ class _ScheduleLoadedBody extends StatelessWidget {
           : l10n.scheduleAlarmDisabled,
       isEnabled: config.isEnabled && nextAlarmTime != null,
       locationLabel:
-          '${_localizedCity(l10n, config.cityName)} · ${_localizedMethod(l10n, config.calculationMethod)}',
+          '${localizedCityName(l10n, config.cityName)} · ${localizedMethodName(l10n, config.calculationMethod)}',
       onChangeLocation: isWithinLockWindow
           ? null
           : () => _showLocationMethodSheet(context, config, cubit),
@@ -1010,107 +1011,11 @@ class _EditorialGridPainter extends CustomPainter {
   }
 }
 
-String _localizedCity(AppLocalizations l10n, String? cityKey) {
-  return switch (cityKey) {
-    'Cairo' => l10n.cityCairo,
-    'Alexandria' => l10n.cityAlexandria,
-    'Makkah' => l10n.cityMakkah,
-    'Madinah' => l10n.cityMadinah,
-    'Riyadh' => l10n.cityRiyadh,
-    'Dubai' => l10n.cityDubai,
-    'Istanbul' => l10n.cityIstanbul,
-    'London' => l10n.cityLondon,
-    'New York' => l10n.cityNewYork,
-    _ => cityKey ?? l10n.cityCairo,
-  };
-}
-
-String _localizedMethod(AppLocalizations l10n, FajrCalculationMethod method) {
-  return switch (method) {
-    FajrCalculationMethod.egyptian => l10n.methodEgyptian,
-    FajrCalculationMethod.ummAlQura => l10n.methodUmmAlQura,
-    FajrCalculationMethod.muslimWorldLeague => l10n.methodMuslimWorldLeague,
-    FajrCalculationMethod.northAmerica => l10n.methodNorthAmerica,
-    FajrCalculationMethod.karachi => l10n.methodKarachi,
-    FajrCalculationMethod.dubai => l10n.methodDubai,
-    FajrCalculationMethod.turkey => l10n.methodTurkey,
-    _ => method.name,
-  };
-}
-
 Future<void> _showLocationMethodSheet(
   BuildContext context,
   FajrAlarmConfig currentConfig,
   PrayerScheduleCubit cubit,
 ) {
-  const cities =
-      <({String key, double lat, double lng, FajrCalculationMethod method})>[
-        (
-          key: 'Cairo',
-          lat: 30.0444,
-          lng: 31.2357,
-          method: FajrCalculationMethod.egyptian,
-        ),
-        (
-          key: 'Alexandria',
-          lat: 31.2001,
-          lng: 29.9187,
-          method: FajrCalculationMethod.egyptian,
-        ),
-        (
-          key: 'Makkah',
-          lat: 21.4225,
-          lng: 39.8262,
-          method: FajrCalculationMethod.ummAlQura,
-        ),
-        (
-          key: 'Madinah',
-          lat: 24.5247,
-          lng: 39.5692,
-          method: FajrCalculationMethod.ummAlQura,
-        ),
-        (
-          key: 'Riyadh',
-          lat: 24.7136,
-          lng: 46.6753,
-          method: FajrCalculationMethod.ummAlQura,
-        ),
-        (
-          key: 'Dubai',
-          lat: 25.2048,
-          lng: 55.2708,
-          method: FajrCalculationMethod.dubai,
-        ),
-        (
-          key: 'Istanbul',
-          lat: 41.0082,
-          lng: 28.9784,
-          method: FajrCalculationMethod.turkey,
-        ),
-        (
-          key: 'London',
-          lat: 51.5074,
-          lng: -0.1278,
-          method: FajrCalculationMethod.muslimWorldLeague,
-        ),
-        (
-          key: 'New York',
-          lat: 40.7128,
-          lng: -74.0060,
-          method: FajrCalculationMethod.northAmerica,
-        ),
-      ];
-
-  const methods = <FajrCalculationMethod>[
-    FajrCalculationMethod.egyptian,
-    FajrCalculationMethod.ummAlQura,
-    FajrCalculationMethod.muslimWorldLeague,
-    FajrCalculationMethod.northAmerica,
-    FajrCalculationMethod.karachi,
-    FajrCalculationMethod.dubai,
-    FajrCalculationMethod.turkey,
-  ];
-
   return showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
@@ -1140,10 +1045,10 @@ Future<void> _showLocationMethodSheet(
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: cities.map((city) {
+                  children: presetFajrCities.map((city) {
                     final selected = currentConfig.cityName == city.key;
                     return ChoiceChip(
-                      label: Text(_localizedCity(l10n, city.key)),
+                      label: Text(localizedCityName(l10n, city.key)),
                       selected: selected,
                       onSelected: (_) {
                         cubit.updateConfig(
@@ -1169,11 +1074,11 @@ Future<void> _showLocationMethodSheet(
                   ),
                 ),
                 const SizedBox(height: 8),
-                ...methods.map((method) {
+                ...supportedFajrMethods.map((method) {
                   final selected = currentConfig.calculationMethod == method;
                   return ListTile(
                     contentPadding: EdgeInsetsDirectional.zero,
-                    title: Text(_localizedMethod(l10n, method)),
+                    title: Text(localizedMethodName(l10n, method)),
                     trailing: selected
                         ? Icon(
                             Icons.check_circle_rounded,

@@ -289,7 +289,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengePhotoInstruction =>
-      'Stand on your prayer rug, point the camera down at your feet (-45° to -90°), and take a live photo.';
+      'Stand on your prayer rug, point the camera down at your feet (-15° to 25°), and take a live photo.';
 
   @override
   String challengeTiltValid(String degrees) {
@@ -298,7 +298,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String challengeTiltInvalid(String degrees) {
-    return 'Point phone downward between -45° and -90° (current: $degrees°)';
+    return 'Hold phone at a standing angle between -15° and 25° (current: $degrees°)';
   }
 
   @override
@@ -338,7 +338,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get challengeTypingInstruction =>
-      'Hold your phone at a standing angle (-45° to -90°) and type the 120-character text exactly without pasting.';
+      'Hold your phone at a standing angle (-15° to 25°) and type the 120-character text exactly without pasting.';
 
   @override
   String challengeTypingCounter(int current, int target) {
@@ -686,4 +686,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get alarmChallengeRuleHint =>
       'Alarm stays active until Proof-of-Action is verified.';
+
+  @override
+  String get settingsBarcodeTitle => 'Bathroom Barcode (Offline Fallback)';
+
+  @override
+  String get settingsBarcodeSubtitle =>
+      'Used to verify wake-up when offline or when Gemini API is unreachable.';
+
+  @override
+  String settingsBarcodeRegistered(String code) {
+    return 'Registered barcode: $code';
+  }
+
+  @override
+  String get settingsBarcodeNotSet => 'No bathroom barcode registered yet';
+
+  @override
+  String get settingsBarcodeScanOrEditButton => 'Scan or Edit Barcode';
+
+  @override
+  String get settingsBarcodeClearButton => 'Remove Barcode';
+
+  @override
+  String get settingsBarcodeSavedMessage => 'Bathroom barcode saved.';
+
+  @override
+  String get settingsBarcodeClearedMessage => 'Bathroom barcode removed.';
+
+  @override
+  String get settingsApiKeyTitle => 'Gemini API Key & Privacy';
+
+  @override
+  String get settingsApiKeyVerified => 'API key verified and stored securely';
+
+  @override
+  String get settingsApiKeyNotSet => 'No verified Gemini API key';
+
+  @override
+  String get settingsApiKeyUpdateButton => 'Update Gemini API Key';
+
+  @override
+  String get settingsAlarmAndLocationTitle => 'Alarm Timing, Location & Method';
+
+  @override
+  String get settingsEditLocationMethodButton =>
+      'Edit City, Coordinates & Method';
+
+  @override
+  String get settingsPermissionsTitle => 'System Permissions Status';
+
+  @override
+  String get settingsVacationDeactivateButton => 'End Vacation Mode Now';
+
+  @override
+  String get settingsAlarmAndLocationSavedMessage =>
+      'Alarm and location settings saved.';
 }
