@@ -6,6 +6,28 @@ An open-source, serverless, **Local-First / BYOK** Flutter mobile alarm app engi
 
 ---
 
+## Screenshots
+
+### Onboarding Flow (Arabic Dark & English Light)
+
+| Location Setup | Permissions Gate | BYOK Gemini Key & Consent | Bathroom Barcode |
+| :---: | :---: | :---: | :---: |
+| ![Onboarding Location Dark AR](docs/screenshots/01-onboarding-location-dark-ar.png) | ![Onboarding Permissions Dark AR](docs/screenshots/02-onboarding-permissions-dark-ar.png) | ![Onboarding Privacy Key Light EN](docs/screenshots/03-onboarding-privacy-key-light-en.png) | ![Onboarding Barcode Dark AR](docs/screenshots/04-onboarding-barcode-dark-ar.png) |
+
+### Core Screens (Prayer Schedule, Relentless Alarm, Proof-of-Action & Settings)
+
+| Prayer Schedule (AR Dark) | Prayer Schedule (EN Light) | Alarm Ringing (AR Dark) | Settings & Streak (AR Dark) |
+| :---: | :---: | :---: | :---: |
+| ![Prayer Schedule Dark AR](docs/screenshots/05-prayer-schedule-dark-ar.png) | ![Prayer Schedule Light EN](docs/screenshots/06-prayer-schedule-light-en.png) | ![Alarm Ringing Dark AR](docs/screenshots/07-alarm-ringing-dark-ar.png) | ![Settings and Streak Dark AR](docs/screenshots/11-settings-and-streak-dark-ar.png) |
+
+### Proof-of-Action Verification & Fallbacks
+
+| Rug POV Camera (AR Dark) | Rug POV Camera (EN Light) | Standing Typing Fallback | Settings & Streak (EN Light) |
+| :---: | :---: | :---: | :---: |
+| ![Challenge Camera Dark AR](docs/screenshots/08-challenge-camera-dark-ar.png) | ![Challenge Camera Light EN](docs/screenshots/09-challenge-camera-light-en.png) | ![Challenge Standing Fallback Dark AR](docs/screenshots/10-challenge-fallback-standing-dark-ar.png) | ![Settings and Streak Light EN](docs/screenshots/12-settings-and-streak-light-en.png) |
+
+---
+
 ## Interactive Architecture Map (Floorplan)
 
 Explore the entire codebase visually — all 142 source & test files, 12 modules, 2 end-to-end flows, and a 5-stop guided onboarding tour:
