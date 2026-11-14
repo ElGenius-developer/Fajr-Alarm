@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsState {
 
- bool get isLoading; UserSettings get settings; StreakStats get streakStats; bool get isWithinLockWindow; Failure? get failure; DateTime? get dryRunScheduledAt;
+ bool get isLoading; UserSettings get settings; StreakStats get streakStats; bool get isWithinLockWindow; Failure? get failure; DateTime? get dryRunScheduledAt; bool get dryRunJustScheduled; bool get dryRunCancelled;
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as SettingsState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&(identical(other.streakStats, _this.streakStats) || other.streakStats == _this.streakStats)&&(identical(other.isWithinLockWindow, _this.isWithinLockWindow) || other.isWithinLockWindow == _this.isWithinLockWindow)&&(identical(other.failure, _this.failure) || other.failure == _this.failure)&&(identical(other.dryRunScheduledAt, _this.dryRunScheduledAt) || other.dryRunScheduledAt == _this.dryRunScheduledAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&(identical(other.streakStats, _this.streakStats) || other.streakStats == _this.streakStats)&&(identical(other.isWithinLockWindow, _this.isWithinLockWindow) || other.isWithinLockWindow == _this.isWithinLockWindow)&&(identical(other.failure, _this.failure) || other.failure == _this.failure)&&(identical(other.dryRunScheduledAt, _this.dryRunScheduledAt) || other.dryRunScheduledAt == _this.dryRunScheduledAt)&&(identical(other.dryRunJustScheduled, _this.dryRunJustScheduled) || other.dryRunJustScheduled == _this.dryRunJustScheduled)&&(identical(other.dryRunCancelled, _this.dryRunCancelled) || other.dryRunCancelled == _this.dryRunCancelled));
 }
 
 
 @override
 int get hashCode {
   final _this = this as SettingsState;
-  return Object.hash(runtimeType,_this.isLoading,_this.settings,_this.streakStats,_this.isWithinLockWindow,_this.failure,_this.dryRunScheduledAt);
+  return Object.hash(runtimeType,_this.isLoading,_this.settings,_this.streakStats,_this.isWithinLockWindow,_this.failure,_this.dryRunScheduledAt,_this.dryRunJustScheduled,_this.dryRunCancelled);
 }
 
 @override
 String toString() {
   final _this = this as SettingsState;
-  return 'SettingsState(isLoading: ${_this.isLoading}, settings: ${_this.settings}, streakStats: ${_this.streakStats}, isWithinLockWindow: ${_this.isWithinLockWindow}, failure: ${_this.failure}, dryRunScheduledAt: ${_this.dryRunScheduledAt})';
+  return 'SettingsState(isLoading: ${_this.isLoading}, settings: ${_this.settings}, streakStats: ${_this.streakStats}, isWithinLockWindow: ${_this.isWithinLockWindow}, failure: ${_this.failure}, dryRunScheduledAt: ${_this.dryRunScheduledAt}, dryRunJustScheduled: ${_this.dryRunJustScheduled}, dryRunCancelled: ${_this.dryRunCancelled})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $SettingsStateCopyWith<$Res>  {
   factory $SettingsStateCopyWith(SettingsState value, $Res Function(SettingsState) _then) = _$SettingsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, UserSettings settings, StreakStats streakStats, bool isWithinLockWindow, Failure? failure, DateTime? dryRunScheduledAt
+ bool isLoading, UserSettings settings, StreakStats streakStats, bool isWithinLockWindow, Failure? failure, DateTime? dryRunScheduledAt, bool dryRunJustScheduled, bool dryRunCancelled
 });
 
 
@@ -68,7 +68,7 @@ class _$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? settings = null,Object? streakStats = null,Object? isWithinLockWindow = null,Object? failure = freezed,Object? dryRunScheduledAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? settings = null,Object? streakStats = null,Object? isWithinLockWindow = null,Object? failure = freezed,Object? dryRunScheduledAt = freezed,Object? dryRunJustScheduled = null,Object? dryRunCancelled = null,}) {
   return _then(SettingsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,9 @@ as UserSettings,streakStats: null == streakStats ? _self.streakStats : streakSta
 as StreakStats,isWithinLockWindow: null == isWithinLockWindow ? _self.isWithinLockWindow : isWithinLockWindow // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,dryRunScheduledAt: freezed == dryRunScheduledAt ? _self.dryRunScheduledAt : dryRunScheduledAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,dryRunJustScheduled: null == dryRunJustScheduled ? _self.dryRunJustScheduled : dryRunJustScheduled // ignore: cast_nullable_to_non_nullable
+as bool,dryRunCancelled: null == dryRunCancelled ? _self.dryRunCancelled : dryRunCancelled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of SettingsState
@@ -191,10 +193,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt,  bool dryRunJustScheduled,  bool dryRunCancelled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt);case _:
+return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt,_that.dryRunJustScheduled,_that.dryRunCancelled);case _:
   return orElse();
 
 }
@@ -212,10 +214,10 @@ return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinL
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt,  bool dryRunJustScheduled,  bool dryRunCancelled)  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState():
-return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt);case _:
+return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt,_that.dryRunJustScheduled,_that.dryRunCancelled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -232,10 +234,10 @@ return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinL
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  UserSettings settings,  StreakStats streakStats,  bool isWithinLockWindow,  Failure? failure,  DateTime? dryRunScheduledAt,  bool dryRunJustScheduled,  bool dryRunCancelled)?  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt);case _:
+return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinLockWindow,_that.failure,_that.dryRunScheduledAt,_that.dryRunJustScheduled,_that.dryRunCancelled);case _:
   return null;
 
 }
@@ -247,7 +249,7 @@ return $default(_that.isLoading,_that.settings,_that.streakStats,_that.isWithinL
 
 
 class _SettingsState implements SettingsState {
-  const _SettingsState({this.isLoading = false, this.settings = const UserSettings(), this.streakStats = const StreakStats(), this.isWithinLockWindow = false, this.failure, this.dryRunScheduledAt});
+  const _SettingsState({this.isLoading = false, this.settings = const UserSettings(), this.streakStats = const StreakStats(), this.isWithinLockWindow = false, this.failure, this.dryRunScheduledAt, this.dryRunJustScheduled = false, this.dryRunCancelled = false});
   
 
 @override@JsonKey() final  bool isLoading;
@@ -256,6 +258,8 @@ class _SettingsState implements SettingsState {
 @override@JsonKey() final  bool isWithinLockWindow;
 @override final  Failure? failure;
 @override final  DateTime? dryRunScheduledAt;
+@override@JsonKey() final  bool dryRunJustScheduled;
+@override@JsonKey() final  bool dryRunCancelled;
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
@@ -267,18 +271,18 @@ _$SettingsStateCopyWith<_SettingsState> get copyWith => __$SettingsStateCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.streakStats, streakStats) || other.streakStats == streakStats)&&(identical(other.isWithinLockWindow, isWithinLockWindow) || other.isWithinLockWindow == isWithinLockWindow)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.dryRunScheduledAt, dryRunScheduledAt) || other.dryRunScheduledAt == dryRunScheduledAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.streakStats, streakStats) || other.streakStats == streakStats)&&(identical(other.isWithinLockWindow, isWithinLockWindow) || other.isWithinLockWindow == isWithinLockWindow)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.dryRunScheduledAt, dryRunScheduledAt) || other.dryRunScheduledAt == dryRunScheduledAt)&&(identical(other.dryRunJustScheduled, dryRunJustScheduled) || other.dryRunJustScheduled == dryRunJustScheduled)&&(identical(other.dryRunCancelled, dryRunCancelled) || other.dryRunCancelled == dryRunCancelled));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,isLoading,settings,streakStats,isWithinLockWindow,failure,dryRunScheduledAt);
+    return Object.hash(runtimeType,isLoading,settings,streakStats,isWithinLockWindow,failure,dryRunScheduledAt,dryRunJustScheduled,dryRunCancelled);
 }
 
 @override
 String toString() {
-    return 'SettingsState(isLoading: $isLoading, settings: $settings, streakStats: $streakStats, isWithinLockWindow: $isWithinLockWindow, failure: $failure, dryRunScheduledAt: $dryRunScheduledAt)';
+    return 'SettingsState(isLoading: $isLoading, settings: $settings, streakStats: $streakStats, isWithinLockWindow: $isWithinLockWindow, failure: $failure, dryRunScheduledAt: $dryRunScheduledAt, dryRunJustScheduled: $dryRunJustScheduled, dryRunCancelled: $dryRunCancelled)';
 }
 
 
@@ -289,7 +293,7 @@ abstract mixin class _$SettingsStateCopyWith<$Res> implements $SettingsStateCopy
   factory _$SettingsStateCopyWith(_SettingsState value, $Res Function(_SettingsState) _then) = __$SettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, UserSettings settings, StreakStats streakStats, bool isWithinLockWindow, Failure? failure, DateTime? dryRunScheduledAt
+ bool isLoading, UserSettings settings, StreakStats streakStats, bool isWithinLockWindow, Failure? failure, DateTime? dryRunScheduledAt, bool dryRunJustScheduled, bool dryRunCancelled
 });
 
 
@@ -306,7 +310,7 @@ class __$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? settings = null,Object? streakStats = null,Object? isWithinLockWindow = null,Object? failure = freezed,Object? dryRunScheduledAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? settings = null,Object? streakStats = null,Object? isWithinLockWindow = null,Object? failure = freezed,Object? dryRunScheduledAt = freezed,Object? dryRunJustScheduled = null,Object? dryRunCancelled = null,}) {
   return _then(_SettingsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
@@ -314,7 +318,9 @@ as UserSettings,streakStats: null == streakStats ? _self.streakStats : streakSta
 as StreakStats,isWithinLockWindow: null == isWithinLockWindow ? _self.isWithinLockWindow : isWithinLockWindow // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,dryRunScheduledAt: freezed == dryRunScheduledAt ? _self.dryRunScheduledAt : dryRunScheduledAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,dryRunJustScheduled: null == dryRunJustScheduled ? _self.dryRunJustScheduled : dryRunJustScheduled // ignore: cast_nullable_to_non_nullable
+as bool,dryRunCancelled: null == dryRunCancelled ? _self.dryRunCancelled : dryRunCancelled // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

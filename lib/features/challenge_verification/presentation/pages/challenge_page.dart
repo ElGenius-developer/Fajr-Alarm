@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -131,7 +132,15 @@ class _ChallengePageState extends State<ChallengePage> {
 
     try {
       final XFile file = await controller.takePicture();
-      final Uint8List bytes = await file.readAsBytes();
+      final Uint8List bytes;
+      try {
+        bytes = await file.readAsBytes();
+      } finally {
+        final File tempFile = File(file.path);
+        if (await tempFile.exists()) {
+          await tempFile.delete();
+        }
+      }
       await cubit.submitPhoto(imageBytes: bytes, localeCode: localeCode);
     } on CameraException {
       await cubit.reportCameraUnavailable();

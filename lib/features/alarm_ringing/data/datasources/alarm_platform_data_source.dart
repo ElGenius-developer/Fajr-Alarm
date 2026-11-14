@@ -69,4 +69,27 @@ class AlarmPlatformDataSource {
   Future<void> requestIgnoreBatteryOptimizations() async {
     await _channel.invokeMethod<void>('requestIgnoreBatteryOptimizations');
   }
+
+  Future<Map<String, dynamic>?> consumePendingAlarmTrigger() async {
+    final result = await _channel.invokeMapMethod<String, dynamic>(
+      'consumePendingAlarmTrigger',
+    );
+    return result;
+  }
+
+  void setAlarmTriggeredHandler(
+    void Function({required bool isDryRun})? handler,
+  ) {
+    if (handler == null) {
+      _channel.setMethodCallHandler(null);
+      return;
+    }
+    _channel.setMethodCallHandler((MethodCall call) async {
+      if (call.method == 'onAlarmTriggered') {
+        final args = call.arguments as Map<Object?, Object?>?;
+        final isDryRun = args?['isDryRun'] as bool? ?? false;
+        handler(isDryRun: isDryRun);
+      }
+    });
+  }
 }

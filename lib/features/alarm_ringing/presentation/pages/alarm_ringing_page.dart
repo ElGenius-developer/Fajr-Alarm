@@ -12,9 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Lock-screen / full-screen alarm ringing UI obeying 60-30-10 Quiet Dawn (FR-02, FR-6.2).
 class AlarmRingingPage extends StatelessWidget {
-  const AlarmRingingPage({super.key, this.onStartChallenge});
+  const AlarmRingingPage({
+    super.key,
+    this.onStartChallenge,
+    this.onEmergencyCompleted,
+  });
 
   final VoidCallback? onStartChallenge;
+  final VoidCallback? onEmergencyCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,13 @@ class AlarmRingingPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: BlocBuilder<AlarmRingingBloc, AlarmRingingState>(
+        child: BlocConsumer<AlarmRingingBloc, AlarmRingingState>(
+          listenWhen: (previous, current) =>
+              previous.entity.status != AlarmStatus.completed &&
+              current.entity.status == AlarmStatus.completed,
+          listener: (context, state) {
+            onEmergencyCompleted?.call();
+          },
           builder: (context, state) {
             final status = state.entity.status;
             final isRingingOrSnoozed =

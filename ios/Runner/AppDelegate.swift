@@ -19,8 +19,18 @@ import UIKit
         name: AlarmKitManager.channelName,
         binaryMessenger: registrar.messenger()
       )
+      alarmKitManager.attachChannel(channel)
       channel.setMethodCallHandler { [weak self] call, result in
         self?.alarmKitManager.handle(call, result: result)
+      }
+    }
+    if let permissionsRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "OnboardingPermissionsPlugin") {
+      let permissionsChannel = FlutterMethodChannel(
+        name: AlarmKitManager.permissionsChannelName,
+        binaryMessenger: permissionsRegistrar.messenger()
+      )
+      permissionsChannel.setMethodCallHandler { [weak self] call, result in
+        self?.alarmKitManager.handleOnboardingPermissions(call, result: result)
       }
     }
   }

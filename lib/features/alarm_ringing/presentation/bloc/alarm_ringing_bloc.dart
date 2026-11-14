@@ -88,6 +88,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
     final startResult = await _platformRepository.startRinging(
       isDryRun: event.isDryRun,
     );
+    if (isClosed) return;
 
     if (startResult.isLeft()) {
       startResult.fold(
@@ -98,6 +99,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
     }
 
     await _platformRepository.enableScreenPinning();
+    if (isClosed) return;
 
     _initialRingStartElapsed = _clock.elapsed;
     emit(
@@ -137,6 +139,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
   ) async {
     _initialIgnoreTimer?.cancel();
     final result = await _snoozeAlarmUseCase(state.entity);
+    if (isClosed) return;
     result.fold((failure) => emit(state.copyWith(failure: failure)), (
       updatedEntity,
     ) {
@@ -199,6 +202,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
     if (_clock.elapsed - _relentlessLastRingElapsed >= relentlessInterval) {
       _relentlessLastRingElapsed = _clock.elapsed;
       final result = await _startRelentlessRingingUseCase(state.entity);
+      if (isClosed) return;
       result.fold(
         (failure) => emit(state.copyWith(failure: failure)),
         (updatedEntity) =>
@@ -209,6 +213,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
 
   Future<void> _escalateToRelentless(Emitter<AlarmRingingState> emit) async {
     final result = await _startRelentlessRingingUseCase(state.entity);
+    if (isClosed) return;
     result.fold((failure) => emit(state.copyWith(failure: failure)), (
       updatedEntity,
     ) {
@@ -257,6 +262,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
   ) async {
     _cancelAllTimers();
     final result = await _completeAlarmUseCase(state.entity);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(state.copyWith(failure: failure)),
       (updatedEntity) => emit(
@@ -283,6 +289,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
     final result = await _emergencyOverrideUseCase.beginTouchMute(
       remainingEmergencyOverrides: state.entity.remainingEmergencyOverrides,
     );
+    if (isClosed) return;
 
     result.fold((failure) => emit(state.copyWith(failure: failure)), (_) {
       _emergencyStartElapsed = _clock.elapsed;
@@ -317,6 +324,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
       final result = await _emergencyOverrideUseCase.completeOverride(
         state.entity,
       );
+      if (isClosed) return;
       result.fold(
         (failure) => emit(
           state.copyWith(
@@ -351,6 +359,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
     }
     _emergencyTimer?.cancel();
     final result = await _emergencyOverrideUseCase.cancelEarlyRelease();
+    if (isClosed) return;
     result.fold(
       (failure) => emit(
         state.copyWith(

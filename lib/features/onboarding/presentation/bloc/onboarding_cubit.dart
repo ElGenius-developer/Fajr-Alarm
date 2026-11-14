@@ -30,25 +30,28 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
 
   /// Loads persisted onboarding state and checks current OS permissions.
   Future<void> loadOnboarding() async {
+    if (isClosed) return;
     emit(state.copyWith(isLoading: true, error: null));
     final Either<Failure, OnboardingStateEntity> stateResult = await _repository
         .getOnboardingState();
+    if (isClosed) return;
 
     await stateResult.fold(
       (Failure failure) async {
-        emit(state.copyWith(isLoading: false, error: failure));
+        _safeEmit(state.copyWith(isLoading: false, error: failure));
       },
       (OnboardingStateEntity entity) async {
         final Either<Failure, PermissionsGateStatus> permResult =
             await _checkPermissionsGateUseCase(request: false);
+        if (isClosed) return;
         permResult.fold(
           (Failure failure) {
-            emit(
+            _safeEmit(
               state.copyWith(entity: entity, isLoading: false, error: failure),
             );
           },
           (PermissionsGateStatus status) {
-            emit(
+            _safeEmit(
               state.copyWith(
                 entity: entity.copyWith(permissionsGranted: status.allGranted),
                 permissionsStatus: status,
@@ -67,6 +70,7 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
     required double longitude,
     required String cityName,
   }) async {
+    if (isClosed) return;
     emit(state.copyWith(isSubmitting: true, error: null));
     final Either<Failure, OnboardingStateEntity> result =
         await _saveLocationUseCase(
@@ -74,31 +78,36 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
           longitude: longitude,
           cityName: cityName,
         );
+    if (isClosed) return;
 
     await result.fold(
       (Failure failure) async {
-        emit(state.copyWith(isSubmitting: false, error: failure));
+        _safeEmit(state.copyWith(isSubmitting: false, error: failure));
       },
       (OnboardingStateEntity updated) async {
         final OnboardingStateEntity next = updated.copyWith(step: 1);
         await _repository.updateStep(1);
-        emit(state.copyWith(entity: next, isSubmitting: false, error: null));
+        _safeEmit(
+          state.copyWith(entity: next, isSubmitting: false, error: null),
+        );
       },
     );
   }
 
   /// Step 2: Checks or requests mandatory OS permissions.
   Future<void> checkPermissions({bool request = false}) async {
+    if (isClosed) return;
     emit(state.copyWith(isSubmitting: true, error: null));
     final Either<Failure, PermissionsGateStatus> result =
         await _checkPermissionsGateUseCase(request: request);
+    if (isClosed) return;
 
     result.fold(
       (Failure failure) {
-        emit(state.copyWith(isSubmitting: false, error: failure));
+        _safeEmit(state.copyWith(isSubmitting: false, error: failure));
       },
       (PermissionsGateStatus status) {
-        emit(
+        _safeEmit(
           state.copyWith(
             entity: state.entity.copyWith(
               permissionsGranted: status.allGranted,
@@ -114,6 +123,7 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
 
   /// Advances from Step 2 to Step 3 only when all mandatory permissions are granted.
   Future<void> continueFromPermissionsGate() async {
+    if (isClosed) return;
     if (!state.permissionsStatus.allGranted) {
       emit(
         state.copyWith(
@@ -129,6 +139,7 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
 
   /// Step 3: Updates explicit Google Free Tier privacy consent checkbox.
   Future<void> setPrivacyConsent(bool accepted) async {
+    if (isClosed) return;
     emit(
       state.copyWith(
         entity: state.entity.copyWith(privacyConsentAccepted: accepted),
@@ -140,15 +151,17 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
 
   /// Step 3: Validates Gemini key live and saves it only if explicit consent is true.
   Future<void> validateAndSaveApiKey(String apiKey) async {
+    if (isClosed) return;
     emit(state.copyWith(isValidatingKey: true, error: null));
     final Either<Failure, bool> result = await _validateAndSaveGeminiKeyUseCase(
       apiKey: apiKey,
       privacyConsentAccepted: state.entity.privacyConsentAccepted,
     );
+    if (isClosed) return;
 
     await result.fold(
       (Failure failure) async {
-        emit(
+        _safeEmit(
           state.copyWith(
             isValidatingKey: false,
             entity: state.entity.copyWith(apiKeyValidated: false),
@@ -164,7 +177,7 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
         if (valid) {
           await _repository.updateStep(3);
         }
-        emit(
+        _safeEmit(
           state.copyWith(entity: updated, isValidatingKey: false, error: null),
         );
       },
@@ -173,23 +186,26 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
 
   /// Step 4: Registers a bathroom barcode (or skips with `null`) and completes onboarding.
   Future<void> registerBarcodeAndComplete(String? barcode) async {
+    if (isClosed) return;
     emit(state.copyWith(isSubmitting: true, error: null));
     final Either<Failure, Unit> barcodeResult =
         await _registerBathroomBarcodeUseCase(barcode: barcode);
+    if (isClosed) return;
 
     await barcodeResult.fold(
       (Failure failure) async {
-        emit(state.copyWith(isSubmitting: false, error: failure));
+        _safeEmit(state.copyWith(isSubmitting: false, error: failure));
       },
       (_) async {
         final Either<Failure, OnboardingStateEntity> completeResult =
             await _completeOnboardingUseCase();
+        if (isClosed) return;
         completeResult.fold(
           (Failure failure) {
-            emit(state.copyWith(isSubmitting: false, error: failure));
+            _safeEmit(state.copyWith(isSubmitting: false, error: failure));
           },
           (OnboardingStateEntity completed) {
-            emit(
+            _safeEmit(
               state.copyWith(
                 entity: completed,
                 isSubmitting: false,
@@ -206,8 +222,14 @@ final class OnboardingCubit extends Cubit<OnboardingState> {
   Future<void> goToStep(int step) async {
     final int clamped = step.clamp(0, 3);
     await _repository.updateStep(clamped);
-    emit(
+    _safeEmit(
       state.copyWith(entity: state.entity.copyWith(step: clamped), error: null),
     );
+  }
+
+  void _safeEmit(OnboardingState nextState) {
+    if (!isClosed) {
+      emit(nextState);
+    }
   }
 }

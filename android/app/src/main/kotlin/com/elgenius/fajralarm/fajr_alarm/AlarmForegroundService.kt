@@ -82,6 +82,7 @@ class AlarmForegroundService : Service() {
 
     private fun startAlarmForeground() {
         isRinging = true
+        currentIsDryRun = isDryRun
         isMuted = false
         currentVolumeScale = CRESCENDO_START_SCALE
 
@@ -215,6 +216,10 @@ class AlarmForegroundService : Service() {
 
         @Volatile
         var isRinging: Boolean = false
+            private set
+
+        @Volatile
+        var currentIsDryRun: Boolean = false
             private set
 
         @Volatile

@@ -17,4 +17,6 @@ abstract interface class SettingsAndStreakRepository {
   Future<Either<Failure, Unit>> scheduleDryRunAlarm({
     required DateTime scheduledAt,
   });
+
+  Future<Either<Failure, Unit>> cancelDryRunAlarm();
 }

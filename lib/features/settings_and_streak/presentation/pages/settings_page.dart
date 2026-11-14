@@ -32,9 +32,14 @@ class _SettingsPageState extends State<SettingsPage> {
             SnackBar(content: Text(_localizeFailure(l10n, state.failure!))),
           );
           context.read<SettingsCubit>().clearNotifications();
-        } else if (state.dryRunScheduledAt != null) {
+        } else if (state.dryRunJustScheduled) {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.settingsDryRunScheduled)),
+          );
+          context.read<SettingsCubit>().clearNotifications();
+        } else if (state.dryRunCancelled) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(l10n.settingsDryRunCancelled)),
           );
           context.read<SettingsCubit>().clearNotifications();
         }
@@ -531,6 +536,17 @@ class _DryRunCard extends StatelessWidget {
               icon: const Icon(Icons.alarm_on),
               label: Text(l10n.settingsDryRunButton),
             ),
+            if (state.dryRunScheduledAt != null) ...[
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                key: const Key('settings_cancel_dry_run_button'),
+                onPressed: state.isWithinLockWindow
+                    ? null
+                    : () => context.read<SettingsCubit>().cancelDryRunAlarm(),
+                icon: const Icon(Icons.alarm_off),
+                label: Text(l10n.settingsDryRunCancelButton),
+              ),
+            ],
           ],
         ),
       ),

@@ -4,6 +4,8 @@ import 'package:fajr_alarm/features/onboarding/data/datasources/onboarding_local
 import 'package:fajr_alarm/features/onboarding/data/datasources/onboarding_permissions_data_source.dart';
 import 'package:fajr_alarm/features/onboarding/data/repositories/onboarding_repository_impl.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
+import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_config.dart';
+import 'package:fajr_alarm/features/prayer_schedule/domain/repositories/prayer_schedule_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -16,6 +18,9 @@ class MockGeminiValidator extends Mock
 
 class MockPermissionsDataSource extends Mock
     implements OnboardingPermissionsDataSource {}
+
+class MockPrayerScheduleRepository extends Mock
+    implements PrayerScheduleRepository {}
 
 void main() {
   late MockLocalDataSource localDataSource;
@@ -173,6 +178,10 @@ void main() {
     );
     when(() => localDataSource.saveGeminiKey('k')).thenAnswer((_) async {});
     when(() => localDataSource.getGeminiKey()).thenAnswer((_) async => 'k');
+    when(() => localDataSource.saveBathroomBarcode(any()))
+        .thenAnswer((_) async {});
+    when(() => localDataSource.saveBathroomBarcode(any()))
+        .thenAnswer((_) async {});
     when(
       () => permissionsDataSource.requestPermissions(),
     ).thenAnswer((_) async => const PermissionsGateStatus(cameraGranted: true));
@@ -186,8 +195,123 @@ void main() {
     expect((await repository.saveGeminiKey('k')).isRight(), isTrue);
     expect(await repository.getGeminiKey(), const Right<Failure, String?>('k'));
     expect((await repository.registerBathroomBarcode('123')).isRight(), isTrue);
+    verify(() => localDataSource.saveBathroomBarcode('123')).called(1);
     expect((await repository.updateStep(2)).isRight(), isTrue);
   });
+
+  test(
+    'saveLocation syncs PrayerScheduleRepository FajrAlarmConfig when provided',
+    () async {
+      final MockPrayerScheduleRepository prayerRepo =
+          MockPrayerScheduleRepository();
+      const FajrAlarmConfig initialConfig = FajrAlarmConfig(
+        latitude: 30.0444,
+        longitude: 31.2357,
+        cityName: 'Cairo',
+        calculationMethod: FajrCalculationMethod.egyptian,
+        offsetMinutes: 15,
+      );
+      when(() => localDataSource.getOnboardingState())
+          .thenAnswer((_) async => const OnboardingStateEntity());
+      when(() => localDataSource.saveOnboardingState(any())).thenAnswer(
+        (Invocation inv) async =>
+            inv.positionalArguments.first as OnboardingStateEntity,
+      );
+      when(() => prayerRepo.getAlarmConfig())
+          .thenAnswer((_) async => const Right(initialConfig));
+      when(
+        () => prayerRepo.saveAlarmConfig(
+          initialConfig.copyWith(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          ),
+        ),
+      ).thenAnswer((_) async => const Right(unit));
+
+      final OnboardingRepositoryImpl syncedRepo = OnboardingRepositoryImpl(
+        localDataSource: localDataSource,
+        geminiKeyValidatorDataSource: validator,
+        permissionsDataSource: permissionsDataSource,
+        prayerScheduleRepository: prayerRepo,
+      );
+
+      final Either<Failure, OnboardingStateEntity> result = await syncedRepo
+          .saveLocation(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          );
+
+      expect(result.isRight(), isTrue);
+      verify(
+        () => prayerRepo.saveAlarmConfig(
+          initialConfig.copyWith(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'saveLocation syncs PrayerScheduleRepository FajrAlarmConfig when provided',
+    () async {
+      final MockPrayerScheduleRepository prayerRepo =
+          MockPrayerScheduleRepository();
+      const FajrAlarmConfig initialConfig = FajrAlarmConfig(
+        latitude: 30.0444,
+        longitude: 31.2357,
+        cityName: 'Cairo',
+        calculationMethod: FajrCalculationMethod.egyptian,
+        offsetMinutes: 15,
+      );
+      when(() => localDataSource.getOnboardingState())
+          .thenAnswer((_) async => const OnboardingStateEntity());
+      when(() => localDataSource.saveOnboardingState(any())).thenAnswer(
+        (Invocation inv) async =>
+            inv.positionalArguments.first as OnboardingStateEntity,
+      );
+      when(() => prayerRepo.getAlarmConfig())
+          .thenAnswer((_) async => const Right(initialConfig));
+      when(
+        () => prayerRepo.saveAlarmConfig(
+          initialConfig.copyWith(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          ),
+        ),
+      ).thenAnswer((_) async => const Right(unit));
+
+      final OnboardingRepositoryImpl syncedRepo = OnboardingRepositoryImpl(
+        localDataSource: localDataSource,
+        geminiKeyValidatorDataSource: validator,
+        permissionsDataSource: permissionsDataSource,
+        prayerScheduleRepository: prayerRepo,
+      );
+
+      final Either<Failure, OnboardingStateEntity> result = await syncedRepo
+          .saveLocation(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          );
+
+      expect(result.isRight(), isTrue);
+      verify(
+        () => prayerRepo.saveAlarmConfig(
+          initialConfig.copyWith(
+            latitude: 21.3891,
+            longitude: 39.8579,
+            cityName: 'Makkah',
+          ),
+        ),
+      ).called(1);
+    },
+  );
 
   test('validateGeminiKey maps GeminiApiException to ApiFailure', () async {
     when(() => validator.validateKey('key'))

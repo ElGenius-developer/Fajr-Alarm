@@ -88,6 +88,17 @@ class AlarmPlatformRepositoryImpl implements AlarmPlatformRepository {
         return unit;
       });
 
+  @override
+  Future<Either<Failure, Map<String, dynamic>?>> consumePendingAlarmTrigger() =>
+      _guard(dataSource.consumePendingAlarmTrigger);
+
+  @override
+  void listenForAlarmTriggers(
+    void Function({required bool isDryRun})? onTriggered,
+  ) {
+    dataSource.setAlarmTriggeredHandler(onTriggered);
+  }
+
   Future<Either<Failure, T>> _guard<T>(Future<T> Function() action) async {
     try {
       return Right(await action());

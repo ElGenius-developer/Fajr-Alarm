@@ -67,7 +67,13 @@ class UpdateFajrAlarmConfigUseCase {
         now: effectiveNow,
       );
       return nextAlarmResult.fold(Left.new, (nextAlarm) async {
-        await _repository.saveNextScheduledAlarm(nextAlarm);
+        final saveNextResult = await _repository.saveNextScheduledAlarm(
+          nextAlarm,
+        );
+        final Failure? schedulingFailure = saveNextResult.fold(
+          (Failure failure) => failure,
+          (_) => null,
+        );
         final updatedLock = _isWithinLockWindow(
           alarmTime: nextAlarm,
           now: effectiveNow,
@@ -80,6 +86,7 @@ class UpdateFajrAlarmConfigUseCase {
             schedules: schedules,
             nextAlarmTime: nextAlarm,
             isWithinLockWindow: updatedLock,
+            actionFailure: schedulingFailure,
           ),
         );
       });

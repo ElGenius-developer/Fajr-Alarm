@@ -15,12 +15,14 @@ class PrayerScheduleOverview {
     required this.schedules,
     required this.nextAlarmTime,
     required this.isWithinLockWindow,
+    this.actionFailure,
   });
 
   final FajrAlarmConfig config;
   final List<PrayerSchedule> schedules;
   final DateTime? nextAlarmTime;
   final bool isWithinLockWindow;
+  final Failure? actionFailure;
 }
 
 /// Loads the persisted config and 30-day rolling schedule (calculating offline
@@ -75,7 +77,11 @@ class LoadPrayerScheduleUseCase {
       );
 
       return nextAlarmResult.fold(Left.new, (nextAlarm) async {
-        await _repository.saveNextScheduledAlarm(nextAlarm);
+        final saveResult = await _repository.saveNextScheduledAlarm(nextAlarm);
+        final Failure? schedulingFailure = saveResult.fold(
+          (Failure failure) => failure,
+          (_) => null,
+        );
         final lockResult = _isWithinLockWindow(
           alarmTime: nextAlarm,
           now: effectiveNow,
@@ -88,6 +94,7 @@ class LoadPrayerScheduleUseCase {
             schedules: schedules,
             nextAlarmTime: nextAlarm,
             isWithinLockWindow: isLocked,
+            actionFailure: schedulingFailure,
           ),
         );
       });

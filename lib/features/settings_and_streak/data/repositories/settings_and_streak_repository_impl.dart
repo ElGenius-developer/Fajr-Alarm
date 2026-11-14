@@ -11,15 +11,20 @@ typedef DryRunAlarmScheduler = Future<Either<Failure, Unit>> Function(
   DateTime scheduledAt,
 );
 
+/// Callback type for cancelling an active dry-run alarm on the platform layer.
+typedef DryRunAlarmCanceller = Future<Either<Failure, Unit>> Function();
+
 /// Repository implementation backed by [SettingsLocalDataSource].
 class SettingsAndStreakRepositoryImpl implements SettingsAndStreakRepository {
   SettingsAndStreakRepositoryImpl({
     required this._localDataSource,
     this._onScheduleDryRunAlarm,
+    this._onCancelDryRunAlarm,
   });
 
   final SettingsLocalDataSource _localDataSource;
   final DryRunAlarmScheduler? _onScheduleDryRunAlarm;
+  final DryRunAlarmCanceller? _onCancelDryRunAlarm;
 
   @override
   Future<Either<Failure, UserSettings>> getSettings() async {
@@ -74,5 +79,14 @@ class SettingsAndStreakRepositoryImpl implements SettingsAndStreakRepository {
       return const Right(unit);
     }
     return scheduler(scheduledAt);
+  }
+
+  @override
+  Future<Either<Failure, Unit>> cancelDryRunAlarm() async {
+    final canceller = _onCancelDryRunAlarm;
+    if (canceller == null) {
+      return const Right(unit);
+    }
+    return canceller();
   }
 }

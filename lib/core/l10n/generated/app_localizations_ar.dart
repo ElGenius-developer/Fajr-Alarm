@@ -193,8 +193,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsDryRunButton => 'تجربة المنبه الآن (10 ثوانٍ)';
 
   @override
+  String get settingsDryRunCancelButton => 'إلغاء المنبه التجريبي';
+
+  @override
   String get settingsDryRunScheduled =>
       'تمت جدولة المنبه التجريبي ليرنّ بعد 10 ثوانٍ.';
+
+  @override
+  String get settingsDryRunCancelled => 'تم إلغاء المنبه التجريبي.';
 
   @override
   String get settingsLockWindowNotice =>
