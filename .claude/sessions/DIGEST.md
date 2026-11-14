@@ -11,6 +11,13 @@ files: app_theme.dart, appearance_sheet.dart, app_en.arb, prayer_schedule_reposi
 status: in-progress
 ---
 
+## 2026-11-14 | ui-polish-quiet-dawn-icon-and-device-deploy
+keywords: PR #12, 55a2130, J52H7284YY, main, lib/features/onboarding/presentation/widgets/barcode_step_view.dart, onboarding_page.dart, MobileScanner, scannerBuilder, lib/core/theme/app_theme.dart, lib/main.dart, buildTextTheme(..., isArabic, Avenir Next, SegmentedButtonTheme, lib/features/prayer_schedule/presentation/pages/prayer_schedule_page.dart, SegmentedButton
+decisions: Build standalone `Release` instead of `--debug` for user phone testing — lets Ahmed reopen the app on-device away from the workstation without iOS ter... | Pass `DEVELOPMENT_TEAM=J52H7284YY` on the `xcodebuild` CLI rather than committing to `project.pbxproj` — keeps personal developer team IDs out of open-source tracked files. | Defer "Open Google AI Studio" button (`https://aistudio.google.com/apikey`) in Step 3 (`PrivacyKeyStepView`) to the next version — Ahmed opted to obtain/paste his key manually during live v1.0 device testing ...
+files: 2026-11-14_ui-polish-quiet-dawn-icon-and-device-deploy.md, INDEX.md, TRACKER.md
+status: in-progress
+---
+
 ## 2026-11-14 | qa-fixes-argon-approve-and-merge
 keywords: feat/fajr-alarm-v1, main, Users/ahmed/Documents/GitHub/athkari, tutorial_coach_mark: ^1.2.11, WalkthroughService, android/app/src/main/AndroidManifest.xml, SCHEDULE_EXACT_ALARM, maxSdkVersion="32, android/app/src/main/kotlin/com/elgenius/fajralarm/fajr_alarm/AlarmForegroundService.kt, currentIsDryRun, android/app/src/main/kotlin/com/elgenius/fajralarm/fajr_alarm/MainActivity.kt, onCreate, onNewIntent, consumePendingAlarmTrigger, ios/Runner/AlarmKitManager.swift
 decisions: Native Alarm Trigger Bridge (`consumePendingAlarmTrigger` + `onAlarmTriggered`) — supports both cold launches (`onCreate` / `OpenFajrChallengeIntent` buffered ... | Keep `dryRunScheduledAt` persistent across SnackBar dismiss — tracked transient feedback via `dryRunJustScheduled` / `dryRunCancelled` flag... | Defer Phase B Walkthrough (`tutorial_coach_mark`) to post-merge branch + explicit user approval — honors Constitution/Non-Negotiable rules (separate PR after `main` merge, exp...
