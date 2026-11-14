@@ -69,13 +69,20 @@ GoRouter createAppRouter({
         builder: (BuildContext context, GoRouterState state) =>
             BlocProvider<PrayerScheduleCubit>(
               create: (_) => sl<PrayerScheduleCubit>()..loadSchedule(),
-              child: PrayerSchedulePage(
-                onOpenSettings: () {
-                  if (sl.isRegistered<SettingsCubit>()) {
-                    unawaited(sl<SettingsCubit>().load());
-                  }
-                  context.push(AppRoutes.settings);
-                },
+              child: Builder(
+                builder: (BuildContext innerContext) => PrayerSchedulePage(
+                  onOpenSettings: () async {
+                    if (sl.isRegistered<SettingsCubit>()) {
+                      unawaited(sl<SettingsCubit>().load());
+                    }
+                    await innerContext.push(AppRoutes.settings);
+                    if (innerContext.mounted) {
+                      unawaited(
+                        innerContext.read<PrayerScheduleCubit>().loadSchedule(),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
       ),

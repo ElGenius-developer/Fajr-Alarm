@@ -63,6 +63,7 @@ class UpdateSettingsUseCase {
         current.manualAlarmHour != next.manualAlarmHour ||
         current.manualAlarmMinute != next.manualAlarmMinute ||
         current.monthlyEmergencyQuota != next.monthlyEmergencyQuota ||
-        current.vacationMode != next.vacationMode;
+        current.vacationMode != next.vacationMode ||
+        current.bathroomBarcode != next.bathroomBarcode;
   }
 }

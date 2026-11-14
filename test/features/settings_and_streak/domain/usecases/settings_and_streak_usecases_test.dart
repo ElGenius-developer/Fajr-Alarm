@@ -168,6 +168,56 @@ void main() {
         );
       },
     );
+
+    test(
+      'blocks modifying or clearing bathroomBarcode inside T - 30m lock window',
+      () async {
+        const current = UserSettings(bathroomBarcode: 'OLD-123');
+        final now = fajrAt.subtract(const Duration(minutes: 10));
+
+        when(() => repository.getSettings())
+            .thenAnswer((_) async => const Right(current));
+
+        final editResult = await useCase(
+          newSettings: current.copyWith(bathroomBarcode: 'NEW-456'),
+          now: now,
+          nextFajrAlarmAt: fajrAt,
+        );
+        final clearResult = await useCase(
+          newSettings: current.copyWith(bathroomBarcode: null),
+          now: now,
+          nextFajrAlarmAt: fajrAt,
+        );
+
+        expect(
+          editResult.fold((l) => l, (_) => null),
+          isA<LockWindowFailure>(),
+        );
+        expect(
+          clearResult.fold((l) => l, (_) => null),
+          isA<LockWindowFailure>(),
+        );
+        verifyNever(() => repository.saveSettings(any()));
+      },
+    );
+
+    test('allows updating bathroomBarcode outside lock window', () async {
+      const current = UserSettings(bathroomBarcode: 'OLD-123');
+      final updated = current.copyWith(bathroomBarcode: 'NEW-789');
+
+      when(() => repository.getSettings())
+          .thenAnswer((_) async => const Right(current));
+      when(() => repository.saveSettings(updated))
+          .thenAnswer((_) async => Right(updated));
+
+      final result = await useCase(
+        newSettings: updated,
+        now: fajrAt.subtract(const Duration(hours: 2)),
+        nextFajrAlarmAt: fajrAt,
+      );
+
+      expect(result, Right<Failure, UserSettings>(updated));
+    });
   });
 
   group('ActivateVacationModeUseCase', () {

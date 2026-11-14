@@ -104,6 +104,8 @@ void main() {
     );
 
     for (final Failure apiOrNetworkFailure in <Failure>[
+      const Failure.api(message: 'Bad key', statusCode: 400),
+      const Failure.api(message: 'Unauthorized', statusCode: 401),
       const Failure.api(message: 'Rate limited', statusCode: 429),
       const Failure.api(message: 'Forbidden', statusCode: 403),
       const Failure.api(message: 'Server error', statusCode: 500),

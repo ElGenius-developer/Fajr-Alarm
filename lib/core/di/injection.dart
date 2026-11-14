@@ -247,6 +247,10 @@ Future<void> initDependencies({String? hivePath}) async {
         autoResumeVacation: sl(),
         triggerDryRunAlarm: sl(),
         cancelDryRunAlarm: sl(),
+        onboardingRepository: sl(),
+        prayerScheduleRepository: sl(),
+        updateFajrAlarmConfig: sl(),
+        rescheduleTomorrowFajr: sl(),
         nextAlarmProvider: () async {
           final result = await sl<PrayerScheduleRepository>()
               .getNextScheduledAlarm();
