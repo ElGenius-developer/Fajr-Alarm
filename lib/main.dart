@@ -110,12 +110,13 @@ class _FajrAlarmAppState extends State<FajrAlarmApp>
             previous.settings.designStyle != current.settings.designStyle,
         builder: (BuildContext context, SettingsState state) {
           final style = AppDesignStyle.fromKey(state.settings.designStyle);
+          final isArabic = state.settings.locale == 'ar';
           return MaterialApp.router(
             locale: Locale(state.settings.locale),
             onGenerateTitle: (BuildContext context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: AppTheme.light(style),
-            darkTheme: AppTheme.dark(style),
+            theme: AppTheme.light(style, isArabic),
+            darkTheme: AppTheme.dark(style, isArabic),
             themeMode: AppTheme.parseThemeMode(state.settings.themeMode),
             localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
               AppLocalizations.delegate,

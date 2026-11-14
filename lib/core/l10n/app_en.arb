@@ -243,6 +243,20 @@
   "onboardingStep4Subtitle": "Register a product barcode in your bathroom (e.g., toothpaste) as an offline Proof-of-Action fallback.",
   "onboardingBarcodeLabel": "Barcode Value",
   "onboardingBarcodeHint": "Scan or enter product barcode",
+  "onboardingScanBarcodeButton": "Scan Barcode with Camera",
+  "onboardingScanBarcodeHint": "Point camera at a bathroom item barcode (e.g., toothpaste)",
+  "onboardingStopScanButton": "Close Camera",
+  "onboardingOrEnterManually": "or enter barcode manually",
+  "onboardingBarcodeScannedBadge": "Scanned: {code}",
+  "@onboardingBarcodeScannedBadge": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingScannerUnavailable": "Camera scanner unavailable here. Enter the code below.",
+  "onboardingToggleFlashTooltip": "Toggle flash",
   "onboardingRegisterBarcodeButton": "Save Barcode & Finish",
   "onboardingSkipBarcodeButton": "Skip for now & Finish",
   "onboardingCompletedMessage": "Setup complete! You are ready for Fajr.",

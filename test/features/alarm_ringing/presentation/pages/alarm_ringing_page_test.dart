@@ -93,7 +93,7 @@ void main() {
         await tester.pumpWidget(buildTestWidget(locale: const Locale('ar')));
 
         expect(find.text('منبه تجريبي'), findsOneWidget);
-        expect(find.text('رنّ ملحّ — استيقظ الآن!'), findsOneWidget);
+        expect(find.text('رنين متواصل — استيقظ الآن!'), findsOneWidget);
         expect(find.text('غفوة (5 دقائق)'), findsNothing);
         expect(find.text('بدء تحدي إثبات الفعل'), findsOneWidget);
       },

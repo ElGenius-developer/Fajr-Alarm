@@ -998,6 +998,48 @@ abstract class AppLocalizations {
   /// **'Scan or enter product barcode'**
   String get onboardingBarcodeHint;
 
+  /// No description provided for @onboardingScanBarcodeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode with Camera'**
+  String get onboardingScanBarcodeButton;
+
+  /// No description provided for @onboardingScanBarcodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Point camera at a bathroom item barcode (e.g., toothpaste)'**
+  String get onboardingScanBarcodeHint;
+
+  /// No description provided for @onboardingStopScanButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Camera'**
+  String get onboardingStopScanButton;
+
+  /// No description provided for @onboardingOrEnterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'or enter barcode manually'**
+  String get onboardingOrEnterManually;
+
+  /// No description provided for @onboardingBarcodeScannedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned: {code}'**
+  String onboardingBarcodeScannedBadge(String code);
+
+  /// No description provided for @onboardingScannerUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera scanner unavailable here. Enter the code below.'**
+  String get onboardingScannerUnavailable;
+
+  /// No description provided for @onboardingToggleFlashTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle flash'**
+  String get onboardingToggleFlashTooltip;
+
   /// No description provided for @onboardingRegisterBarcodeButton.
   ///
   /// In en, this message translates to:
