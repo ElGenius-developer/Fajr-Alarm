@@ -16,8 +16,8 @@
 
 ## Threat Model & Anti-Cheating Policy (#6)
 - **Sleepy-Self Threat Model:** Defenses target quick in-bed cheats by the sleepy user (muting volume, locking screen, toggling Airplane Mode, photographing a screen, changing the system clock) — not complex technical attacks (`adb`, uninstalling, code modification).
-- **Offline Fallback Hierarchy (`FR-4.2`):** Bathroom Barcode Scan is the primary offline challenge to enforce physical locomotion out of bed. The 120-char zero-error no-paste typing challenge is only available if no barcode is registered or camera fails, and requires holding the phone at the standing tilt angle (`-45°` to `-90°`).
-- **Pragmatic POV Verification (`FR-03` / `FR-04`):** Live camera stream + standing tilt check (`-45°` to `-90°`) + balanced Gemini prompt that accepts any clear live photo of a foot standing on a prayer rug without overly complex/strict rejection loops.
+- **Offline Fallback Hierarchy (`FR-4.2`):** Bathroom Barcode Scan is the primary offline challenge to enforce physical locomotion out of bed. The 120-char zero-error no-paste typing challenge is only available if no barcode is registered or camera fails, and requires holding the phone at the standing tilt angle (`-15°` to `25°` pitch, same range as `FR-3.2`).
+- **Pragmatic POV Verification (`FR-03` / `FR-04`):** Live camera stream + standing tilt check (`-15°` to `25°` pitch — changed from `-45°`/`-90°` in PR #14 because the old range stopped users aiming the camera at their feet; source of truth: `TiltAngleReading.minValidPitchDegrees` / `maxValidPitchDegrees`) + balanced Gemini prompt that accepts any clear live photo of a foot standing on a prayer rug without overly complex/strict rejection loops.
 - **Clock & Settings Guard (`FR-5.4`):** Snooze and ringing timers use the system monotonic clock (immune to manual wall-clock changes), and alarm edits / disabling / Vacation Mode are locked starting **30 minutes before Fajr alarm (`T - 30m`)** until `[COMPLETED]`.
 
 ## Emergency Override & Vacation Mode Policy (#7)

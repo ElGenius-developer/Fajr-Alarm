@@ -37,6 +37,13 @@ Checked against the PR diff during `pr-guard` Phase 2. CRITICAL/HIGH findings bl
 - **`freezed` / `json_serializable` model modified without regenerating `.freezed.dart` / `.g.dart` (`dart run build_runner build --delete-conflicting-outputs`)** → **HIGH**.
 - **Any `dart analyze --fatal-infos` error/warning/info or `dart format` drift** → **HIGH** / **LOW**.
 
+## Spec Drift (`docs/SRS-Fajr-alarm.md` / `.claude/memory.md`)
+
+- **The diff changes a value or behavior that the SRS or `.claude/memory.md` documents, without updating that doc in the same PR** → **HIGH**. A decision recorded only in a session log does not count as documented.
+- **Existing code outside the diff contradicts the SRS or `memory.md`:** do not report it as a broken contract and do not revert the code. Search `.claude/sessions/DIGEST.md` for the FR id or the value first.
+  - A recorded decision exists (the newest one wins) → **MEDIUM**: the doc is stale; fix the doc, not the code.
+  - No recorded decision → ask Ahmed which side is correct. Never pick one yourself.
+
 ## Git & Proof-of-Execution (Constitution §6–7)
 
 - **Any commit pushed directly to `main`** → **CRITICAL**.
