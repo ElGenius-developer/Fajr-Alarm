@@ -4,6 +4,13 @@
 <!-- Do not edit manually. Rebuilt via /rebuild-digest. -->
 <!-- Updated automatically by /save-session (Step 2.5). -->
 
+## 2026-11-15 | llm-critic-trap-and-spec-drift-gate
+keywords: a5fb694, CLAUDE.md, AGENTS.md, claude/CONSTITUTION.md, claude/settings.json, claude/hooks/*.sh, fajr-app-pr-guard, claude/skills/pr-guard, clean-code-guard, GLOSSARY.md, claude/memory.md, docs/SRS-Fajr-alarm.md, docs/agents/domain.md, constitution-gates.md, claude
+decisions: Main anti-loop mechanisms are kept as they are: (1) the architecture is fixed by the Constitution, so layer and interface debates stay closed; (2) a finding blocks only if it has a concrete failure scenario, and only CRITICAL/HIGH block; (3) the Sleepy-Self threat model and the SRS Out-of-Scope table bound security and feature scope. — reason: these are what prevent over-engineering vs YAGNI oscillation; weakening any reopens the loop. | Spec Drift gate added to `constitution-gates.md`: changing a value that the SRS or `memory.md` documents without updating that doc in the same PR is HIGH. When existing code contradicts the SRS, the reviewer checks `DIGEST.md` first. A recorded decision means the doc is stale (MEDIUM, fix the doc). No recorded decision means ask Ahmed. The code is never reverted on the reviewer's own call. — reason: decisions made during device testing were landing only in session logs, so a reviewer reading the SRS would "fix" correct code back to a broken value. | No `docs/adr/` yet — `DIGEST.md` already carries decisions; create ADRs lazily when a real archite...
+files: SRS-Fajr-alarm.md, memory.md, constitution-gates.md, pr-15-review.md, 2026-11-15_llm-critic-trap-and-spec-drift-gate.md
+status: in-progress
+---
+
 ## 2026-11-15 | alarmkit-tilt-settings-and-pr14-merge
 keywords: 15.0°, 25.0, d3f4c9e, main, ios/Runner/AlarmKitManager.swift, FajrOpenChallengeIntent, alarmUpdates, lib/features/challenge_verification, tilt_angle_reading.dart, tilt_sensor_datasource.dart, verify_standing_typing_usecase.dart, challenge_page.dart, challenge_cubit.dart, lib/features/settings_and_streak, settings_page.dart, settings_extended_cards.dart
 decisions: Standing tilt pitch range changed to `[-15.0°, 25.0°]` — `[45°, 90°]` prevented users from aiming the phone downward toward their feet... | No `DEVELOPMENT_TEAM` in `project.pbxproj` — pass `DEVELOPMENT_TEAM=J52H7284YY CODE_SIGN_STYLE=Automatic` exclusively on `... | Shared `BarcodeScannerInput` & `location_method_helpers.dart` — eliminate duplication between Onboarding/Schedule and the extended Settings s...
