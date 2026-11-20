@@ -22,7 +22,7 @@ import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/consume_
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/record_alarm_completion_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_cubit.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/pages/settings_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';

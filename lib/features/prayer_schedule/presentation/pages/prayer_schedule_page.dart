@@ -9,7 +9,7 @@ import 'package:fajr_alarm/features/prayer_schedule/domain/entities/prayer_sched
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_cubit.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_state.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/widgets/location_method_helpers.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.elgenius.fajralarm.fajr_alarm"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

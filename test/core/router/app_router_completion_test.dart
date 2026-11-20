@@ -1,3 +1,4 @@
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/di/injection.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/router/app_router.dart';
@@ -18,7 +19,7 @@ import 'package:fajr_alarm/features/settings_and_streak/domain/entities/user_set
 import 'package:fajr_alarm/features/settings_and_streak/domain/repositories/settings_and_streak_repository.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/consume_emergency_quota_usecase.dart';
 import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/record_alarm_completion_usecase.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -158,7 +159,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp.router(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: router,
         ),

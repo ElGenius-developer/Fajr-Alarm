@@ -1,6 +1,6 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/widgets/barcode_scanner_input.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 export 'package:fajr_alarm/core/widgets/barcode_scanner_input.dart'
     show BarcodeScannerBuilder;

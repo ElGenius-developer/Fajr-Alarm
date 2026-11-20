@@ -3,7 +3,7 @@ import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/core/widgets/barcode_scanner_input.dart';
 import 'package:fajr_alarm/features/prayer_schedule/domain/entities/fajr_alarm_config.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/widgets/location_method_helpers.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Result returned when the bathroom barcode sheet finishes saving or clearing.
 typedef BarcodeSheetResult = ({bool cleared, String? barcode});

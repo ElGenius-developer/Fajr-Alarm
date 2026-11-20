@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/features/alarm_ringing/domain/entities/alarm_state_entity.dart';
 import 'package:fajr_alarm/features/alarm_ringing/domain/entities/alarm_status.dart';
@@ -6,7 +7,7 @@ import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringin
 import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringing_event.dart';
 import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringing_state.dart';
 import 'package:fajr_alarm/features/alarm_ringing/presentation/pages/alarm_ringing_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -32,7 +33,7 @@ void main() {
   }) {
     return MaterialApp(
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: BlocProvider<AlarmRingingBloc>.value(
         value: mockBloc,

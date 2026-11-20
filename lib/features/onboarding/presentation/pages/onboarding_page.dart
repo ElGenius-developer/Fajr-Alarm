@@ -7,7 +7,7 @@ import 'package:fajr_alarm/features/onboarding/presentation/widgets/barcode_step
 import 'package:fajr_alarm/features/onboarding/presentation/widgets/location_step_view.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/widgets/permissions_gate_step_view.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/widgets/privacy_key_step_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// 4-Step Onboarding page coordinating Location, Permissions Gate, BYOK Consent & Key, and Barcode.

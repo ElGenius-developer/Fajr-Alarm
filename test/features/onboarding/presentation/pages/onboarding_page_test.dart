@@ -1,3 +1,4 @@
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
@@ -11,7 +12,7 @@ import 'package:fajr_alarm/features/onboarding/domain/usecases/validate_and_save
 import 'package:fajr_alarm/features/onboarding/presentation/bloc/onboarding_cubit.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/widgets/barcode_step_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -69,7 +70,7 @@ void main() {
   }) {
     return MaterialApp(
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: BlocProvider<OnboardingCubit>.value(
         value: cubit,
@@ -229,7 +230,7 @@ void main() {
             theme: AppTheme.light(AppDesignStyle.horizon),
             darkTheme: AppTheme.dark(AppDesignStyle.horizon),
             themeMode: ThemeMode.dark,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: BlocProvider<OnboardingCubit>.value(
               value: cubit,
