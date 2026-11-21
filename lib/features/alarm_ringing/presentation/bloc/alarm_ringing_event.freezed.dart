@@ -153,11 +153,11 @@ return vacationEnded(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  preFajrLockEntered,TResult Function( DateTime? scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  alarmTriggered,TResult Function()?  snoozeRequested,TResult Function()?  snoozeTicked,TResult Function()?  relentlessTicked,TResult Function()?  challengeStarted,TResult Function()?  challengeRejected,TResult Function()?  challengeSucceeded,TResult Function()?  emergencyHoldStarted,TResult Function()?  emergencyHoldTicked,TResult Function()?  emergencyHoldReleased,TResult Function()?  vacationFrozen,TResult Function()?  vacationEnded,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  preFajrLockEntered,TResult Function( DateTime? scheduledAt,  bool isDryRun,  bool snoozeUsed,  int remainingEmergencyOverrides)?  alarmTriggered,TResult Function()?  snoozeRequested,TResult Function()?  snoozeTicked,TResult Function()?  relentlessTicked,TResult Function()?  challengeStarted,TResult Function()?  challengeRejected,TResult Function()?  challengeSucceeded,TResult Function()?  emergencyHoldStarted,TResult Function()?  emergencyHoldTicked,TResult Function()?  emergencyHoldReleased,TResult Function()?  vacationFrozen,TResult Function()?  vacationEnded,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case PreFajrLockEntered() when preFajrLockEntered != null:
 return preFajrLockEntered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case AlarmTriggered() when alarmTriggered != null:
-return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case SnoozeRequested() when snoozeRequested != null:
+return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.snoozeUsed,_that.remainingEmergencyOverrides);case SnoozeRequested() when snoozeRequested != null:
 return snoozeRequested();case SnoozeTicked() when snoozeTicked != null:
 return snoozeTicked();case RelentlessTicked() when relentlessTicked != null:
 return relentlessTicked();case ChallengeStarted() when challengeStarted != null:
@@ -186,11 +186,11 @@ return vacationEnded();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)  preFajrLockEntered,required TResult Function( DateTime? scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)  alarmTriggered,required TResult Function()  snoozeRequested,required TResult Function()  snoozeTicked,required TResult Function()  relentlessTicked,required TResult Function()  challengeStarted,required TResult Function()  challengeRejected,required TResult Function()  challengeSucceeded,required TResult Function()  emergencyHoldStarted,required TResult Function()  emergencyHoldTicked,required TResult Function()  emergencyHoldReleased,required TResult Function()  vacationFrozen,required TResult Function()  vacationEnded,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)  preFajrLockEntered,required TResult Function( DateTime? scheduledAt,  bool isDryRun,  bool snoozeUsed,  int remainingEmergencyOverrides)  alarmTriggered,required TResult Function()  snoozeRequested,required TResult Function()  snoozeTicked,required TResult Function()  relentlessTicked,required TResult Function()  challengeStarted,required TResult Function()  challengeRejected,required TResult Function()  challengeSucceeded,required TResult Function()  emergencyHoldStarted,required TResult Function()  emergencyHoldTicked,required TResult Function()  emergencyHoldReleased,required TResult Function()  vacationFrozen,required TResult Function()  vacationEnded,}) {final _that = this;
 switch (_that) {
 case PreFajrLockEntered():
 return preFajrLockEntered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case AlarmTriggered():
-return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case SnoozeRequested():
+return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.snoozeUsed,_that.remainingEmergencyOverrides);case SnoozeRequested():
 return snoozeRequested();case SnoozeTicked():
 return snoozeTicked();case RelentlessTicked():
 return relentlessTicked();case ChallengeStarted():
@@ -215,11 +215,11 @@ return vacationEnded();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  preFajrLockEntered,TResult? Function( DateTime? scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  alarmTriggered,TResult? Function()?  snoozeRequested,TResult? Function()?  snoozeTicked,TResult? Function()?  relentlessTicked,TResult? Function()?  challengeStarted,TResult? Function()?  challengeRejected,TResult? Function()?  challengeSucceeded,TResult? Function()?  emergencyHoldStarted,TResult? Function()?  emergencyHoldTicked,TResult? Function()?  emergencyHoldReleased,TResult? Function()?  vacationFrozen,TResult? Function()?  vacationEnded,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( DateTime scheduledAt,  bool isDryRun,  int remainingEmergencyOverrides)?  preFajrLockEntered,TResult? Function( DateTime? scheduledAt,  bool isDryRun,  bool snoozeUsed,  int remainingEmergencyOverrides)?  alarmTriggered,TResult? Function()?  snoozeRequested,TResult? Function()?  snoozeTicked,TResult? Function()?  relentlessTicked,TResult? Function()?  challengeStarted,TResult? Function()?  challengeRejected,TResult? Function()?  challengeSucceeded,TResult? Function()?  emergencyHoldStarted,TResult? Function()?  emergencyHoldTicked,TResult? Function()?  emergencyHoldReleased,TResult? Function()?  vacationFrozen,TResult? Function()?  vacationEnded,}) {final _that = this;
 switch (_that) {
 case PreFajrLockEntered() when preFajrLockEntered != null:
 return preFajrLockEntered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case AlarmTriggered() when alarmTriggered != null:
-return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.remainingEmergencyOverrides);case SnoozeRequested() when snoozeRequested != null:
+return alarmTriggered(_that.scheduledAt,_that.isDryRun,_that.snoozeUsed,_that.remainingEmergencyOverrides);case SnoozeRequested() when snoozeRequested != null:
 return snoozeRequested();case SnoozeTicked() when snoozeTicked != null:
 return snoozeTicked();case RelentlessTicked() when relentlessTicked != null:
 return relentlessTicked();case ChallengeStarted() when challengeStarted != null:
@@ -314,11 +314,12 @@ as int,
 
 
 class AlarmTriggered implements AlarmRingingEvent {
-  const AlarmTriggered({this.scheduledAt, this.isDryRun = false, this.remainingEmergencyOverrides = 3});
+  const AlarmTriggered({this.scheduledAt, this.isDryRun = false, this.snoozeUsed = false, this.remainingEmergencyOverrides = 3});
   
 
  final  DateTime? scheduledAt;
 @JsonKey() final  bool isDryRun;
+@JsonKey() final  bool snoozeUsed;
 @JsonKey() final  int remainingEmergencyOverrides;
 
 /// Create a copy of AlarmRingingEvent
@@ -331,18 +332,18 @@ $AlarmTriggeredCopyWith<AlarmTriggered> get copyWith => _$AlarmTriggeredCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is AlarmTriggered&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.isDryRun, isDryRun) || other.isDryRun == isDryRun)&&(identical(other.remainingEmergencyOverrides, remainingEmergencyOverrides) || other.remainingEmergencyOverrides == remainingEmergencyOverrides));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AlarmTriggered&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.isDryRun, isDryRun) || other.isDryRun == isDryRun)&&(identical(other.snoozeUsed, snoozeUsed) || other.snoozeUsed == snoozeUsed)&&(identical(other.remainingEmergencyOverrides, remainingEmergencyOverrides) || other.remainingEmergencyOverrides == remainingEmergencyOverrides));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,scheduledAt,isDryRun,remainingEmergencyOverrides);
+    return Object.hash(runtimeType,scheduledAt,isDryRun,snoozeUsed,remainingEmergencyOverrides);
 }
 
 @override
 String toString() {
-    return 'AlarmRingingEvent.alarmTriggered(scheduledAt: $scheduledAt, isDryRun: $isDryRun, remainingEmergencyOverrides: $remainingEmergencyOverrides)';
+    return 'AlarmRingingEvent.alarmTriggered(scheduledAt: $scheduledAt, isDryRun: $isDryRun, snoozeUsed: $snoozeUsed, remainingEmergencyOverrides: $remainingEmergencyOverrides)';
 }
 
 
@@ -353,7 +354,7 @@ abstract mixin class $AlarmTriggeredCopyWith<$Res> implements $AlarmRingingEvent
   factory $AlarmTriggeredCopyWith(AlarmTriggered value, $Res Function(AlarmTriggered) _then) = _$AlarmTriggeredCopyWithImpl;
 @useResult
 $Res call({
- DateTime? scheduledAt, bool isDryRun, int remainingEmergencyOverrides
+ DateTime? scheduledAt, bool isDryRun, bool snoozeUsed, int remainingEmergencyOverrides
 });
 
 
@@ -370,10 +371,11 @@ class _$AlarmTriggeredCopyWithImpl<$Res>
 
 /// Create a copy of AlarmRingingEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? scheduledAt = freezed,Object? isDryRun = null,Object? remainingEmergencyOverrides = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? scheduledAt = freezed,Object? isDryRun = null,Object? snoozeUsed = null,Object? remainingEmergencyOverrides = null,}) {
   return _then(AlarmTriggered(
 scheduledAt: freezed == scheduledAt ? _self.scheduledAt : scheduledAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,isDryRun: null == isDryRun ? _self.isDryRun : isDryRun // ignore: cast_nullable_to_non_nullable
+as bool,snoozeUsed: null == snoozeUsed ? _self.snoozeUsed : snoozeUsed // ignore: cast_nullable_to_non_nullable
 as bool,remainingEmergencyOverrides: null == remainingEmergencyOverrides ? _self.remainingEmergencyOverrides : remainingEmergencyOverrides // ignore: cast_nullable_to_non_nullable
 as int,
   ));

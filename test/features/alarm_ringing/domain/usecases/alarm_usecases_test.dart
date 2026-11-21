@@ -20,9 +20,13 @@ void main() {
   late EmergencyOverrideUseCase emergencyUseCase;
   late CompleteAlarmUseCase completeUseCase;
 
+  final snoozedAt = DateTime(2026, 1, 1, 5, 0);
+
+  setUpAll(() => registerFallbackValue(DateTime(0)));
+
   setUp(() {
     mockRepo = MockAlarmPlatformRepository();
-    snoozeUseCase = SnoozeAlarmUseCase(mockRepo);
+    snoozeUseCase = SnoozeAlarmUseCase(mockRepo, now: () => snoozedAt);
     relentlessUseCase = StartRelentlessRingingUseCase(mockRepo);
     emergencyUseCase = EmergencyOverrideUseCase(mockRepo);
     completeUseCase = CompleteAlarmUseCase(mockRepo);
@@ -39,6 +43,12 @@ void main() {
     when(() => mockRepo.disableScreenPinning())
         .thenAnswer((_) async => right(unit));
     when(() => mockRepo.cancelAllAlarms()).thenAnswer((_) async => right(unit));
+    when(
+      () => mockRepo.scheduleSnoozeAlarm(
+        at: any(named: 'at'),
+        isDryRun: any(named: 'isDryRun'),
+      ),
+    ).thenAnswer((_) async => right(unit));
   });
 
   group('SnoozeAlarmUseCase', () {
@@ -56,6 +66,43 @@ void main() {
           ),
         );
         verify(() => mockRepo.stopRinging()).called(1);
+      },
+    );
+
+    test('arms a native alarm 5 minutes out so ringing resumes if the app is killed', () async {
+      const initial = AlarmStateEntity(
+        status: AlarmStatus.ringingInitial,
+        isDryRun: true,
+      );
+
+      await snoozeUseCase(initial);
+
+      verify(
+        () => mockRepo.scheduleSnoozeAlarm(
+          at: snoozedAt.add(const Duration(minutes: 5)),
+          isDryRun: true,
+        ),
+      ).called(1);
+    });
+
+    test(
+      'keeps ringing when the native snooze alarm cannot be armed',
+      () async {
+        when(
+          () => mockRepo.scheduleSnoozeAlarm(
+            at: any(named: 'at'),
+            isDryRun: any(named: 'isDryRun'),
+          ),
+        ).thenAnswer(
+          (_) async =>
+              left(const Failure.platform(message: 'exact alarm denied')),
+        );
+        const initial = AlarmStateEntity(status: AlarmStatus.ringingInitial);
+
+        final result = await snoozeUseCase(initial);
+
+        expect(result.isLeft(), isTrue);
+        verifyNever(() => mockRepo.stopRinging());
       },
     );
 

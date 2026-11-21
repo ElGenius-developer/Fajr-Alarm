@@ -6,9 +6,15 @@ import 'package:fpdart/fpdart.dart';
 
 /// Snoozes the initial Fajr alarm once for 5 minutes (FR-2.3).
 class SnoozeAlarmUseCase {
-  const SnoozeAlarmUseCase(this._platformRepository);
+  const SnoozeAlarmUseCase(
+    this._platformRepository, {
+    this._now = DateTime.now,
+  });
+
+  static const Duration snoozeDuration = Duration(minutes: 5);
 
   final AlarmPlatformRepository _platformRepository;
+  final DateTime Function() _now;
 
   Future<Either<Failure, AlarmStateEntity>> call(
     AlarmStateEntity currentState,
@@ -20,6 +26,16 @@ class SnoozeAlarmUseCase {
           message: 'Snooze is only allowed once during initial ringing.',
         ),
       );
+    }
+
+    // Arm first: if the backup alarm can't be set, keep ringing rather than
+    // trust a Dart timer that dies with the app process.
+    final armResult = await _platformRepository.scheduleSnoozeAlarm(
+      at: _now().add(snoozeDuration),
+      isDryRun: currentState.isDryRun,
+    );
+    if (armResult.isLeft()) {
+      return armResult.map((_) => currentState);
     }
 
     final stopResult = await _platformRepository.stopRinging();

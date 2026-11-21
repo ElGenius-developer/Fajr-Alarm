@@ -20,6 +20,16 @@ class AlarmPlatformDataSource {
     });
   }
 
+  Future<void> scheduleSnoozeAlarm({
+    required DateTime at,
+    required bool isDryRun,
+  }) async {
+    await _channel.invokeMethod<void>('scheduleSnoozeAlarm', <String, Object?>{
+      'scheduledAtEpochMillis': at.millisecondsSinceEpoch,
+      'isDryRun': isDryRun,
+    });
+  }
+
   Future<void> cancelAllAlarms() async {
     await _channel.invokeMethod<void>('cancelAllAlarms');
   }
@@ -78,7 +88,7 @@ class AlarmPlatformDataSource {
   }
 
   void setAlarmTriggeredHandler(
-    void Function({required bool isDryRun})? handler,
+    void Function({required bool isDryRun, required bool snoozeUsed})? handler,
   ) {
     if (handler == null) {
       _channel.setMethodCallHandler(null);
@@ -88,7 +98,8 @@ class AlarmPlatformDataSource {
       if (call.method == 'onAlarmTriggered') {
         final args = call.arguments as Map<Object?, Object?>?;
         final isDryRun = args?['isDryRun'] as bool? ?? false;
-        handler(isDryRun: isDryRun);
+        final snoozeUsed = args?['snoozeUsed'] as bool? ?? false;
+        handler(isDryRun: isDryRun, snoozeUsed: snoozeUsed);
       }
     });
   }

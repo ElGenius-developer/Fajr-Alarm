@@ -108,7 +108,7 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
           status: AlarmStatus.ringingInitial,
           scheduledAt: event.scheduledAt ?? state.entity.scheduledAt,
           isDryRun: event.isDryRun,
-          snoozeUsed: false,
+          snoozeUsed: event.snoozeUsed,
           remainingEmergencyOverrides: event.remainingEmergencyOverrides,
           relentlessCycleCount: 0,
         ),
@@ -119,6 +119,12 @@ class AlarmRingingBloc extends Bloc<AlarmRingingEvent, AlarmRingingState> {
         failure: null,
       ),
     );
+
+    // The native snooze alarm relaunched us: the one snooze is spent.
+    if (event.snoozeUsed) {
+      await _escalateToRelentless(emit);
+      return;
+    }
 
     _initialIgnoreTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (state.entity.status != AlarmStatus.ringingInitial ||

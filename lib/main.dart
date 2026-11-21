@@ -38,7 +38,8 @@ class _FajrAlarmAppState extends State<FajrAlarmApp>
     WidgetsBinding.instance.addObserver(this);
     if (sl.isRegistered<AlarmPlatformRepository>()) {
       sl<AlarmPlatformRepository>().listenForAlarmTriggers(
-        ({required bool isDryRun}) => _openAlarmRinging(isDryRun: isDryRun),
+        ({required bool isDryRun, required bool snoozeUsed}) =>
+            _openAlarmRinging(isDryRun: isDryRun, snoozeUsed: snoozeUsed),
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         unawaited(_consumePendingAlarmTrigger());
@@ -64,13 +65,15 @@ class _FajrAlarmAppState extends State<FajrAlarmApp>
     }
     result.fold((_) {}, (Map<String, dynamic>? payload) {
       if (payload != null) {
-        final bool isDryRun = payload['isDryRun'] as bool? ?? false;
-        _openAlarmRinging(isDryRun: isDryRun);
+        _openAlarmRinging(
+          isDryRun: payload['isDryRun'] as bool? ?? false,
+          snoozeUsed: payload['snoozeUsed'] as bool? ?? false,
+        );
       }
     });
   }
 
-  void _openAlarmRinging({required bool isDryRun}) {
+  void _openAlarmRinging({required bool isDryRun, bool snoozeUsed = false}) {
     if (!mounted) {
       return;
     }
@@ -83,7 +86,7 @@ class _FajrAlarmAppState extends State<FajrAlarmApp>
         : 3;
     final int startedAtMs = DateTime.now().millisecondsSinceEpoch;
     _router.go(
-      '${AppRoutes.alarmRinging}?autoTrigger=true&dryRun=$isDryRun&remainingOverrides=$remainingOverrides&startedAt=$startedAtMs',
+      '${AppRoutes.alarmRinging}?autoTrigger=true&dryRun=$isDryRun&remainingOverrides=$remainingOverrides&startedAt=$startedAtMs&snoozeUsed=$snoozeUsed',
     );
   }
 
