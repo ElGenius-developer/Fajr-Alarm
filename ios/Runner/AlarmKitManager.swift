@@ -16,12 +16,15 @@ import SwiftUI
 @available(iOS 26.0, *)
 struct OpenFajrChallengeIntent: LiveActivityIntent {
   static var title: LocalizedStringResource = "Open Fajr Challenge"
-  static var openAppWhenRun: Bool = true
-  static var supportedModes: IntentModes = .foreground(.immediate)
+  /// Starts in the background so the re-arm happens even if the unlock that
+  /// `continueInForeground` asks for fails (sleeping user, Face ID can't see them).
+  static var supportedModes: IntentModes = [.background, .foreground(.dynamic)]
 
   @MainActor
   func perform() async throws -> some IntentResult {
+    await AlarmKitManager.rearmIfCascadeActive()
     UserDefaults.standard.set(true, forKey: AlarmKitManager.pendingTriggerDefaultsKey)
+    try await continueInForeground(alwaysConfirm: false)
     NotificationCenter.default.post(
       name: AlarmKitManager.openChallengeNotificationName,
       object: nil
@@ -109,6 +112,15 @@ enum FajrCascadePolicy {
     records.filter { $0.cascadeStart > now.addingTimeInterval(-recordLifetime) }
   }
 
+  /// The flag of the cascade ringing now. The global last-scheduled flag is
+  /// wrong once a real reschedule lands after a pending dry run.
+  static func ringingIsDryRun(_ records: [FajrAlarmRecord], now: Date) -> Bool? {
+    records
+      .filter { $0.cascadeStart <= now }
+      .max(by: { $0.cascadeStart < $1.cascadeStart })?
+      .isDryRun
+  }
+
   /// Nil when no cascade has started, or one of ours rings again soon anyway.
   static func rearmRecord(_ records: [FajrAlarmRecord], now: Date) -> FajrAlarmRecord? {
     let started = records.filter { $0.cascadeStart <= now }
@@ -141,6 +153,7 @@ final class AlarmKitManager {
 
   private static let legacyCascadeIdsDefaultsKey = "fajr_alarm_cascade_ids"
   private static let cascadeRecordsDefaultsKey = "fajr_alarm_cascade_records"
+  private static let cascadeGenerationDefaultsKey = "fajr_alarm_cascade_generation"
   private static let lastDryRunDefaultsKey = "fajr_alarm_last_is_dry_run"
 
   /// Cascade offsets in seconds: T0, T0+5m, then every 1m up to T0+15m.
@@ -272,7 +285,9 @@ final class AlarmKitManager {
     }
     pendingTrigger = nil
     UserDefaults.standard.set(false, forKey: Self.pendingTriggerDefaultsKey)
-    let isDryRun = UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
+    let isDryRun =
+      FajrCascadePolicy.ringingIsDryRun(Self.loadRecords(), now: Date())
+      ?? UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
     return ["isDryRun": isDryRun]
   }
 
@@ -409,6 +424,7 @@ final class AlarmKitManager {
           }
           let replacedIds = Set(replaced.map(\.id))
           records.removeAll { replacedIds.contains($0.id) }
+          Self.saveRecords(records)
           UserDefaults.standard.set(isDryRun, forKey: Self.lastDryRunDefaultsKey)
 
           for offset in Self.cascadeOffsetsSeconds {
@@ -419,8 +435,8 @@ final class AlarmKitManager {
               isDryRun: isDryRun
             )
             try await Self.schedule(record)
-            records.append(record)
-            Self.saveRecords(records)
+            // Reload: a re-arm intent may have saved a record during the await.
+            Self.saveRecords(Self.loadRecords() + [record])
           }
           result(nil)
         } catch {
@@ -463,6 +479,8 @@ final class AlarmKitManager {
   private func cancelStoredCascade() {
     let stored = Self.loadRecords()
     UserDefaults.standard.removeObject(forKey: Self.cascadeRecordsDefaultsKey)
+    let generation = UserDefaults.standard.integer(forKey: Self.cascadeGenerationDefaultsKey)
+    UserDefaults.standard.set(generation + 1, forKey: Self.cascadeGenerationDefaultsKey)
     for record in stored {
       try? AlarmManager.shared.stop(id: record.id)
       try? AlarmManager.shared.cancel(id: record.id)
@@ -481,14 +499,21 @@ final class AlarmKitManager {
 
   #if canImport(AlarmKit)
   @available(iOS 26.0, *)
+  @MainActor
   static func rearmIfCascadeActive() async {
     let now = Date()
     let records = FajrCascadePolicy.liveRecords(loadRecords(), now: now)
     guard let record = FajrCascadePolicy.rearmRecord(records, now: now) else {
       return
     }
+    let generation = UserDefaults.standard.integer(forKey: cascadeGenerationDefaultsKey)
     do {
       try await schedule(record)
+      // Completion or override may have cancelled the cascade during the await.
+      guard UserDefaults.standard.integer(forKey: cascadeGenerationDefaultsKey) == generation else {
+        try? AlarmManager.shared.cancel(id: record.id)
+        return
+      }
       saveRecords(loadRecords() + [record])
     } catch {
       NSLog("Fajr re-arm failed: \(error.localizedDescription)")

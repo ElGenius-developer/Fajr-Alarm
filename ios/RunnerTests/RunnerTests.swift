@@ -61,4 +61,14 @@ final class FajrCascadePolicyTests: XCTestCase {
 
     XCTAssertNil(FajrCascadePolicy.rearmRecord(tomorrow, now: now))
   }
+
+  func testDryRunRingingAfterARealRescheduleIsStillReportedAsDryRun() {
+    let dryRunStart = fajr.addingTimeInterval(-86_400)
+    let records =
+      cascade(start: dryRunStart, isDryRun: true, offsets: [0])
+      + cascade(start: fajr, offsets: [0, 300])
+    let now = dryRunStart.addingTimeInterval(5)
+
+    XCTAssertEqual(FajrCascadePolicy.ringingIsDryRun(records, now: now), true)
+  }
 }
