@@ -16,12 +16,15 @@ import SwiftUI
 @available(iOS 26.0, *)
 struct OpenFajrChallengeIntent: LiveActivityIntent {
   static var title: LocalizedStringResource = "Open Fajr Challenge"
-  static var openAppWhenRun: Bool = true
-  static var supportedModes: IntentModes = .foreground(.immediate)
+  /// Starts in the background so the re-arm happens even if the unlock that
+  /// `continueInForeground` asks for fails (sleeping user, Face ID can't see them).
+  static var supportedModes: IntentModes = [.background, .foreground(.dynamic)]
 
   @MainActor
   func perform() async throws -> some IntentResult {
+    await AlarmKitManager.rearmIfCascadeActive()
     UserDefaults.standard.set(true, forKey: AlarmKitManager.pendingTriggerDefaultsKey)
+    try await continueInForeground(alwaysConfirm: false)
     NotificationCenter.default.post(
       name: AlarmKitManager.openChallengeNotificationName,
       object: nil
@@ -30,9 +33,112 @@ struct OpenFajrChallengeIntent: LiveActivityIntent {
   }
 }
 
+/// Runs on the system Stop button without opening the app, so it also works
+/// on a locked phone where Face ID fails (the sleeping user isn't looking).
+/// The OS has already silenced the current alert; this keeps the sequence alive.
+@available(iOS 26.0, *)
+struct RearmFajrAlarmIntent: LiveActivityIntent {
+  static var title: LocalizedStringResource = "Keep Fajr Alarm Ringing"
+
+  func perform() async throws -> some IntentResult {
+    await AlarmKitManager.rearmIfCascadeActive()
+    return .result()
+  }
+}
+
 @available(iOS 26.0, *)
 struct FajrAlarmMetadata: AlarmMetadata {}
 #endif
+
+struct FajrAlarmRecord: Equatable {
+  let id: UUID
+  let fireAt: Date
+  let cascadeStart: Date
+  let isDryRun: Bool
+
+  init(id: UUID, fireAt: Date, cascadeStart: Date, isDryRun: Bool) {
+    self.id = id
+    self.fireAt = fireAt
+    self.cascadeStart = cascadeStart
+    self.isDryRun = isDryRun
+  }
+
+  init?(dictionary: [String: Any]) {
+    guard
+      let rawId = dictionary["id"] as? String,
+      let id = UUID(uuidString: rawId),
+      let fireAt = dictionary["fireAt"] as? Double,
+      let cascadeStart = dictionary["cascadeStart"] as? Double
+    else {
+      return nil
+    }
+    self.init(
+      id: id,
+      fireAt: Date(timeIntervalSince1970: fireAt),
+      cascadeStart: Date(timeIntervalSince1970: cascadeStart),
+      isDryRun: dictionary["isDryRun"] as? Bool ?? false
+    )
+  }
+
+  var dictionary: [String: Any] {
+    [
+      "id": id.uuidString,
+      "fireAt": fireAt.timeIntervalSince1970,
+      "cascadeStart": cascadeStart.timeIntervalSince1970,
+      "isDryRun": isDryRun,
+    ]
+  }
+}
+
+/// Decides which stored alarms a reschedule may replace and when Stop re-arms.
+enum FajrCascadePolicy {
+  static let rearmDelay: TimeInterval = 60
+  static let rearmLookahead: TimeInterval = 120
+  static let recordLifetime: TimeInterval = 12 * 60 * 60
+
+  /// Only cascades that have not started yet are replaced. A started cascade is
+  /// the alarm currently waking the user: opening the app recomputes "next
+  /// Fajr" as tomorrow, and that must not silence today. Completion and
+  /// emergency override end it through `cancelAllAlarms`.
+  static func recordsToReplace(
+    _ records: [FajrAlarmRecord],
+    isDryRun: Bool,
+    now: Date
+  ) -> [FajrAlarmRecord] {
+    records.filter { $0.isDryRun == isDryRun && $0.cascadeStart > now }
+  }
+
+  static func liveRecords(_ records: [FajrAlarmRecord], now: Date) -> [FajrAlarmRecord] {
+    records.filter { $0.cascadeStart > now.addingTimeInterval(-recordLifetime) }
+  }
+
+  /// The flag of the cascade ringing now. The global last-scheduled flag is
+  /// wrong once a real reschedule lands after a pending dry run.
+  static func ringingIsDryRun(_ records: [FajrAlarmRecord], now: Date) -> Bool? {
+    records
+      .filter { $0.cascadeStart <= now }
+      .max(by: { $0.cascadeStart < $1.cascadeStart })?
+      .isDryRun
+  }
+
+  /// Nil when no cascade has started, or one of ours rings again soon anyway.
+  static func rearmRecord(_ records: [FajrAlarmRecord], now: Date) -> FajrAlarmRecord? {
+    let started = records.filter { $0.cascadeStart <= now }
+    guard let latest = started.max(by: { $0.cascadeStart < $1.cascadeStart }) else {
+      return nil
+    }
+    let lookaheadEnd = now.addingTimeInterval(rearmLookahead)
+    if records.contains(where: { $0.fireAt > now && $0.fireAt <= lookaheadEnd }) {
+      return nil
+    }
+    return FajrAlarmRecord(
+      id: UUID(),
+      fireAt: now.addingTimeInterval(rearmDelay),
+      cascadeStart: latest.cascadeStart,
+      isDryRun: latest.isDryRun
+    )
+  }
+}
 
 /// Manages the `com.elgenius.fajralarm/alarm_platform` and
 /// `com.elgenius.fajralarm/onboarding_permissions` MethodChannels on iOS 26+
@@ -45,7 +151,9 @@ final class AlarmKitManager {
     "com.elgenius.fajralarm.openChallenge"
   )
 
-  private static let cascadeIdsDefaultsKey = "fajr_alarm_cascade_ids"
+  private static let legacyCascadeIdsDefaultsKey = "fajr_alarm_cascade_ids"
+  private static let cascadeRecordsDefaultsKey = "fajr_alarm_cascade_records"
+  private static let cascadeGenerationDefaultsKey = "fajr_alarm_cascade_generation"
   private static let lastDryRunDefaultsKey = "fajr_alarm_last_is_dry_run"
 
   /// Cascade offsets in seconds: T0, T0+5m, then every 1m up to T0+15m.
@@ -177,7 +285,9 @@ final class AlarmKitManager {
     }
     pendingTrigger = nil
     UserDefaults.standard.set(false, forKey: Self.pendingTriggerDefaultsKey)
-    let isDryRun = UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
+    let isDryRun =
+      FajrCascadePolicy.ringingIsDryRun(Self.loadRecords(), now: Date())
+      ?? UserDefaults.standard.bool(forKey: Self.lastDryRunDefaultsKey)
     return ["isDryRun": isDryRun]
   }
 
@@ -276,6 +386,10 @@ final class AlarmKitManager {
     isArabicPreferredLanguage() ? "بدء التحدي" : "Open Challenge"
   }
 
+  private static func localizedStopButtonTitle() -> String {
+    isArabicPreferredLanguage() ? "إيقاف" : "Stop"
+  }
+
   private func scheduleAlarmCascade(
     scheduledAt: Date,
     isDryRun: Bool,
@@ -283,8 +397,7 @@ final class AlarmKitManager {
   ) {
     #if canImport(AlarmKit)
     if #available(iOS 26.0, *) {
-      Task { @MainActor [weak self] in
-        guard let self else { return }
+      Task { @MainActor in
         do {
           let authState = try await AlarmManager.shared.requestAuthorization()
           guard authState == .authorized else {
@@ -298,54 +411,33 @@ final class AlarmKitManager {
             return
           }
 
-          self.cancelStoredCascade()
+          let now = Date()
+          Self.cancelLegacyCascade()
+          var records = FajrCascadePolicy.liveRecords(Self.loadRecords(), now: now)
+          let replaced = FajrCascadePolicy.recordsToReplace(
+            records,
+            isDryRun: isDryRun,
+            now: now
+          )
+          for record in replaced {
+            try? AlarmManager.shared.cancel(id: record.id)
+          }
+          let replacedIds = Set(replaced.map(\.id))
+          records.removeAll { replacedIds.contains($0.id) }
+          Self.saveRecords(records)
           UserDefaults.standard.set(isDryRun, forKey: Self.lastDryRunDefaultsKey)
 
-          var scheduledIds: [String] = []
-          let title = LocalizedStringResource(
-            stringLiteral: Self.localizedAlarmTitle(isDryRun: isDryRun)
-          )
-          let challengeButton = AlarmButton(
-            text: LocalizedStringResource(
-              stringLiteral: Self.localizedChallengeButtonTitle()
-            ),
-            textColor: .white,
-            systemImageName: "camera.viewfinder"
-          )
-
           for offset in Self.cascadeOffsetsSeconds {
-            let fireDate = scheduledAt.addingTimeInterval(offset)
-            let alarmId = UUID()
-            let alert: AlarmPresentation.Alert
-            if #available(iOS 26.1, *) {
-              alert = AlarmPresentation.Alert(
-                title: title,
-                secondaryButton: challengeButton,
-                secondaryButtonBehavior: .custom
-              )
-            } else {
-              alert = AlarmPresentation.Alert(
-                title: title,
-                stopButton: challengeButton,
-                secondaryButton: challengeButton,
-                secondaryButtonBehavior: .custom
-              )
-            }
-            let attributes = AlarmAttributes<FajrAlarmMetadata>(
-              presentation: AlarmPresentation(alert: alert),
-              tintColor: .green
+            let record = FajrAlarmRecord(
+              id: UUID(),
+              fireAt: scheduledAt.addingTimeInterval(offset),
+              cascadeStart: scheduledAt,
+              isDryRun: isDryRun
             )
-            let config = AlarmManager.AlarmConfiguration(
-              schedule: .fixed(fireDate),
-              attributes: attributes,
-              stopIntent: OpenFajrChallengeIntent(),
-              secondaryIntent: OpenFajrChallengeIntent()
-            )
-            _ = try await AlarmManager.shared.schedule(id: alarmId, configuration: config)
-            scheduledIds.append(alarmId.uuidString)
+            try await Self.schedule(record)
+            // Reload: a re-arm intent may have saved a record during the await.
+            Self.saveRecords(Self.loadRecords() + [record])
           }
-
-          UserDefaults.standard.set(scheduledIds, forKey: Self.cascadeIdsDefaultsKey)
           result(nil)
         } catch {
           result(
@@ -385,22 +477,110 @@ final class AlarmKitManager {
   #if canImport(AlarmKit)
   @available(iOS 26.0, *)
   private func cancelStoredCascade() {
-    let stored = UserDefaults.standard.stringArray(forKey: Self.cascadeIdsDefaultsKey) ?? []
-    for rawId in stored {
-      if let uuid = UUID(uuidString: rawId) {
-        try? AlarmManager.shared.stop(id: uuid)
-        try? AlarmManager.shared.cancel(id: uuid)
-      }
+    let stored = Self.loadRecords()
+    UserDefaults.standard.removeObject(forKey: Self.cascadeRecordsDefaultsKey)
+    let generation = UserDefaults.standard.integer(forKey: Self.cascadeGenerationDefaultsKey)
+    UserDefaults.standard.set(generation + 1, forKey: Self.cascadeGenerationDefaultsKey)
+    for record in stored {
+      try? AlarmManager.shared.stop(id: record.id)
+      try? AlarmManager.shared.cancel(id: record.id)
     }
+    Self.cancelLegacyCascade()
     let activeAlarms = (try? AlarmManager.shared.alarms) ?? []
     for alarm in activeAlarms {
       try? AlarmManager.shared.stop(id: alarm.id)
       try? AlarmManager.shared.cancel(id: alarm.id)
     }
-    UserDefaults.standard.removeObject(forKey: Self.cascadeIdsDefaultsKey)
     UserDefaults.standard.removeObject(forKey: Self.pendingTriggerDefaultsKey)
     pendingTrigger = nil
     handledAlertingAlarmIds.removeAll()
+  }
+  #endif
+
+  #if canImport(AlarmKit)
+  @available(iOS 26.0, *)
+  @MainActor
+  static func rearmIfCascadeActive() async {
+    let now = Date()
+    let records = FajrCascadePolicy.liveRecords(loadRecords(), now: now)
+    guard let record = FajrCascadePolicy.rearmRecord(records, now: now) else {
+      return
+    }
+    let generation = UserDefaults.standard.integer(forKey: cascadeGenerationDefaultsKey)
+    do {
+      try await schedule(record)
+      // Completion or override may have cancelled the cascade during the await.
+      guard UserDefaults.standard.integer(forKey: cascadeGenerationDefaultsKey) == generation else {
+        try? AlarmManager.shared.cancel(id: record.id)
+        return
+      }
+      saveRecords(loadRecords() + [record])
+    } catch {
+      NSLog("Fajr re-arm failed: \(error.localizedDescription)")
+    }
+  }
+
+  @available(iOS 26.0, *)
+  private static func schedule(_ record: FajrAlarmRecord) async throws {
+    let title = LocalizedStringResource(
+      stringLiteral: localizedAlarmTitle(isDryRun: record.isDryRun)
+    )
+    let challengeButton = AlarmButton(
+      text: LocalizedStringResource(stringLiteral: localizedChallengeButtonTitle()),
+      textColor: .white,
+      systemImageName: "camera.viewfinder"
+    )
+    let alert: AlarmPresentation.Alert
+    if #available(iOS 26.1, *) {
+      alert = AlarmPresentation.Alert(
+        title: title,
+        secondaryButton: challengeButton,
+        secondaryButtonBehavior: .custom
+      )
+    } else {
+      alert = AlarmPresentation.Alert(
+        title: title,
+        stopButton: AlarmButton(
+          text: LocalizedStringResource(stringLiteral: localizedStopButtonTitle()),
+          textColor: .white,
+          systemImageName: "stop.circle"
+        ),
+        secondaryButton: challengeButton,
+        secondaryButtonBehavior: .custom
+      )
+    }
+    let config = AlarmManager.AlarmConfiguration(
+      schedule: .fixed(record.fireAt),
+      attributes: AlarmAttributes<FajrAlarmMetadata>(
+        presentation: AlarmPresentation(alert: alert),
+        tintColor: .green
+      ),
+      stopIntent: RearmFajrAlarmIntent(),
+      secondaryIntent: OpenFajrChallengeIntent()
+    )
+    _ = try await AlarmManager.shared.schedule(id: record.id, configuration: config)
+  }
+  #endif
+
+  private static func loadRecords() -> [FajrAlarmRecord] {
+    let raw = UserDefaults.standard.array(forKey: cascadeRecordsDefaultsKey) as? [[String: Any]] ?? []
+    return raw.compactMap(FajrAlarmRecord.init(dictionary:))
+  }
+
+  private static func saveRecords(_ records: [FajrAlarmRecord]) {
+    UserDefaults.standard.set(records.map(\.dictionary), forKey: cascadeRecordsDefaultsKey)
+  }
+
+  #if canImport(AlarmKit)
+  /// Alarms scheduled before records existed carry no start time to judge them by.
+  @available(iOS 26.0, *)
+  private static func cancelLegacyCascade() {
+    let legacy = UserDefaults.standard.stringArray(forKey: legacyCascadeIdsDefaultsKey) ?? []
+    for uuid in legacy.compactMap(UUID.init(uuidString:)) {
+      try? AlarmManager.shared.stop(id: uuid)
+      try? AlarmManager.shared.cancel(id: uuid)
+    }
+    UserDefaults.standard.removeObject(forKey: legacyCascadeIdsDefaultsKey)
   }
   #endif
 
