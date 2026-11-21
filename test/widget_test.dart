@@ -5,7 +5,7 @@ import 'package:fajr_alarm/features/onboarding/data/models/onboarding_state_mode
 import 'package:fajr_alarm/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:fajr_alarm/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:fajr_alarm/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';

@@ -1,5 +1,5 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Step 1: Location and city selection for offline Fajr calculation.
 class LocationStepView extends StatefulWidget {

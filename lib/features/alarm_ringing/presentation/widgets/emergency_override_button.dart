@@ -1,6 +1,6 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Touch-Mute + 60s continuous hold button for Emergency Override (FR-6.2).
 class EmergencyOverrideButton extends StatelessWidget {

@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:fajr_alarm/core/di/injection.dart';
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/router/app_router.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/alarm_ringing/domain/repositories/alarm_platform_repository.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_cubit.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_state.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 Future<void> main() async {
@@ -118,12 +118,7 @@ class _FajrAlarmAppState extends State<FajrAlarmApp>
             theme: AppTheme.light(style, isArabic),
             darkTheme: AppTheme.dark(style, isArabic),
             themeMode: AppTheme.parseThemeMode(state.settings.themeMode),
-            localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
+            localizationsDelegates: appLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: _router,
           );

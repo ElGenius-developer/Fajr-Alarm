@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
@@ -7,7 +8,7 @@ import 'package:fajr_alarm/features/prayer_schedule/domain/entities/prayer_sched
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_cubit.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/bloc/prayer_schedule_state.dart';
 import 'package:fajr_alarm/features/prayer_schedule/presentation/pages/prayer_schedule_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -31,7 +32,7 @@ void main() {
   Widget buildTestable(Locale locale) {
     return MaterialApp(
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: BlocProvider<PrayerScheduleCubit>.value(
         value: mockCubit,
@@ -249,7 +250,7 @@ void main() {
           MaterialApp(
             locale: const Locale('en'),
             theme: AppTheme.light(AppDesignStyle.horizon),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: BlocProvider<PrayerScheduleCubit>.value(
               value: mockCubit,
