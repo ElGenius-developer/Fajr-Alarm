@@ -11,6 +11,13 @@ files: AlarmKitManager.swift, RunnerTests.swift, app_localization_delegates.dart
 status: in-progress
 ---
 
+## 2026-11-21 | android-snooze-native-rearm
+keywords: lib/features/alarm_ringing/domain/usecases/snooze_alarm_usecase.dart, alarm_ringing_bloc.dart, alarm_ringing_event.dart, alarm_platform, lib/main.dart, lib/core/router/app_router.dart, android/app/src/main/kotlin/com/elgenius/fajralarm/fajr_alarm/{AlarmReceiver,AlarmStorage,DirectBootReceiver,MainActivity}.kt, ios/Runner/AlarmKitManager.swift, scheduleSnoozeAlarm, lib/features/alarm_ringing/domain/repositories/alarm_platform_repository.dart, data/repositories/alarm_platform_repository_impl.dart, data/datasources/alarm_platform_data_source.dart, snoozeUsed, lib/features/alarm_ringing/presentation/bloc/alarm_ringing_event.dart, android/.../AlarmReceiver.kt
+decisions: The snooze alarm uses its own request code, 1003, separate from the next-Fajr alarm (1001). — rescheduling tomorrow (for example when the schedule page reloads) must not r... | Arm before stop. — a ringing alarm the user can still silence is safer than a silent one that de... | iOS `scheduleSnoozeAlarm` is a no-op. — the AlarmKit cascade already rings at T0+5m whether or not the app is alive.
+files: snooze_alarm_usecase.dart, alarm_platform_repository.dart, alarm_ringing_event.dart, main.dart, AlarmReceiver.kt, AlarmStorage.kt, DirectBootReceiver.kt, MainActivity.kt
+status: in-progress
+---
+
 ## 2026-11-20 | onboard-floorplan-readme-and-main-ruleset
 keywords: fajr-alarm-context, main, my-flutter-expert/SKILL.md, docs/TOPIC_INDEX.md, docs/SYMBOLS.json, claude/skills/fajr-alarm-context, graphify-out, git/hooks/post-commit, floorplan, docs/architecture-map.html, README.md, docs/screenshots, ElGenius-developer/Fajr-Alarm, refs/heads/main, agents/skills/my-flutter-expert/SKILL.md
 decisions: Use GitHub Ruleset with `bypass_mode: "pull_request"` for `RepositoryRole` Admin (`5`) — blocks direct `git push` to `main` even for the owner, requires PR + 1 approv... | Export `docs/architecture-map.html` alongside gitignored `floorplan/` — `floorplan/` stays local/untracked by default, while `docs/architecture-map.h... | Exclude `.claude/`, `.agents/`, `/.freezed.dart`, `/.g.dart` in `floorplan/architecture.json` — reason: keeps the interactive Floorplan focused on the 142 actual app and test source files.

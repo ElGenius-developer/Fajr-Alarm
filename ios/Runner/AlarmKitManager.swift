@@ -329,6 +329,10 @@ final class AlarmKitManager {
       let scheduledDate = Date(timeIntervalSince1970: epochMillis.doubleValue / 1000.0)
       scheduleAlarmCascade(scheduledAt: scheduledDate, isDryRun: isDryRun, result: result)
 
+    case "scheduleSnoozeAlarm":
+      // The AlarmKit cascade already rings at T0+5m whether or not the app lives.
+      result(nil)
+
     case "cancelAllAlarms":
       cancelAllAlarms(result: result)
 

@@ -139,22 +139,29 @@ void main() {
     });
 
     test(
-      'setAlarmTriggeredHandler invokes callback on onAlarmTriggered',
+      'native trigger after a used snooze reaches Dart with snoozeUsed set',
       () async {
         bool? receivedDryRun;
-        dataSource.setAlarmTriggeredHandler(({required bool isDryRun}) {
+        bool? receivedSnoozeUsed;
+        dataSource.setAlarmTriggeredHandler(({
+          required bool isDryRun,
+          required bool snoozeUsed,
+        }) {
           receivedDryRun = isDryRun;
+          receivedSnoozeUsed = snoozeUsed;
         });
 
         final ByteData message = const StandardMethodCodec().encodeMethodCall(
           const MethodCall('onAlarmTriggered', <String, Object?>{
             'isDryRun': true,
+            'snoozeUsed': true,
           }),
         );
         await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(channel.name, message, (_) {});
 
         expect(receivedDryRun, isTrue);
+        expect(receivedSnoozeUsed, isTrue);
         dataSource.setAlarmTriggeredHandler(null);
       },
     );

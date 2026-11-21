@@ -33,6 +33,8 @@ class FakeMonotonicClock implements MonotonicClock {
 void main() {
   late MockAlarmPlatformRepository mockRepo;
 
+  setUpAll(() => registerFallbackValue(DateTime(0)));
+
   setUp(() {
     mockRepo = MockAlarmPlatformRepository();
     when(() => mockRepo.startRinging(isDryRun: any(named: 'isDryRun')))
@@ -47,6 +49,12 @@ void main() {
     when(() => mockRepo.disableScreenPinning())
         .thenAnswer((_) async => right(unit));
     when(() => mockRepo.cancelAllAlarms()).thenAnswer((_) async => right(unit));
+    when(
+      () => mockRepo.scheduleSnoozeAlarm(
+        at: any(named: 'at'),
+        isDryRun: any(named: 'isDryRun'),
+      ),
+    ).thenAnswer((_) async => right(unit));
   });
 
   AlarmRingingBloc createBloc(MonotonicClock clock) {
@@ -61,6 +69,27 @@ void main() {
   }
 
   group('AlarmRingingBloc', () {
+    blocTest<AlarmRingingBloc, AlarmRingingState>(
+      'relaunch after the snooze was used rings relentlessly with no new snooze',
+      build: () => createBloc(FakeMonotonicClock(() => Duration.zero)),
+      act: (bloc) async {
+        bloc.add(const AlarmRingingEvent.alarmTriggered(snoozeUsed: true));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const AlarmRingingEvent.snoozeRequested());
+      },
+      skip: 1,
+      expect: () => [
+        isA<AlarmRingingState>()
+            .having(
+              (s) => s.entity.status,
+              'status',
+              AlarmStatus.ringingRelentless,
+            )
+            .having((s) => s.entity.snoozeUsed, 'snoozeUsed', isTrue),
+        isA<AlarmRingingState>().having((s) => s.failure, 'failure', isNotNull),
+      ],
+    );
+
     blocTest<AlarmRingingBloc, AlarmRingingState>(
       'transitions IDLE -> LOCKED_PRE_FAJR -> RINGING_INITIAL -> CHALLENGE_ACTIVE -> COMPLETED',
       build: () => createBloc(FakeMonotonicClock(() => Duration.zero)),

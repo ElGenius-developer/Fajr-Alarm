@@ -1,6 +1,7 @@
 # Fajr-Alarm Session History
 
 <!-- Newest entries on top. Format: - YYYY-MM-DD: <topic> → <filename> -->
+- 2026-11-21: Android snooze arms native alarm 1003 before stopping, snoozeUsed survives relaunch/reboot, PR #20 → 2026-11-21_android-snooze-native-rearm.md
 - 2026-11-21: Flutter 3.50.1/material_ui, iOS Stop re-arm fix (device-tested), disk cleanup, PR #17 (30fc114) + #18 (dd2d2d5) → 2026-11-21_flutter-350-and-ios-alarm-rearm.md
 - 2026-11-20: Onboarding (graphify/symbols/context), Floorplan + README + screenshots, main PR ruleset, skill fix → 2026-11-20_onboard-floorplan-readme-and-main-ruleset.md
 - 2026-11-15: LLM-critic-trap analysis, SRS/memory tilt sync to [-15,25], Spec Drift review gate, PR #15 merge (a5fb694) → 2026-11-15_llm-critic-trap-and-spec-drift-gate.md

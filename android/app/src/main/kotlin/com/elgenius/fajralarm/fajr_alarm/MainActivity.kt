@@ -53,7 +53,13 @@ class MainActivity : FlutterActivity() {
                     val trigger = pendingAlarmTrigger
                     pendingAlarmTrigger = null
                     trigger ?: if (AlarmForegroundService.isRinging) {
-                        mapOf("isDryRun" to AlarmForegroundService.currentIsDryRun)
+                        mapOf(
+                            "isDryRun" to AlarmForegroundService.currentIsDryRun,
+                            "snoozeUsed" to AlarmStorage.isSnoozeUsed(
+                                applicationContext,
+                                System.currentTimeMillis(),
+                            ),
+                        )
                     } else {
                         null
                     }
@@ -114,7 +120,10 @@ class MainActivity : FlutterActivity() {
         val isDryRun = intent.getBooleanExtra(AlarmForegroundService.EXTRA_IS_DRY_RUN, false)
         intent.removeExtra(AlarmForegroundService.EXTRA_ALARM_RINGING)
         intent.removeExtra(AlarmForegroundService.EXTRA_IS_DRY_RUN)
-        val payload = mapOf<String, Any>("isDryRun" to isDryRun)
+        val payload = mapOf<String, Any>(
+            "isDryRun" to isDryRun,
+            "snoozeUsed" to AlarmStorage.isSnoozeUsed(applicationContext, System.currentTimeMillis()),
+        )
         val channel = alarmPlatformChannel
         if (forwardImmediately && channel != null) {
             channel.invokeMethod("onAlarmTriggered", payload)
@@ -232,6 +241,7 @@ class AlarmPlatformPlugin(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "scheduleAlarm" -> handleScheduleAlarm(call, result)
+            "scheduleSnoozeAlarm" -> handleScheduleSnoozeAlarm(call, result)
             "cancelAllAlarms" -> {
                 AlarmReceiver.cancelAllAlarms(activity.applicationContext)
                 stopAlarmService()
@@ -300,6 +310,25 @@ class AlarmPlatformPlugin(
         }
         try {
             AlarmReceiver.scheduleExactAlarm(
+                context = activity.applicationContext,
+                scheduledAtEpochMillis = epochMillis,
+                isDryRun = isDryRun,
+            )
+            result.success(null)
+        } catch (se: SecurityException) {
+            result.error("PERMISSION_DENIED", se.message, null)
+        }
+    }
+
+    private fun handleScheduleSnoozeAlarm(call: MethodCall, result: MethodChannel.Result) {
+        val epochMillis = call.argument<Number>("scheduledAtEpochMillis")?.toLong()
+        val isDryRun = call.argument<Boolean>("isDryRun") ?: false
+        if (epochMillis == null) {
+            result.error("INVALID_ARGS", "scheduledAtEpochMillis is required", null)
+            return
+        }
+        try {
+            AlarmReceiver.scheduleSnoozeAlarm(
                 context = activity.applicationContext,
                 scheduledAtEpochMillis = epochMillis,
                 isDryRun = isDryRun,

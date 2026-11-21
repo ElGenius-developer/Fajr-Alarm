@@ -24,6 +24,15 @@ class AlarmPlatformRepositoryImpl implements AlarmPlatformRepository {
   });
 
   @override
+  Future<Either<Failure, Unit>> scheduleSnoozeAlarm({
+    required DateTime at,
+    required bool isDryRun,
+  }) => _guard(() async {
+    await dataSource.scheduleSnoozeAlarm(at: at, isDryRun: isDryRun);
+    return unit;
+  });
+
+  @override
   Future<Either<Failure, Unit>> cancelAllAlarms() => _guard(() async {
     await dataSource.cancelAllAlarms();
     return unit;
@@ -94,7 +103,8 @@ class AlarmPlatformRepositoryImpl implements AlarmPlatformRepository {
 
   @override
   void listenForAlarmTriggers(
-    void Function({required bool isDryRun})? onTriggered,
+    void Function({required bool isDryRun, required bool snoozeUsed})?
+    onTriggered,
   ) {
     dataSource.setAlarmTriggeredHandler(onTriggered);
   }
