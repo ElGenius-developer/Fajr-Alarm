@@ -1,6 +1,6 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Step 3: Explicit Google Free Tier privacy consent + BYOK Gemini API key validation.
 class PrivacyKeyStepView extends StatefulWidget {

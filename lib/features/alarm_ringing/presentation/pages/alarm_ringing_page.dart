@@ -7,7 +7,7 @@ import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringin
 import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringing_event.dart';
 import 'package:fajr_alarm/features/alarm_ringing/presentation/bloc/alarm_ringing_state.dart';
 import 'package:fajr_alarm/features/alarm_ringing/presentation/widgets/emergency_override_button.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Lock-screen / full-screen alarm ringing UI obeying 60-30-10 Quiet Dawn (FR-02, FR-6.2).

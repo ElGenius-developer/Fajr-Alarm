@@ -9,7 +9,7 @@ import 'package:fajr_alarm/features/challenge_verification/domain/entities/chall
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/tilt_angle_reading.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_cubit.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_state.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 

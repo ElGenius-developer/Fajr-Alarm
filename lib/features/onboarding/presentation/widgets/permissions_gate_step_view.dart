@@ -1,7 +1,7 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/onboarding/domain/entities/onboarding_state_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Step 2: Mandatory OS permissions gate (FullScreenIntent, Battery, Camera, AlarmKit).
 class PermissionsGateStepView extends StatelessWidget {

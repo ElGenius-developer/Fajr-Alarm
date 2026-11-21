@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/challenge_mode.dart';
@@ -12,7 +13,7 @@ import 'package:fajr_alarm/features/challenge_verification/domain/usecases/verif
 import 'package:fajr_alarm/features/challenge_verification/domain/usecases/verify_standing_typing_usecase.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_cubit.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/pages/challenge_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -49,7 +50,7 @@ void main() {
 
   Widget buildTestablePage() {
     return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
       home: BlocProvider<ChallengeCubit>.value(

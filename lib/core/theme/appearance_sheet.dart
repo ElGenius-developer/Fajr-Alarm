@@ -2,7 +2,7 @@ import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_cubit.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_state.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Opens the live Appearance & Design selector modal sheet.

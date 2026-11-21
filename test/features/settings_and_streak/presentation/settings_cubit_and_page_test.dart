@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:fajr_alarm/core/l10n/app_localization_delegates.dart';
 import 'package:fajr_alarm/core/error/failures.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/widgets/barcode_scanner_input.dart';
@@ -25,7 +26,7 @@ import 'package:fajr_alarm/features/settings_and_streak/domain/usecases/update_s
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_cubit.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/cubit/settings_state.dart';
 import 'package:fajr_alarm/features/settings_and_streak/presentation/pages/settings_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -251,7 +252,7 @@ void main() {
     }) {
       return MaterialApp(
         locale: locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SettingsCubit>.value(
           value: cubit,
@@ -666,7 +667,7 @@ void main() {
     }) {
       return MaterialApp(
         locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SettingsCubit>.value(
           value: cubit,

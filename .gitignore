@@ -50,3 +50,4 @@ app.*.map.json
 # Graphify & Symbol Index
 graphify-out/
 docs/SYMBOLS.json
+/android/build/
