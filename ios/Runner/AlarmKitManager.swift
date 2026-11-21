@@ -333,7 +333,7 @@ final class AlarmKitManager {
       // The AlarmKit cascade already rings at T0+5m whether or not the app lives.
       result(nil)
 
-    case "cancelAllAlarms":
+    case "cancelAllAlarms", "cancelNextFajrAlarm":
       cancelAllAlarms(result: result)
 
     case "startRinging":
