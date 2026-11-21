@@ -34,6 +34,10 @@ class AlarmPlatformDataSource {
     await _channel.invokeMethod<void>('cancelAllAlarms');
   }
 
+  Future<void> cancelNextFajrAlarm() async {
+    await _channel.invokeMethod<void>('cancelNextFajrAlarm');
+  }
+
   Future<void> startRinging({required bool isDryRun}) async {
     await _channel.invokeMethod<void>('startRinging', <String, Object?>{
       'isDryRun': isDryRun,

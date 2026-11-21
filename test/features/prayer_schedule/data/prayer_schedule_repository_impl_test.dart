@@ -114,7 +114,7 @@ void main() {
       ).called(1);
     });
 
-    test('saveNextScheduledAlarm cancels OS alarms when null', () async {
+    test('disabling the alarm cancels only the next Fajr so a pending snooze survives', () async {
       final mockPlatform = MockAlarmPlatformRepository();
       final wiredRepo = PrayerScheduleRepositoryImpl(
         mockDataSource,
@@ -122,14 +122,15 @@ void main() {
       );
       when(() => mockDataSource.saveNextScheduledAlarm(null))
           .thenAnswer((_) async {});
-      when(() => mockPlatform.cancelAllAlarms())
+      when(() => mockPlatform.cancelNextFajrAlarm())
           .thenAnswer((_) async => const Right(unit));
 
       final result = await wiredRepo.saveNextScheduledAlarm(null);
 
       expect(result, const Right<Failure, Unit>(unit));
       verify(() => mockDataSource.saveNextScheduledAlarm(null)).called(1);
-      verify(() => mockPlatform.cancelAllAlarms()).called(1);
+      verify(() => mockPlatform.cancelNextFajrAlarm()).called(1);
+      verifyNever(() => mockPlatform.cancelAllAlarms());
     });
 
     test('saveNextScheduledAlarm propagates platform failure', () async {

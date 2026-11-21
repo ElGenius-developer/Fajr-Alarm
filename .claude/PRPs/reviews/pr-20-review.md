@@ -6,7 +6,7 @@
 CRITICAL 0 · HIGH 0 · MEDIUM 2 · LOW 2
 
 - **MEDIUM:** a reboot during the snooze lost alarm 1003. **Fixed in this PR:** `AlarmStorage.pendingSnooze` plus a re-arm in `DirectBootReceiver`.
-- **MEDIUM (open, follow-up):** `cancelAllAlarms`, called from `saveNextScheduledAlarm(null)` and from the dry-run cancel, clears the snooze. This is only reachable if Settings are unlocked during a snooze.
+- **MEDIUM (fixed in a follow-up PR via `cancelNextFajrAlarm`):** `cancelAllAlarms`, called from `saveNextScheduledAlarm(null)` and from the dry-run cancel, clears the snooze. This is only reachable if Settings are unlocked during a snooze.
 - **LOW (open):** a failed escalation on relaunch never retries in Dart. Native audio keeps ringing.
 - **LOW (open):** the 2h snooze window can expire during a very long ring.
 

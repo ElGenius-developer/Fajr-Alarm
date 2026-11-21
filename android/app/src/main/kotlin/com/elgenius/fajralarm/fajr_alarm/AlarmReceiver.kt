@@ -96,8 +96,21 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         fun cancelAllAlarms(context: Context) {
+            cancelRequestCodes(context, REQUEST_CODE_ALARM, REQUEST_CODE_SNOOZE)
+            AlarmStorage.clearAlarm(context)
+            AlarmStorage.clearSnooze(context)
+        }
+
+        // A settings change (disable, vacation, dry-run cancel) must not let
+        // the user escape a snooze that is already counting down.
+        fun cancelNextFajrAlarm(context: Context) {
+            cancelRequestCodes(context, REQUEST_CODE_ALARM)
+            AlarmStorage.clearAlarm(context)
+        }
+
+        private fun cancelRequestCodes(context: Context, vararg requestCodes: Int) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            for (requestCode in intArrayOf(REQUEST_CODE_ALARM, REQUEST_CODE_SNOOZE)) {
+            for (requestCode in requestCodes) {
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     requestCode,
@@ -109,8 +122,6 @@ class AlarmReceiver : BroadcastReceiver() {
                     pendingIntent.cancel()
                 }
             }
-            AlarmStorage.clearAlarm(context)
-            AlarmStorage.clearSnooze(context)
         }
     }
 }
