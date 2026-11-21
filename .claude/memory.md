@@ -41,4 +41,4 @@
 - Use `appLocalizationsDelegates` (`lib/core/l10n/app_localization_delegates.dart`), never `AppLocalizations.localizationsDelegates`: gen-l10n still emits `flutter_localizations` delegate types that `material_ui` widgets cannot find (Arabic widget tests fail with "No MaterialLocalizations found").
 - Android: AGP 9.1.1, `compileSdk 36` (required by plugins); `targetSdk` stays 35.
 - Device install: pass `DEVELOPMENT_TEAM=J52H7284YY CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates` on the xcodebuild CLI (personal Apple account's Personal Team, never committed). After clearing `iOS DeviceSupport`, the first install needs a USB cable.
-
+- Android snooze (PR #20): snooze arms a native `setAlarmClock` (request code 1003, separate from next-Fajr 1001) *before* stopping the ringing service; if arming fails it keeps ringing. `AlarmStorage` keeps the snooze mark (2h window) + due time so a relaunch can't grant a fresh snooze and `DirectBootReceiver` re-arms it after reboot. Trigger payloads carry `snoozeUsed`; the bloc then goes straight to relentless. iOS `scheduleSnoozeAlarm` is a no-op (cascade rings at T0+5m).

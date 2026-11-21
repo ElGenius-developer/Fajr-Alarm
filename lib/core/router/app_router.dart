@@ -102,6 +102,8 @@ GoRouter createAppRouter({
           final bool isDryRun = state.uri.queryParameters['dryRun'] == 'true';
           final bool autoTrigger =
               state.uri.queryParameters['autoTrigger'] == 'true';
+          final bool snoozeUsed =
+              state.uri.queryParameters['snoozeUsed'] == 'true';
           final int remainingOverrides =
               int.tryParse(
                 state.uri.queryParameters['remainingOverrides'] ?? '',
@@ -119,6 +121,7 @@ GoRouter createAppRouter({
                   AlarmRingingEvent.alarmTriggered(
                     scheduledAt: DateTime.now(),
                     isDryRun: isDryRun,
+                    snoozeUsed: snoozeUsed,
                     remainingEmergencyOverrides: remainingOverrides,
                   ),
                 );

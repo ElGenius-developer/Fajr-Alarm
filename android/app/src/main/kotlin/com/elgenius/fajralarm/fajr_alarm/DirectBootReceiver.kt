@@ -17,8 +17,17 @@ class DirectBootReceiver : BroadcastReceiver() {
             return
         }
 
-        val saved = AlarmStorage.loadAlarm(context) ?: return
         val now = System.currentTimeMillis()
+        // AlarmManager drops pending alarms on reboot; a snooze in progress must still end in a ring.
+        AlarmStorage.pendingSnooze(context, now)?.let { snooze ->
+            AlarmReceiver.scheduleSnoozeAlarm(
+                context = context,
+                scheduledAtEpochMillis = maxOf(snooze.scheduledAtEpochMillis, now + 1_000L),
+                isDryRun = snooze.isDryRun,
+            )
+        }
+
+        val saved = AlarmStorage.loadAlarm(context) ?: return
         // Re-schedule via AlarmManager instead of starting ForegroundService from BOOT_COMPLETED.
         val triggerAt = if (saved.scheduledAtEpochMillis > now) {
             saved.scheduledAtEpochMillis

@@ -12,6 +12,13 @@ abstract class AlarmPlatformRepository {
     required bool isDryRun,
   });
 
+  /// Arms a native alarm that ends the snooze even if the app process dies
+  /// (Android). iOS no-ops: its AlarmKit cascade already rings at T0+5m.
+  Future<Either<Failure, Unit>> scheduleSnoozeAlarm({
+    required DateTime at,
+    required bool isDryRun,
+  });
+
   /// Cancels all scheduled alarms and any active iOS AlarmKit cascade.
   Future<Either<Failure, Unit>> cancelAllAlarms();
 
@@ -50,6 +57,7 @@ abstract class AlarmPlatformRepository {
 
   /// Registers or clears a live callback when native alarms start ringing.
   void listenForAlarmTriggers(
-    void Function({required bool isDryRun})? onTriggered,
+    void Function({required bool isDryRun, required bool snoozeUsed})?
+    onTriggered,
   );
 }

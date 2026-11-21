@@ -20,6 +20,10 @@ class AlarmReceiver : BroadcastReceiver() {
     companion object {
         private const val REQUEST_CODE_ALARM = 1001
         private const val REQUEST_CODE_SHOW = 1002
+
+        // Separate from REQUEST_CODE_ALARM so rescheduling the next Fajr
+        // (e.g. the schedule page reloading) cannot replace an active snooze.
+        private const val REQUEST_CODE_SNOOZE = 1003
         const val EXTRA_IS_DRY_RUN = "extra_is_dry_run"
 
         fun scheduleExactAlarm(
@@ -55,20 +59,58 @@ class AlarmReceiver : BroadcastReceiver() {
             AlarmStorage.saveAlarm(context, scheduledAtEpochMillis, isDryRun)
         }
 
-        fun cancelAllAlarms(context: Context) {
+        /** Rings when the snooze ends even if the app process is killed meanwhile. */
+        fun scheduleSnoozeAlarm(
+            context: Context,
+            scheduledAtEpochMillis: Long,
+            isDryRun: Boolean,
+        ) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val triggerIntent = Intent(context, AlarmReceiver::class.java)
+            val triggerIntent = Intent(context, AlarmReceiver::class.java).apply {
+                putExtra(EXTRA_IS_DRY_RUN, isDryRun)
+            }
             val triggerPendingIntent = PendingIntent.getBroadcast(
                 context,
-                REQUEST_CODE_ALARM,
+                REQUEST_CODE_SNOOZE,
                 triggerIntent,
-                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
-            if (triggerPendingIntent != null) {
-                alarmManager.cancel(triggerPendingIntent)
-                triggerPendingIntent.cancel()
+            val showPendingIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_CODE_SHOW,
+                Intent(context, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(scheduledAtEpochMillis, showPendingIntent),
+                triggerPendingIntent,
+            )
+            AlarmStorage.markSnoozed(
+                context,
+                nowEpochMillis = System.currentTimeMillis(),
+                dueAtEpochMillis = scheduledAtEpochMillis,
+                isDryRun = isDryRun,
+            )
+        }
+
+        fun cancelAllAlarms(context: Context) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            for (requestCode in intArrayOf(REQUEST_CODE_ALARM, REQUEST_CODE_SNOOZE)) {
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    requestCode,
+                    Intent(context, AlarmReceiver::class.java),
+                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE,
+                )
+                if (pendingIntent != null) {
+                    alarmManager.cancel(pendingIntent)
+                    pendingIntent.cancel()
+                }
             }
             AlarmStorage.clearAlarm(context)
+            AlarmStorage.clearSnooze(context)
         }
     }
 }

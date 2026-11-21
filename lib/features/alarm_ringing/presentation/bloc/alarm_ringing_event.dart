@@ -14,6 +14,7 @@ sealed class AlarmRingingEvent with _$AlarmRingingEvent {
   const factory AlarmRingingEvent.alarmTriggered({
     DateTime? scheduledAt,
     @Default(false) bool isDryRun,
+    @Default(false) bool snoozeUsed,
     @Default(3) int remainingEmergencyOverrides,
   }) = AlarmTriggered;
 
