@@ -45,7 +45,7 @@ Fixed the Android snooze. Before, snooze could silence the alarm for good, and r
 - `.claude/PRPs/reviews/pr-20-review.md`, `.claude/memory.md`
 
 ### Open Questions / Blockers
-- **MEDIUM (review), not fixed:** `cancelAllAlarms` is also called by `saveNextScheduledAlarm(null)` (alarm disabled or vacation) and by the dry-run cancel. If one of those runs during a snooze, it clears 1003 and the snooze mark, and the user escapes the snooze. This is only reachable if Settings are unlocked during a snooze. Fix: a separate native "cancel next Fajr only" call for those paths.
+- **MEDIUM (review), fixed in a follow-up PR:** disable/vacation/dry-run cancel now call `cancelNextFajrAlarm` (cancels 1001 only). `cancelAllAlarms` is also called by `saveNextScheduledAlarm(null)` (alarm disabled or vacation) and by the dry-run cancel. If one of those runs during a snooze, it clears 1003 and the snooze mark, and the user escapes the snooze. This is only reachable if Settings are unlocked during a snooze. Fix: a separate native "cancel next Fajr only" call for those paths.
 - **LOW:** if `_escalateToRelentless` fails on relaunch, the Dart loop never starts. Native audio keeps ringing.
 - **LOW:** the 2h snooze window can expire during a very long ring.
 - **Not tested on a physical Android device.** There is no Kotlin unit test harness.

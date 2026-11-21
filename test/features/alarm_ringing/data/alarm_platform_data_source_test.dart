@@ -51,6 +51,12 @@ void main() {
       expect(recordedCalls.first.method, 'cancelAllAlarms');
     });
 
+    test('cancelNextFajrAlarm uses its own channel method', () async {
+      await dataSource.cancelNextFajrAlarm();
+
+      expect(recordedCalls.single.method, 'cancelNextFajrAlarm');
+    });
+
     test('startRinging sends isDryRun', () async {
       await dataSource.startRinging(isDryRun: false);
 

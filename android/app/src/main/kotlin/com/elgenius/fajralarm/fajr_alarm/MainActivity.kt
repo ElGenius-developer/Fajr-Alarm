@@ -247,6 +247,10 @@ class AlarmPlatformPlugin(
                 stopAlarmService()
                 result.success(null)
             }
+            "cancelNextFajrAlarm" -> {
+                AlarmReceiver.cancelNextFajrAlarm(activity.applicationContext)
+                result.success(null)
+            }
             "startRinging" -> {
                 val isDryRun = call.argument<Boolean>("isDryRun") ?: false
                 startAlarmService(isDryRun)

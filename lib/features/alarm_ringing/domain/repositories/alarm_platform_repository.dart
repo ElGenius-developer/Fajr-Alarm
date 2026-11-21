@@ -22,6 +22,10 @@ abstract class AlarmPlatformRepository {
   /// Cancels all scheduled alarms and any active iOS AlarmKit cascade.
   Future<Either<Failure, Unit>> cancelAllAlarms();
 
+  /// Cancels the upcoming Fajr alarm but keeps a pending snooze (Android).
+  /// iOS cancels everything, same as [cancelAllAlarms].
+  Future<Either<Failure, Unit>> cancelNextFajrAlarm();
+
   /// Starts the native foreground ringing service / alarm audio engine.
   Future<Either<Failure, Unit>> startRinging({required bool isDryRun});
 

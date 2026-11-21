@@ -115,6 +115,6 @@ class PrayerScheduleRepositoryImpl implements PrayerScheduleRepository {
         isDryRun: false,
       );
     }
-    return platformRepository.cancelAllAlarms();
+    return platformRepository.cancelNextFajrAlarm();
   }
 }

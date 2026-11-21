@@ -39,6 +39,12 @@ class AlarmPlatformRepositoryImpl implements AlarmPlatformRepository {
   });
 
   @override
+  Future<Either<Failure, Unit>> cancelNextFajrAlarm() => _guard(() async {
+    await dataSource.cancelNextFajrAlarm();
+    return unit;
+  });
+
+  @override
   Future<Either<Failure, Unit>> startRinging({required bool isDryRun}) =>
       _guard(() async {
         await dataSource.startRinging(isDryRun: isDryRun);

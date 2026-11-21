@@ -202,7 +202,7 @@ Future<void> initDependencies({String? hivePath}) async {
         },
         onCancelDryRunAlarm: () async {
           final cancelResult = await sl<AlarmPlatformRepository>()
-              .cancelAllAlarms();
+              .cancelNextFajrAlarm();
           if (cancelResult.isLeft()) {
             return cancelResult;
           }
