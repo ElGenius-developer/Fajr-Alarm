@@ -9,6 +9,7 @@
 ## Platform Contract (v1.0)
 - **Android (`minSdk 29`, `targetSdk 35`):** `USE_EXACT_ALARM` + `setAlarmClock()`, `FullScreenIntent` (`canUseFullScreenIntent()` checked at onboarding), `ForegroundService` (`mediaPlayback`), `LOCKED_BOOT_COMPLETED` + `deviceProtectedStorage`, multi-layered volume (`onKeyDown` + `STREAM_ALARM` observer) & screen-pinning deterrence (`startLockTask()`).
 - **iOS (`iOS 26+` only in v1.0):** `AlarmKit` via Swift MethodChannel using **Relentless AlarmKit Cascade** (pre-scheduled sequence $T_0, T_0+5\text{m}, T_0+6\text{m}, \dots$ cancelled only inside the app on `[COMPLETED]`). `iOS 15–25` support is deferred past `v1.0`.
+- **iOS cascade rules (PR #18):** a reschedule replaces only cascades that have not started (opening the app recomputes "next Fajr" as tomorrow and must not silence today); only `cancelAllAlarms` (completion, override, disable, vacation) ends a started one. Both AlarmKit buttons re-arm in the background without unlock (+60s when none of ours rings within 120s), so Stop on a locked phone never ends the alarm. Trigger `isDryRun` comes from the ringing cascade's record, not the global last-scheduled flag.
 
 ## AI Verification & Privacy
 - Primary Vision verification uses Gemini REST API (`gemini-2.5-flash-lite` default, `gemini-2.5-flash` fallback) with `responseMimeType: application/json` and `responseSchema`, authenticating with user-supplied key stored in `FlutterSecureStorage` (`x-goog-api-key`).
@@ -34,4 +35,10 @@
 - **Automated Testing (`80%+ Coverage`):** Unit, Repository, and Bloc tests using `mocktail`, `bloc_test`, and `fake_async` (for time-travel testing of 5m/1m snooze, 60s emergency hold, and `T - 30m` lock window), plus `setMockMethodCallHandler` contract tests for native channels.
 - **Real-Device Dry-Run Alarm:** In-app "Test Alarm in 10 Seconds" button in Settings (outside the lock window) runs the full native alarm + challenge loop without modifying the user's Streak.
 - **Onboarding, i18n & Local KPIs:** 4-step onboarding (Location → Permissions Gate → Privacy Consent & Gemini Key Test → Bathroom Barcode registration); full `ar` (RTL) and `en` (LTR) `.arb` localization with language switcher; 100% local KPIs/Streaks in `hive_ce` with zero external analytics.
+
+## Toolchain (2026-11-21)
+- Flutter 3.50.1 (Shorebird bundles the same). `package:flutter/material.dart` is deprecated: import `package:material_ui/material_ui.dart`.
+- Use `appLocalizationsDelegates` (`lib/core/l10n/app_localization_delegates.dart`), never `AppLocalizations.localizationsDelegates`: gen-l10n still emits `flutter_localizations` delegate types that `material_ui` widgets cannot find (Arabic widget tests fail with "No MaterialLocalizations found").
+- Android: AGP 9.1.1, `compileSdk 36` (required by plugins); `targetSdk` stays 35.
+- Device install: pass `DEVELOPMENT_TEAM=J52H7284YY CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates` on the xcodebuild CLI (personal Apple account's Personal Team, never committed). After clearing `iOS DeviceSupport`, the first install needs a USB cable.
 
