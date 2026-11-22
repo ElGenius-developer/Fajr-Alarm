@@ -103,6 +103,7 @@ Project-local skills installed under `.claude/skills/` and `.agents/skills/`:
 2. `.claude/sessions/INDEX.md` — injected at session start (keep entries `<= 190` chars; `<= 30` rows).
 3. `.claude/sessions/DIGEST.md` — keyword-searchable index rebuilt via `python3 .claude/scripts/rebuild_digest.py`.
 4. `.claude/sessions/YYYY-MM-DD_*.md` — detailed session logs, read on demand.
+- Layers 2–4 (`.claude/sessions/`) are local-only and gitignored; never commit or `git add -f` them. Durable shared facts go in `.claude/memory.md`.
 
 - **Commands / Skills:** `/save-session` at session end (or mid-session checkpoint), `/sessions <question>` to recall history via `session-rag`, `/rebuild-digest` to rebuild `DIGEST.md`.
 - **Session RAG:** Spawn `.claude/agents/session-rag.md` instead of bulk-reading session files in the main context window.

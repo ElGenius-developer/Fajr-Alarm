@@ -27,5 +27,5 @@ Applies to Codex, OpenCode, Cursor, Antigravity, and any CLI agent. Keep this lo
 Before coding state `[DEFINITION OF DONE]`; after coding include real `[STDOUT]` and end with `[STATUS]: done` (or `implemented-pending-verification`). Fabricated stdout is a CRITICAL violation.
 
 ## 3. Shared Session Memory
-Use `/save-session` (`.claude/skills/save-session/SKILL.md` / `.agents/skills/save-session/SKILL.md`) to save sessions to `.claude/sessions/`, rebuild `DIGEST.md` with `python3 .claude/scripts/rebuild_digest.py`, and update `.claude/sessions/INDEX.md`. Use `/sessions <question>` (via `.claude/agents/session-rag.md`) to recall past sessions.
+Use `/save-session` (`.claude/skills/save-session/SKILL.md` / `.agents/skills/save-session/SKILL.md`) to save sessions to `.claude/sessions/`, rebuild `DIGEST.md` with `python3 .claude/scripts/rebuild_digest.py`, and update `.claude/sessions/INDEX.md` (local-only, gitignored; never commit). Use `/sessions <question>` (via `.claude/agents/session-rag.md`) to recall past sessions.
 

@@ -20,5 +20,5 @@ Applies to Gemini CLI, Antigravity IDE, and `agy`. Mirrors [`CLAUDE.md`](./CLAUD
 
 ## 2. Proof-of-Execution & Session Memory
 - Include `[DEFINITION OF DONE]`, real `[STDOUT]`, and `[STATUS]: done` on completion.
-- Save sessions using `.agents/skills/save-session/SKILL.md` (`/save-session`) into `.claude/sessions/`, rebuild `DIGEST.md` via `python3 .claude/scripts/rebuild_digest.py`, and update `.claude/sessions/INDEX.md`.
+- Save sessions using `.agents/skills/save-session/SKILL.md` (`/save-session`) into `.claude/sessions/`, rebuild `DIGEST.md` via `python3 .claude/scripts/rebuild_digest.py`, and update `.claude/sessions/INDEX.md` (local-only, gitignored; never commit).
 

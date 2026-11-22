@@ -51,3 +51,6 @@ app.*.map.json
 graphify-out/
 docs/SYMBOLS.json
 /android/build/
+
+# Session logs are local-only (not published)
+.claude/sessions/
