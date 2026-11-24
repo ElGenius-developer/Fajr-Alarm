@@ -80,7 +80,7 @@ flowchart TB
   - **iOS 26+:** Native Swift channel driving `AlarmKit` (`Relentless AlarmKit Cascade` + `LiveActivityIntent`).
 - **Proof-of-Action Verification:**
   - **Primary:** Standing POV photo of feet on a prayer rug verified via user-supplied Gemini Vision API (`generativelanguage.googleapis.com`), gated by `sensors_plus` tilt-angle verification.
-  - **Offline Fallbacks:** Bathroom barcode scan (`mobile_scanner`) and standing typing challenge.
+  - **Offline Fallbacks:** Bathroom barcode scan (`camera` + native FOSS ZXing on Android / Apple Vision on iOS) and standing typing challenge.
 - **Privacy & Zero Secrets:**
   - Serverless & local-first: zero developer backend or telemetry.
   - BYOK Gemini API key is stored exclusively in `FlutterSecureStorage` (explicit consent captured during onboarding for Gemini free-tier terms).
@@ -184,3 +184,9 @@ Before grepping across the repo, walk this ladder in order:
 2. **Test-Driven Development:** Maintain **80%+** test coverage across domain, BLoC/Cubit, and repository layers.
 3. **Localization:** Never hardcode user-visible strings; add all copy to both `ar` and `en` `.arb` files and verify RTL layout.
 4. **Commit Format:** Use conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`).
+
+---
+
+## License
+
+Licensed under the [MIT License](LICENSE).

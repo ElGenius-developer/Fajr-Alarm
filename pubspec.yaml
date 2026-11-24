@@ -1,5 +1,5 @@
 name: fajr_alarm
-description: "A new Flutter project."
+description: "Open-source, serverless, local-first Fajr prayer alarm with Proof-of-Action verification."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -47,7 +47,6 @@ dependencies:
   dio: ^5.11.1
   camera: ^0.12.2
   sensors_plus: ^7.1.1
-  mobile_scanner: ^7.5.0
   intl: ^0.20.3
   flutter_localizations:
     sdk: flutter

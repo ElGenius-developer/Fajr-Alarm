@@ -1,0 +1,12 @@
+Fajr Alarm is a free, open-source, serverless, local-first alarm app engineered to help you wake up reliably for Fajr prayer.
+
+Instead of a dismiss button you can tap while half-asleep, Fajr Alarm requires Proof-of-Action verification backed by a relentless native Android alarm engine.
+
+Key Features:
+- Offline 30-Day Prayer Schedule: Calculates Fajr and sunrise times locally using astronomical formulas (Adhan) and caches 30 days ahead with zero internet required. Supports relative-to-Adhan offsets or a fixed manual time.
+- Relentless Android Alarm Engine: Uses exact alarms (setAlarmClock), full-screen lock-screen bypass, foreground media-playback audio, Direct Boot reboot recovery (LOCKED_BOOT_COMPLETED), hardware volume-button deterrence, and screen pinning.
+- Proof-of-Action Verification: Stand on your prayer rug, hold the phone at a standing tilt angle (-15 to 25 degrees), and capture a live photo verified via your own Google Gemini Vision API key (BYOK).
+- Offline Fallbacks: Walk to the bathroom to scan a registered product barcode using the built-in open-source ZXing decoder, or complete a standing 120-character typing challenge without paste.
+- Privacy-First & BYOK: Zero developer servers, zero accounts, zero analytics or trackers. Your Gemini API key is stored locally in encrypted storage, and captured challenge photos stay in RAM only and are purged in under 500ms.
+- Anti-Cheating & Safety Controls: Includes a 30-minute Pre-Fajr Lock Window, monotonic clock snooze (one 5-minute snooze before relentless 1-minute ringing), Vacation Mode with Streak Freeze, a 60-second continuous-hold Emergency Override with monthly quota, and a 10-second Dry-Run test alarm.
+- Bilingual & Customizable: Full English (LTR) and Arabic (RTL) localization with 7 Light and Dark visual themes.

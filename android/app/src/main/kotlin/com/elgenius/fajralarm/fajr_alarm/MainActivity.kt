@@ -25,6 +25,7 @@ class MainActivity : FlutterActivity() {
     private var pendingPermissionResult: MethodChannel.Result? = null
     private var pendingAlarmTrigger: Map<String, Any>? = null
     private var alarmPlatformChannel: MethodChannel? = null
+    private var barcodeDecoderPlugin: BarcodeDecoderPlugin? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +89,19 @@ class MainActivity : FlutterActivity() {
                 },
             ),
         )
+
+        val decoderPlugin = BarcodeDecoderPlugin()
+        barcodeDecoderPlugin = decoderPlugin
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BarcodeDecoderPlugin.CHANNEL_NAME,
+        ).setMethodCallHandler(decoderPlugin)
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        barcodeDecoderPlugin?.dispose()
+        barcodeDecoderPlugin = null
+        super.cleanUpFlutterEngine(flutterEngine)
     }
 
     override fun onRequestPermissionsResult(

@@ -5,13 +5,13 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
+import 'package:fajr_alarm/core/widgets/foss_barcode_scanner.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/challenge_mode.dart';
 import 'package:fajr_alarm/features/challenge_verification/domain/entities/tilt_angle_reading.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_cubit.dart';
 import 'package:fajr_alarm/features/challenge_verification/presentation/cubit/challenge_state.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Proof-of-Action challenge screen supporting Live Prayer-Rug Photo Vision,
 /// Bathroom Barcode Challenge, and Standing Typing Challenge.
@@ -42,7 +42,8 @@ class ChallengePage extends StatefulWidget {
 
 class _ChallengePageState extends State<ChallengePage> {
   CameraController? _cameraController;
-  MobileScannerController? _scannerController;
+  FossBarcodeScannerController? _scannerController;
+  Future<void>? _photoDisposalFuture;
   bool _cameraInitialized = false;
 
   @override
@@ -173,7 +174,7 @@ class _ChallengePageState extends State<ChallengePage> {
       listener: (BuildContext context, ChallengeState state) {
         if (state.mode != ChallengeMode.photoVision &&
             _cameraController != null) {
-          unawaited(_disposePhotoCamera());
+          _photoDisposalFuture = _disposePhotoCamera();
         }
         if (state.status == ChallengeStatus.verified) {
           widget.onChallengeCompleted?.call();
@@ -231,9 +232,11 @@ class _ChallengePageState extends State<ChallengePage> {
                         l10n: l10n,
                         state: state,
                         scannerOverride: widget.scannerOverride,
-                        onControllerCreated: (MobileScannerController? ctrl) {
-                          _scannerController = ctrl;
-                        },
+                        waitBeforeInit: _photoDisposalFuture,
+                        onControllerCreated:
+                            (FossBarcodeScannerController? ctrl) {
+                              _scannerController = ctrl;
+                            },
                         onBarcodeDetected: (String code) {
                           context.read<ChallengeCubit>().submitBarcode(code);
                         },
@@ -546,38 +549,38 @@ class _BathroomBarcodeView extends StatefulWidget {
     required this.scannerOverride,
     required this.onControllerCreated,
     required this.onBarcodeDetected,
+    this.waitBeforeInit,
   });
 
   final AppLocalizations l10n;
   final ChallengeState state;
   final Widget? scannerOverride;
-  final ValueChanged<MobileScannerController?> onControllerCreated;
+  final ValueChanged<FossBarcodeScannerController?> onControllerCreated;
   final ValueChanged<String> onBarcodeDetected;
+  final Future<void>? waitBeforeInit;
 
   @override
   State<_BathroomBarcodeView> createState() => _BathroomBarcodeViewState();
 }
 
 class _BathroomBarcodeViewState extends State<_BathroomBarcodeView> {
-  MobileScannerController? _controller;
+  FossBarcodeScannerController? _controller;
 
   @override
   void initState() {
     super.initState();
     if (widget.scannerOverride == null) {
-      _controller = MobileScannerController();
+      _controller = FossBarcodeScannerController();
       widget.onControllerCreated(_controller);
     }
   }
 
   @override
   void dispose() {
-    final MobileScannerController? controller = _controller;
+    final FossBarcodeScannerController? controller = _controller;
     _controller = null;
     widget.onControllerCreated(null);
-    if (controller != null) {
-      unawaited(controller.dispose());
-    }
+    controller?.dispose();
     super.dispose();
   }
 
@@ -598,17 +601,10 @@ class _BathroomBarcodeViewState extends State<_BathroomBarcodeView> {
             borderRadius: BorderRadius.circular(12),
             child:
                 widget.scannerOverride ??
-                MobileScanner(
-                  controller: _controller!,
-                  onDetect: (BarcodeCapture capture) {
-                    for (final Barcode barcode in capture.barcodes) {
-                      final String? value = barcode.rawValue;
-                      if (value != null && value.isNotEmpty) {
-                        widget.onBarcodeDetected(value);
-                        break;
-                      }
-                    }
-                  },
+                FossBarcodeScanner(
+                  controller: _controller,
+                  waitBeforeInit: widget.waitBeforeInit,
+                  onDetect: widget.onBarcodeDetected,
                 ),
           ),
         ),
