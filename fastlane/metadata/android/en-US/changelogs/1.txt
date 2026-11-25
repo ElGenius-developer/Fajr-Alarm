@@ -1,0 +1,6 @@
+Initial v1.0.0 release:
+- Offline 30-day Fajr prayer schedule & local caching
+- Relentless Android alarm engine with Direct Boot support
+- Proof-of-Action camera challenge (BYOK Gemini Vision, RAM-only <500ms purge)
+- Offline FOSS ZXing bathroom barcode & standing typing fallbacks
+- Bilingual English (LTR) & Arabic (RTL) UI with 7 themes

@@ -1,8 +1,8 @@
 import 'package:fajr_alarm/core/l10n/generated/app_localizations.dart';
 import 'package:fajr_alarm/core/theme/app_theme.dart';
+import 'package:fajr_alarm/core/widgets/foss_barcode_scanner.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Builder hook allowing widget tests to supply a deterministic scanner widget.
 typedef BarcodeScannerBuilder = Widget Function(
@@ -40,7 +40,7 @@ class BarcodeScannerInput extends StatefulWidget {
 }
 
 class _BarcodeScannerInputState extends State<BarcodeScannerInput> {
-  MobileScannerController? _scannerController;
+  FossBarcodeScannerController? _scannerController;
   bool _isScanning = false;
   bool _torchEnabled = false;
   String? _scannedCode;
@@ -52,7 +52,7 @@ class _BarcodeScannerInputState extends State<BarcodeScannerInput> {
   }
 
   void _disposeScannerController() {
-    final MobileScannerController? controller = _scannerController;
+    final FossBarcodeScannerController? controller = _scannerController;
     _scannerController = null;
     controller?.dispose();
   }
@@ -60,7 +60,7 @@ class _BarcodeScannerInputState extends State<BarcodeScannerInput> {
   void _startScanning() {
     if (_isScanning || !widget.enabled) return;
     if (widget.scannerBuilder == null) {
-      _scannerController ??= MobileScannerController();
+      _scannerController ??= FossBarcodeScannerController();
     }
     setState(() {
       _isScanning = true;
@@ -78,11 +78,11 @@ class _BarcodeScannerInputState extends State<BarcodeScannerInput> {
   }
 
   Future<void> _toggleTorch() async {
-    final MobileScannerController? controller = _scannerController;
+    final FossBarcodeScannerController? controller = _scannerController;
     if (controller == null) return;
     await controller.toggleTorch();
     if (!mounted) return;
-    setState(() => _torchEnabled = !_torchEnabled);
+    setState(() => _torchEnabled = controller.isTorchOn);
   }
 
   void _handleBarcodeDetected(String rawValue) {
@@ -209,28 +209,19 @@ class _BarcodeScannerInputState extends State<BarcodeScannerInput> {
   Widget _buildLiveScannerCard(AppLocalizations l10n, FajrDesignTokens tokens) {
     final Widget scannerView =
         widget.scannerBuilder?.call(context, _handleBarcodeDetected) ??
-        MobileScanner(
+        FossBarcodeScanner(
           controller: _scannerController,
-          onDetect: (BarcodeCapture capture) {
-            for (final Barcode barcode in capture.barcodes) {
-              final String? value = barcode.rawValue;
-              if (value != null && value.trim().isNotEmpty) {
-                _handleBarcodeDetected(value);
-                break;
-              }
-            }
-          },
-          errorBuilder: (BuildContext context, MobileScannerException error) =>
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    l10n.onboardingScannerUnavailable,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: tokens.textSecondary),
-                  ),
-                ),
+          onDetect: _handleBarcodeDetected,
+          errorBuilder: (BuildContext context, Object error) => Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                l10n.onboardingScannerUnavailable,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: tokens.textSecondary),
               ),
+            ),
+          ),
         );
 
     return ClipRRect(
